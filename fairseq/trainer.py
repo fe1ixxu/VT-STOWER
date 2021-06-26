@@ -828,6 +828,8 @@ class Trainer(object):
 
         if name == "train_loss" and "loss" in train_meters:
             return train_meters["loss"]
+        elif name == "vae_loss" and "vae_liss" in train_meters:
+            return train_meters["vae_loss"]
         elif name == "train_nll_loss":
             # support for legacy train.py, which assumed this meter is
             # always initialized

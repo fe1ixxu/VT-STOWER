@@ -8,6 +8,7 @@ from typing import Any, Dict, List, Optional, Tuple, NamedTuple
 
 import torch
 import torch.nn as nn
+import torch.nn.functional as F
 from fairseq import utils, checkpoint_utils
 from fairseq.models import (
     FairseqEncoder,
@@ -38,11 +39,13 @@ DEFAULT_MAX_SOURCE_POSITIONS = 1024
 DEFAULT_MAX_TARGET_POSITIONS = 1024
 
 PRETRAINED_MODEL = None
+EMBEDDING = None
 def get_pretrained_model(model_name, use_our_model):
-    global PRETRAINED_MODEL
+    global PRETRAINED_MODEL, EMBEDDING
     if use_our_model:
         PRETRAINED_MODEL = torch.load(model_name)
     else:
+        EMBEDDING = AutoModel.from_pretrained(model_name).get_input_embeddings()
         PRETRAINED_MODEL = AutoModel.from_pretrained(model_name)
     PRETRAINED_MODEL.eval()
 
@@ -194,6 +197,11 @@ class TransformerModel(FairseqEncoderDecoderModel):
                     help="if use our model")
         parser.add_argument("--mean", default=False, action='store_true',
                     help="if mean of selected layers")
+        parser.add_argument("--vq_num", default=2048, type=int)
+        parser.add_argument("--vae_type", default=None, type=str)
+        parser.add_argument("--alpha", default=1, type=float)
+        parser.add_argument("--latent_size", default=256, type=int, help="used for base vae")
+        
 
     @classmethod
     def build_model(cls, args, task):
@@ -287,7 +295,7 @@ class TransformerModel(FairseqEncoderDecoderModel):
         Copied from the base class, but without ``**kwargs``,
         which are not supported by TorchScript.
         """
-        encoder_out = self.encoder(
+        encoder_out, vae_loss = self.encoder(
             src_tokens, src_lengths=src_lengths, return_all_hiddens=return_all_hiddens
         )
         decoder_out = self.decoder(
@@ -299,7 +307,7 @@ class TransformerModel(FairseqEncoderDecoderModel):
             src_lengths=src_lengths,
             return_all_hiddens=return_all_hiddens,
         )
-        return decoder_out
+        return decoder_out, vae_loss
 
     # Since get_normalized_probs is in the Fairseq Model which is not scriptable,
     # I rewrite the get_normalized_probs from Base Class to call the
@@ -391,53 +399,47 @@ class TransformerEncoder(FairseqEncoder):
 
         self.dictionary = dictionary
 
+        if args.vae_type == "vqvae":
+            self.vae = VectorQuantizer(num_embeddings=args.vq_num, embedding_dim=args.encoder_embed_dim, alpha=args.alpha)
+        elif args.vae_type == "base":
+            self.vae = VanillaVAE(args.encoder_embed_dim, args.latent_size)
+        else:
+            self.vae = None
+
         if self.pretrained_model_name:
             get_pretrained_model(self.pretrained_model_name, self.use_our_model)
 
+        # self.rnn = torch.nn.GRU(args.encoder_embed_dim, args.encoder_embed_dim, 2)
     def build_encoder_layer(self, args):
         return TransformerEncoderLayer(args)
 
     def forward_embedding(
         self, src_tokens, token_embedding: Optional[torch.Tensor] = None
-    ):
+    ):  
         # embed tokens and positions
         if token_embedding is None:
             if self.pretrained_model_name:
+                
                 with torch.no_grad():
                     device = src_tokens.device
                     PRETRAINED_MODEL.to(device)
                     bos = self.dictionary.bos() * torch.ones(src_tokens.shape[0], 1, dtype=torch.long, device=device)
                     src_tokens = torch.cat((bos, src_tokens), dim=1)
-                    ### Plan 1
-                    if not self.use_our_model:
-                        token_ids = torch.zeros(src_tokens.shape, dtype=torch.long, device=device)
-                        token_attention = torch.ones(src_tokens.shape, dtype=torch.long, device=device)
-                        token_attention = torch.where(src_tokens==self.dictionary.pad(), token_ids, token_attention)
-                        token_embedding = PRETRAINED_MODEL(src_tokens, token_type_ids=token_ids, attention_mask=token_attention)[0]
                     ### 
-
-                    ### Plan 2
-                    else:
-                        token_embedding = PRETRAINED_MODEL(src_tokens, features_only=True, return_all_hiddens=True)[1]["inner_states"]
-                        if self.use_drop_embedding == 1:
-                            token_embedding = token_embedding[-1].permute(1,0,2)
-                        else:
-                            if self.training and not self.mean_layer:
-                                random_num = torch.rand(1)
-                                token_embedding = token_embedding[-(int(random_num * self.use_drop_embedding)+1)].permute(1,0,2)
-                            else:
-                                token_embedding = torch.mean(torch.stack(token_embedding[-self.use_drop_embedding:]), dim=0).permute(1,0,2)
-
-                        
-
+                    token_ids = torch.zeros(src_tokens.shape, dtype=torch.long, device=device)
+                    token_attention = torch.ones(src_tokens.shape, dtype=torch.long, device=device)
+                    token_attention = torch.where(src_tokens==self.dictionary.pad(), token_ids, token_attention)
+                    token_embedding = PRETRAINED_MODEL(src_tokens, token_type_ids=token_ids, attention_mask=token_attention)[0]
+                    ###
                     token_embedding = token_embedding[:, 1:, :]
                     src_tokens = src_tokens[:, 1:]
 
             else:
                 token_embedding = self.embed_tokens(src_tokens)  # original embedding
 
-
+        
         x = embed = self.embed_scale * token_embedding
+
         if self.embed_positions is not None:
             x = embed + self.embed_positions(src_tokens)
         if self.layernorm_embedding is not None:
@@ -445,6 +447,15 @@ class TransformerEncoder(FairseqEncoder):
         x = self.dropout_module(x)
         if self.quant_noise is not None:
             x = self.quant_noise(x)
+
+        if self.pretrained_model_name:
+            # if self.training:
+            EMBEDDING.eval()
+            EMBEDDING.to(device)
+            with torch.no_grad():
+                embed = EMBEDDING(src_tokens)
+
+        
         return x, embed
 
     def forward(
@@ -494,8 +505,19 @@ class TransformerEncoder(FairseqEncoder):
                 assert encoder_states is not None
                 encoder_states.append(x)
 
+
         if self.layer_norm is not None:
             x = self.layer_norm(x)
+
+
+        encoder_embedding = encoder_embedding.transpose(0,1).contiguous()
+
+        if self.vae:
+            vae_x, vae_loss = self.vae(encoder_embedding, encoder_embedding.device)
+        else:
+            vae_loss = torch.tensor(0).to(encoder_embedding.device)
+        
+        x = x + vae_x
 
         return EncoderOut(
             encoder_out=x,  # T x B x C
@@ -504,10 +526,11 @@ class TransformerEncoder(FairseqEncoder):
             encoder_states=encoder_states,  # List[T x B x C]
             src_tokens=None,
             src_lengths=None,
-        )
+        ), vae_loss
 
     @torch.jit.export
     def reorder_encoder_out(self, encoder_out: EncoderOut, new_order):
+        print(type(encoder_out))
         """
         Reorder encoder output according to *new_order*.
 
@@ -539,7 +562,7 @@ class TransformerEncoder(FairseqEncoder):
         new_encoder_embedding = (
             encoder_embedding
             if encoder_embedding is None
-            else encoder_embedding.index_select(0, new_order)
+            else encoder_embedding.index_select(1, new_order)
         )
         src_tokens = encoder_out.src_tokens
         if src_tokens is not None:
@@ -998,6 +1021,151 @@ class TransformerDecoder(FairseqIncrementalDecoder):
 
         return state_dict
 
+import matplotlib.pyplot as plt
+import random
+class VectorQuantizer(nn.Module):
+    def __init__(self, num_embeddings: int, embedding_dim: int, alpha, beta: float = 0.25):
+        super(VectorQuantizer, self).__init__()
+        self.K = num_embeddings
+        self.D = embedding_dim
+        self.beta = beta
+        self.alpha = alpha
+
+        self.embedding = nn.Embedding(self.K, self.D)
+        # self.embedding.weight.data.uniform_(-1 / self.K, 1 / self.K)
+
+        ###
+        # self.embedding.weight.data.uniform_(-1, 1)
+        ###
+        
+        self.i = 0
+        import collections
+        self.count = collections.defaultdict(int)
+
+        # self.conv1d = torch.nn.Conv1d(768, 512, 2, stride=2)
+        # self.deconv1d = torch.nn.ConvTranspose1d(512, 768, 2, stride=2)
+        
+        ###
+
+    def forward(self, latents, gpu):
+        """
+        latent: output of encoder, [b, len , dim]
+        """
+        ###
+        # orig_shape = latents.shape
+        # latents = latents.mean(dim=0, keepdim=True)
+        latents = latents.permute(1, 0, 2).contiguous()
+        # latents = latents.permute(0, 2, 1).contiguous()
+        # output_size = latents.shape
+        # latents = self.conv1d(latents)
+        # latents = latents.permute(0, 2, 1).contiguous()
+        
+        ####
+        
+        self.gpu = gpu
+        latents_shape = latents.shape
+        flat_latents = latents.view(-1, self.D)   # [b*len, dim]
+        n_tokens = flat_latents.shape[0]
+
+        #### debug block
+        # for _ in range(5):
+        #     self.embedding.weight.data =  self.embedding.weight.data - self.embedding.weight.data.mean(dim=0, keepdim=True)
+        #     self.embedding.weight.data = self.embedding.weight.data / self.embedding.weight.data.norm(dim=1, keepdim=True)
+        #     flat_latents = flat_latents - flat_latents.mean(dim=0, keepdim=True)
+        #     flat_latents = flat_latents / flat_latents.norm(dim=1, keepdim=True)
+
+        ####
+
+        dist = torch.sum(flat_latents ** 2, dim=1, keepdim=True) + \
+               torch.sum(self.embedding.weight ** 2, dim=1) - \
+               2 * torch.matmul(flat_latents, self.embedding.weight.t())  # [b*len, K]
+
+        encoding_inds = torch.argmin(dist, dim=1).unsqueeze(1)    # [b*len, 1]
+
+
+        #### bebug block
+        
+        # exit(0)
+        for ind in encoding_inds:
+            self.count[int(ind)] += 1
+        # if self.i <= 2000:
+        #     encoding_inds = torch.randint(0, self.K, encoding_inds.shape).to(self.gpu)
+        
+
+        if self.i % 200 == 0:
+            print(random.sample([int(ind) for ind in encoding_inds.data], 15))
+            # print(encoding_inds[:20])
+            # print("Most popular selected discrete EMB:", len(self.count))
+            # for key in sorted(self.count, key=self.count.get, reverse=True):
+            #     print(key, self.count[key])
+        
+            # forplot = torch.cat((flat_latents.data, self.embedding.weight.data), dim=0)
+            # U, S, V = torch.pca_lowrank(forplot)
+            # codebook = torch.matmul(forplot, V[:,:2]).to("cpu").numpy()
+            # plt.scatter(codebook[:n_tokens,0], codebook[:n_tokens,1], color="b")
+            # plt.scatter(codebook[n_tokens+1:,0], codebook[n_tokens+1:,1], color="r")
+            # plt.savefig("codebook_orig/"+str(self.i)+".png")
+            # plt.clf()
+        self.i += 1
+        # print(S)
+        # torch.save(torch.matmul(self.embedding.weight.data, V[:,:2]).to("cpu"), "codebook.pt")
+        # exit(0)
+        ####
+
+        # Convert to one-hot encodings
+        encoding_one_hot = torch.zeros(encoding_inds.size(0), self.K, device=self.gpu)
+        encoding_one_hot.scatter_(1, encoding_inds, 1)   # [b*len, K]
+        
+        # Quantize the latents
+        quantized_latents = torch.matmul(encoding_one_hot, self.embedding.weight)  # [b*len, dim]
+        quantized_latents = quantized_latents.view(latents_shape)  # [b, len , dim]
+        
+        # Compute the VQ Losses
+        commitment_loss = F.mse_loss(quantized_latents.detach(), latents)
+        embedding_loss = F.mse_loss(quantized_latents, latents.detach())
+
+        vq_loss = commitment_loss * self.beta + embedding_loss
+
+        # Add the residue back to the latents
+        quantized_latents = latents + (quantized_latents - latents).detach()
+
+        ###
+        # quantized_latents = self.deconv1d(quantized_latents.permute(0, 2, 1), output_size=output_size)
+        # quantized_latents = quantized_latents.permute(2, 0, 1).contiguous()
+        
+        # for layer in layers:
+        #     quantized_latents = layer(quantized_latents, encoder_padding_mask)
+        # quantized_latents = torch.zeros(orig_shape).to(self.gpu) + quantized_latents
+        ### .permute(1, 0, 2).contiguous()
+
+        return quantized_latents.permute(1, 0, 2).contiguous(), vq_loss  * self.alpha 
+
+
+class VanillaVAE(nn.Module):
+    def __init__(self, model_size, latent_size):
+        super(VanillaVAE, self).__init__()
+        self.fc_mu = nn.Linear(model_size, latent_size)
+        self.fc_var = nn.Linear(model_size, latent_size)
+        self.decoder_input = nn.Linear(latent_size, model_size)
+
+    def forward(self, latent, gpu):
+        mu = self.fc_mu(latent)
+        log_var = self.fc_var(latent)
+        z = self.reparameterize(mu, log_var)
+        z = self.decoder_input(z)
+        loss = torch.sum(-0.5 * torch.sum(1 + log_var - mu ** 2 - log_var.exp(), dim = 2))
+        return z, loss
+        
+    def reparameterize(self, mu, logvar):
+
+        std = torch.exp(0.5 * logvar)
+        eps = torch.randn_like(std)
+        return eps * std + mu
+
+    def sample_random_latent(self, num_samples=1):
+        z = torch.randn(num_samples, self.latent_size)
+        z.to(self.gpu)
+        return z
 
 def Embedding(num_embeddings, embedding_dim, padding_idx):
     m = nn.Embedding(num_embeddings, embedding_dim, padding_idx=padding_idx)
@@ -1078,6 +1246,20 @@ def transformer_iwslt_de_en(args):
     args.decoder_attention_heads = getattr(args, "decoder_attention_heads", 4)
     args.decoder_layers = getattr(args, "decoder_layers", 6)
     base_architecture(args)
+
+@register_model_architecture("transformer", "vae")
+def transformer_iwslt_de_en(args):
+    args.encoder_embed_dim = getattr(args, "encoder_embed_dim", 768)
+    args.encoder_ffn_embed_dim = getattr(args, "encoder_ffn_embed_dim", 1024)
+    args.encoder_attention_heads = getattr(args, "encoder_attention_heads", 4)
+    # args.encoder_normalize_before = getattr(args, "encoder_normalize_before", True)
+    args.encoder_layers = getattr(args, "encoder_layers", 2)
+    args.decoder_embed_dim = getattr(args, "decoder_embed_dim", 768)
+    args.decoder_ffn_embed_dim = getattr(args, "decoder_ffn_embed_dim", 1024)
+    args.decoder_attention_heads = getattr(args, "decoder_attention_heads", 4)
+    args.decoder_layers = getattr(args, "decoder_layers", 2)
+    base_architecture(args)
+
 
 
 @register_model_architecture("transformer", "transformer_wmt_en_de")

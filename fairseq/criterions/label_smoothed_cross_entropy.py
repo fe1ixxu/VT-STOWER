@@ -23,8 +23,8 @@ def label_smoothed_nll_loss(lprobs, target, epsilon, ignore_index=None, reduce=T
         nll_loss = nll_loss.squeeze(-1)
         smooth_loss = smooth_loss.squeeze(-1)
     if reduce:
-        nll_loss = nll_loss.sum()
-        smooth_loss = smooth_loss.sum()
+        nll_loss = nll_loss.mean()
+        smooth_loss = smooth_loss.mean()
     eps_i = epsilon / lprobs.size(-1)
     loss = (1.0 - epsilon) * nll_loss + eps_i * smooth_loss
     return loss, nll_loss
@@ -45,6 +45,7 @@ class LabelSmoothedCrossEntropyCriterion(FairseqCriterion):
         self.eps = label_smoothing
         self.ignore_prefix_size = ignore_prefix_size
         self.report_accuracy = report_accuracy
+        self.i = 0
 
     @staticmethod
     def add_args(parser):
@@ -66,14 +67,16 @@ class LabelSmoothedCrossEntropyCriterion(FairseqCriterion):
         2) the sample size, which is used as the denominator for the gradient
         3) logging outputs to display while training
         """
-        net_output = model(**sample["net_input"])
+        net_output, vae_loss = model(**sample["net_input"])
         loss, nll_loss = self.compute_loss(model, net_output, sample, reduce=reduce)
         sample_size = (
             sample["target"].size(0) if self.sentence_avg else sample["ntokens"]
         )
+        rec_loss = loss.data
+        loss = loss + vae_loss
         logging_output = {
-            "loss": loss.data,
-            "nll_loss": nll_loss.data,
+            "loss": rec_loss * sample_size,
+            "nll_loss": nll_loss* sample_size,
             "ntokens": sample["ntokens"],
             "nsentences": sample["target"].size(0),
             "sample_size": sample_size,
@@ -82,6 +85,9 @@ class LabelSmoothedCrossEntropyCriterion(FairseqCriterion):
             n_correct, total = self.compute_accuracy(model, net_output, sample)
             logging_output["n_correct"] = utils.item(n_correct.data)
             logging_output["total"] = utils.item(total.data)
+        if self.i % 200 == 0:
+            print("REC loss:  ", (loss.data-vae_loss).data, "VAE_LOSS:  ", vae_loss.data)
+        self.i += 1
         return loss, sample_size, logging_output
 
     def get_lprobs_and_target(self, model, net_output, sample):

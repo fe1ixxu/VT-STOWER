@@ -61,11 +61,13 @@ class BertBPE(object):
 
 
     def encode(self, x: str) -> str:
-        return " ".join(self.bert_tokenizer.tokenize(x))
+        # return " ".join(self.bert_tokenizer.tokenize(x))
+        return self.space_tok.sub(" ", x)
 
     def decode(self, x: str, if_src=False) -> str:
-        pretrained_bpe = self.pretrained_bpe if not if_src else self.pretrained_bpe_src
-        return self.bert_tokenizer.convert_tokens_to_string(x.split(" "))
+        return x
+        # pretrained_bpe = self.pretrained_bpe if not if_src else self.pretrained_bpe_src
+        # return self.bert_tokenizer.convert_tokens_to_string(x.split(" "))
 
 
     def is_beginning_of_word(self, x: str) -> bool:
