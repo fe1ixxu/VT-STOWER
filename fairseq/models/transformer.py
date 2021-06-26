@@ -39,13 +39,13 @@ DEFAULT_MAX_SOURCE_POSITIONS = 1024
 DEFAULT_MAX_TARGET_POSITIONS = 1024
 
 PRETRAINED_MODEL = None
-EMBEDDING = None
+# EMBEDDING = None
 def get_pretrained_model(model_name, use_our_model):
-    global PRETRAINED_MODEL, EMBEDDING
+    global PRETRAINED_MODEL #, EMBEDDING
     if use_our_model:
         PRETRAINED_MODEL = torch.load(model_name)
     else:
-        EMBEDDING = AutoModel.from_pretrained(model_name).get_input_embeddings()
+        # EMBEDDING = AutoModel.from_pretrained(model_name).get_input_embeddings()
         PRETRAINED_MODEL = AutoModel.from_pretrained(model_name)
     PRETRAINED_MODEL.eval()
 
@@ -200,6 +200,7 @@ class TransformerModel(FairseqEncoderDecoderModel):
         parser.add_argument("--vq_num", default=2048, type=int)
         parser.add_argument("--vae_type", default=None, type=str)
         parser.add_argument("--alpha", default=1, type=float)
+        parser.add_argument("--weight_c", default=10, type=float)
         parser.add_argument("--latent_size", default=256, type=int, help="used for base vae")
         
 
@@ -295,7 +296,7 @@ class TransformerModel(FairseqEncoderDecoderModel):
         Copied from the base class, but without ``**kwargs``,
         which are not supported by TorchScript.
         """
-        encoder_out, vae_loss = self.encoder(
+        encoder_out, vq_loss, class_loss = self.encoder(
             src_tokens, src_lengths=src_lengths, return_all_hiddens=return_all_hiddens
         )
         decoder_out = self.decoder(
@@ -307,7 +308,7 @@ class TransformerModel(FairseqEncoderDecoderModel):
             src_lengths=src_lengths,
             return_all_hiddens=return_all_hiddens,
         )
-        return decoder_out, vae_loss
+        return decoder_out, vq_loss, class_loss
 
     # Since get_normalized_probs is in the Fairseq Model which is not scriptable,
     # I rewrite the get_normalized_probs from Base Class to call the
@@ -400,12 +401,15 @@ class TransformerEncoder(FairseqEncoder):
         self.dictionary = dictionary
 
         if args.vae_type == "vqvae":
-            self.vae = VectorQuantizer(num_embeddings=args.vq_num, embedding_dim=args.encoder_embed_dim, alpha=args.alpha)
+            self.vae_0 = VectorQuantizer(num_embeddings=args.vq_num, embedding_dim=args.encoder_embed_dim, alpha=args.alpha)
+            self.vae_1 = VectorQuantizer(num_embeddings=args.vq_num, embedding_dim=args.encoder_embed_dim, alpha=args.alpha)
         elif args.vae_type == "base":
             self.vae = VanillaVAE(args.encoder_embed_dim, args.latent_size)
         else:
             self.vae = None
 
+        self.classifier = Classifier(args.encoder_embed_dim)
+        self.weight_c = args.weight_c
         if self.pretrained_model_name:
             get_pretrained_model(self.pretrained_model_name, self.use_our_model)
 
@@ -418,10 +422,16 @@ class TransformerEncoder(FairseqEncoder):
     ):  
         # embed tokens and positions
         if token_embedding is None:
+            device = src_tokens.device
+            labels = src_tokens[:,0]
+            zeros = torch.zeros_like(labels).to(device)
+            ones = torch.ones_like(labels).to(device)
+            self.labels = torch.where(labels == self.dictionary.eos_index, ones, zeros)
+            src_tokens = src_tokens[:,1:]
+
             if self.pretrained_model_name:
                 
                 with torch.no_grad():
-                    device = src_tokens.device
                     PRETRAINED_MODEL.to(device)
                     bos = self.dictionary.bos() * torch.ones(src_tokens.shape[0], 1, dtype=torch.long, device=device)
                     src_tokens = torch.cat((bos, src_tokens), dim=1)
@@ -447,14 +457,6 @@ class TransformerEncoder(FairseqEncoder):
         x = self.dropout_module(x)
         if self.quant_noise is not None:
             x = self.quant_noise(x)
-
-        if self.pretrained_model_name:
-            # if self.training:
-            EMBEDDING.eval()
-            EMBEDDING.to(device)
-            with torch.no_grad():
-                embed = EMBEDDING(src_tokens)
-
         
         return x, embed
 
@@ -494,7 +496,7 @@ class TransformerEncoder(FairseqEncoder):
         x = x.transpose(0, 1)
 
         # compute padding mask
-        encoder_padding_mask = src_tokens.eq(self.padding_idx)
+        encoder_padding_mask = src_tokens[:,1:].eq(self.padding_idx)
 
         encoder_states = [] if return_all_hiddens else None
 
@@ -509,15 +511,31 @@ class TransformerEncoder(FairseqEncoder):
         if self.layer_norm is not None:
             x = self.layer_norm(x)
 
-
-        encoder_embedding = encoder_embedding.transpose(0,1).contiguous()
-
-        if self.vae:
-            vae_x, vae_loss = self.vae(encoder_embedding, encoder_embedding.device)
+        if self.vae_0: # and self.training:
+            vq_0, vq_loss_0 = self.vae_0(x, 1 - self.labels, x.device)
+            vq_1, vq_loss_1 = self.vae_1(x, self.labels, x.device)
+            vq = vq_0 + vq_1
+            vq_loss = vq_loss_0 + vq_loss_1
+        # elif self.vae_0 and not self.training:
+        #     vq_0, vq_loss_0 = self.vae_0(x, self.labels, x.device)
+        #     vq_1, vq_loss_1 = self.vae_0(x, 1 - self.labels, x.device)
+        #     vq = vq_0 + vq_1
+        #     vq_loss = vq_loss_0 + vq_loss_1
+        #     from transformers import AutoTokenizer
+        #     a = AutoTokenizer.from_pretrained("roberta-base")
+        #     for i in range(1):
+        #         print(a.convert_ids_to_tokens([int(ind) for ind in src_tokens[i]]))
+        #     print(self.labels)
+        #     print(vq_0)
+        #     print(vq_1)
+        #     exit(0)
         else:
-            vae_loss = torch.tensor(0).to(encoder_embedding.device)
+            vq_loss = torch.tensor(0).to(x.device)
+            vq = x
+
+        class_loss = self.classifier(vq, self.labels, self.weight_c)
         
-        x = x + vae_x
+        x = x + vq.unsqueeze(0).detach()
 
         return EncoderOut(
             encoder_out=x,  # T x B x C
@@ -526,7 +544,7 @@ class TransformerEncoder(FairseqEncoder):
             encoder_states=encoder_states,  # List[T x B x C]
             src_tokens=None,
             src_lengths=None,
-        ), vae_loss
+        ), vq_loss, class_loss
 
     @torch.jit.export
     def reorder_encoder_out(self, encoder_out: EncoderOut, new_order):
@@ -562,7 +580,7 @@ class TransformerEncoder(FairseqEncoder):
         new_encoder_embedding = (
             encoder_embedding
             if encoder_embedding is None
-            else encoder_embedding.index_select(1, new_order)
+            else encoder_embedding.index_select(0, new_order)
         )
         src_tokens = encoder_out.src_tokens
         if src_tokens is not None:
@@ -1047,14 +1065,15 @@ class VectorQuantizer(nn.Module):
         
         ###
 
-    def forward(self, latents, gpu):
-        """
-        latent: output of encoder, [b, len , dim]
-        """
+    def forward(self, latents, label_mask, gpu):
+
+        latents = torch.mean(latents, dim=0)
+        label_mask = label_mask.view(-1, 1)
+
         ###
         # orig_shape = latents.shape
         # latents = latents.mean(dim=0, keepdim=True)
-        latents = latents.permute(1, 0, 2).contiguous()
+        # latents = latents.permute(1, 0, 2).contiguous()
         # latents = latents.permute(0, 2, 1).contiguous()
         # output_size = latents.shape
         # latents = self.conv1d(latents)
@@ -1066,15 +1085,6 @@ class VectorQuantizer(nn.Module):
         latents_shape = latents.shape
         flat_latents = latents.view(-1, self.D)   # [b*len, dim]
         n_tokens = flat_latents.shape[0]
-
-        #### debug block
-        # for _ in range(5):
-        #     self.embedding.weight.data =  self.embedding.weight.data - self.embedding.weight.data.mean(dim=0, keepdim=True)
-        #     self.embedding.weight.data = self.embedding.weight.data / self.embedding.weight.data.norm(dim=1, keepdim=True)
-        #     flat_latents = flat_latents - flat_latents.mean(dim=0, keepdim=True)
-        #     flat_latents = flat_latents / flat_latents.norm(dim=1, keepdim=True)
-
-        ####
 
         dist = torch.sum(flat_latents ** 2, dim=1, keepdim=True) + \
                torch.sum(self.embedding.weight ** 2, dim=1) - \
@@ -1121,13 +1131,14 @@ class VectorQuantizer(nn.Module):
         quantized_latents = quantized_latents.view(latents_shape)  # [b, len , dim]
         
         # Compute the VQ Losses
-        commitment_loss = F.mse_loss(quantized_latents.detach(), latents)
-        embedding_loss = F.mse_loss(quantized_latents, latents.detach())
+        denominator = torch.sum(label_mask) * latents_shape[1]
+        commitment_loss = torch.sum((quantized_latents.detach() - latents)**2 * label_mask) /denominator
+        embedding_loss = torch.sum((quantized_latents - latents.detach())**2 * label_mask) / denominator
 
         vq_loss = commitment_loss * self.beta + embedding_loss
 
         # Add the residue back to the latents
-        quantized_latents = latents + (quantized_latents - latents).detach()
+        quantized_latents = ( latents + (quantized_latents - latents).detach() ) * label_mask
 
         ###
         # quantized_latents = self.deconv1d(quantized_latents.permute(0, 2, 1), output_size=output_size)
@@ -1138,7 +1149,19 @@ class VectorQuantizer(nn.Module):
         # quantized_latents = torch.zeros(orig_shape).to(self.gpu) + quantized_latents
         ### .permute(1, 0, 2).contiguous()
 
-        return quantized_latents.permute(1, 0, 2).contiguous(), vq_loss  * self.alpha 
+        return quantized_latents, vq_loss  * self.alpha 
+
+class Classifier(nn.Module):
+    def __init__(self, latent_size):
+        super(Classifier, self).__init__()
+        self.fc1 = nn.Linear(latent_size, 2)
+        self.sigmoid = nn.Sigmoid()
+        self.criterion = torch.nn.BCEWithLogitsLoss()
+    def forward(self, input, labels, weight_c):
+        out = self.fc1(input)
+        labels = labels.view(-1, 1)
+        loss = self.criterion(out, torch.cat((1.0 - labels, labels), dim=1))
+        return weight_c * loss
 
 
 class VanillaVAE(nn.Module):
