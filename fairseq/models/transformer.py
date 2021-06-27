@@ -410,8 +410,10 @@ class TransformerEncoder(FairseqEncoder):
 
         self.classifier = Classifier(args.encoder_embed_dim)
         self.weight_c = args.weight_c
+        self.style_embedding = Style_Embedding(args.encoder_embed_dim, len(dictionary))
         if self.pretrained_model_name:
             get_pretrained_model(self.pretrained_model_name, self.use_our_model)
+
 
         # self.rnn = torch.nn.GRU(args.encoder_embed_dim, args.encoder_embed_dim, 2)
     def build_encoder_layer(self, args):
@@ -510,32 +512,39 @@ class TransformerEncoder(FairseqEncoder):
 
         if self.layer_norm is not None:
             x = self.layer_norm(x)
+        
+        style_embedding = self.style_embedding(src_tokens[:,1:])
+        style_embedding = style_embedding.transpose(0, 1)
 
-        if self.vae_0: # and self.training:
-            vq_0, vq_loss_0 = self.vae_0(x, 1 - self.labels, x.device)
-            vq_1, vq_loss_1 = self.vae_1(x, self.labels, x.device)
+        if self.vae_0 and len(src_tokens) > 1:
+            vq_0, vq_loss_0 = self.vae_0(style_embedding, 1 - self.labels, x.device)
+            vq_1, vq_loss_1 = self.vae_1(style_embedding, self.labels, x.device)
             vq = vq_0 + vq_1
             vq_loss = vq_loss_0 + vq_loss_1
-        # elif self.vae_0 and not self.training:
-        #     vq_0, vq_loss_0 = self.vae_0(x, self.labels, x.device)
-        #     vq_1, vq_loss_1 = self.vae_0(x, 1 - self.labels, x.device)
-        #     vq = vq_0 + vq_1
-        #     vq_loss = vq_loss_0 + vq_loss_1
-        #     from transformers import AutoTokenizer
-        #     a = AutoTokenizer.from_pretrained("roberta-base")
-        #     for i in range(1):
-        #         print(a.convert_ids_to_tokens([int(ind) for ind in src_tokens[i]]))
-        #     print(self.labels)
-        #     print(vq_0)
-        #     print(vq_1)
-        #     exit(0)
+        elif self.vae_0 and len(src_tokens) == 1:
+            vq_0, vq_loss_0 = self.vae_0(style_embedding, 1 - self.labels, x.device)
+            vq_1, vq_loss_1 = self.vae_1(style_embedding, self.labels, x.device)
+            vq = vq_0 + vq_1
+            vq_loss = vq_loss_0 + vq_loss_1
+            # from transformers import AutoTokenizer
+            # a = AutoTokenizer.from_pretrained("roberta-base")
+            # for i in range(1):
+            #     print(a.convert_ids_to_tokens([int(ind) for ind in src_tokens[i]]))
+            # print(self.labels)
+            # print(vq_0)
+            # print(vq_1)
+            # exit(0)
+      
+
         else:
             vq_loss = torch.tensor(0).to(x.device)
-            vq = x
+            vq = style_embedding.mean(dim=0)
 
-        class_loss = self.classifier(vq, self.labels, self.weight_c)
+        class_loss_1 = self.classifier(torch.mean(x, dim=0), self.labels, self.weight_c)
+        class_loss_2 = self.classifier(torch.mean(x, dim=0) + vq, 1 - self.labels, self.weight_c)
+        class_loss = class_loss_1 + class_loss_2
         
-        x = x + vq.unsqueeze(0).detach()
+        x = x + vq.unsqueeze(0)
 
         return EncoderOut(
             encoder_out=x,  # T x B x C
@@ -548,7 +557,6 @@ class TransformerEncoder(FairseqEncoder):
 
     @torch.jit.export
     def reorder_encoder_out(self, encoder_out: EncoderOut, new_order):
-        print(type(encoder_out))
         """
         Reorder encoder output according to *new_order*.
 
@@ -1103,7 +1111,8 @@ class VectorQuantizer(nn.Module):
         
 
         if self.i % 200 == 0:
-            print(random.sample([int(ind) for ind in encoding_inds.data], 15))
+            print(random.sample([int(ind) for ind in encoding_inds.data], 10))
+            # print(dist[:15, :])
             # print(encoding_inds[:20])
             # print("Most popular selected discrete EMB:", len(self.count))
             # for key in sorted(self.count, key=self.count.get, reverse=True):
@@ -1162,6 +1171,13 @@ class Classifier(nn.Module):
         labels = labels.view(-1, 1)
         loss = self.criterion(out, torch.cat((1.0 - labels, labels), dim=1))
         return weight_c * loss
+
+class Style_Embedding(nn.Module):
+    def __init__(self, model_size, vocab_size):
+        super(Style_Embedding, self).__init__()
+        self.embedding = nn.Embedding(vocab_size, model_size)
+    def forward(self, input):
+        return self.embedding(input)
 
 
 class VanillaVAE(nn.Module):
