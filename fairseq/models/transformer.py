@@ -410,9 +410,10 @@ class TransformerEncoder(FairseqEncoder):
             self.vae_0 = None
             self.vae_1 = None
 
-        self.classifier = Classifier(2)
+        self.classifier = Classifier(1)
         self.weight_c = args.weight_c
-        self.style_embedding = Style_Embedding(args.encoder_embed_dim, 2)
+        self.style_embedding_0 = Style_Embedding(args.encoder_embed_dim, len(dictionary))
+        self.style_embedding_1 = Style_Embedding(args.encoder_embed_dim, len(dictionary))
         if self.pretrained_model_name:
             get_pretrained_model(self.pretrained_model_name, self.use_our_model)
 
@@ -516,46 +517,44 @@ class TransformerEncoder(FairseqEncoder):
         if self.layer_norm is not None:
             x = self.layer_norm(x)
         
-        style_embedding_orig = self.style_embedding(self.labels)
-        style_embedding_rev = self.style_embedding(1 - self.labels)
+        style_embedding_0 = self.style_embedding_0(src_tokens)
+        style_embedding_1 = self.style_embedding_1(src_tokens)
+        style_embedding_0 = style_embedding_0.transpose(0, 1)
+        style_embedding_1 = style_embedding_1.transpose(0, 1)
 
         if self.vae_0 and len(src_tokens) > 1:
-            vq_0, vq_loss_0 = self.vae_0(style_embedding, 1 - self.labels, x.device)
-            vq_1, vq_loss_1 = self.vae_1(style_embedding, self.labels, x.device)
+            vq_0, vq_loss_0 = self.vae_0(style_embedding_0, 1 - self.labels, x.device)
+            vq_1, vq_loss_1 = self.vae_1(style_embedding_1, self.labels, x.device)
             vq = vq_0 + vq_1
             vq_loss = vq_loss_0 + vq_loss_1
         elif self.vae_0 and len(src_tokens) == 1:
-            vq_0, vq_loss_0 = self.vae_0(style_embedding, 1 - self.labels, x.device)
-            vq_1, vq_loss_1 = self.vae_1(style_embedding, self.labels, x.device)
+            vq_0, vq_loss_0 = self.vae_0(style_embedding_0, self.labels, x.device)
+            vq_1, vq_loss_1 = self.vae_1(style_embedding_1, 1 - self.labels, x.device)
             vq = vq_0 + vq_1
             vq_loss = vq_loss_0 + vq_loss_1
-            # from transformers import AutoTokenizer
-            # a = AutoTokenizer.from_pretrained("roberta-base")
-            # for i in range(1):
-            #     print(a.convert_ids_to_tokens([int(ind) for ind in src_tokens[i]]))
-            # print(self.labels)
-            # print(vq_0)
-            # print(vq_1)
-            # exit(0)
-      
 
         else:
             vq_loss = torch.tensor(0).to(x.device)
             # vq = style_embedding.mean(dim=0)
 
-        sim_0 = torch.cosine_similarity(torch.mean(x, dim=0).detach(), style_embedding_orig).unsqueeze(1)
-        sim_1 = torch.cosine_similarity(torch.mean(x, dim=0).detach(), style_embedding_rev).unsqueeze(1)
+        for i in range(len(self.labels)):
+            print(self.labels[i])
+            print(vq_0[i][:10])
+            print(vq_1[i][:10])
+        exit(0)
 
-        class_loss = self.classifier(torch.cat((sim_0, sim_1), dim=-1), self.labels, self.weight_c)
+        sim = torch.cosine_similarity(torch.mean(x, dim=0).detach(), vq).unsqueeze(1)
+
+        class_loss = self.classifier(sim, self.labels, self.weight_c)
         # class_loss_2 = self.classifier(torch.mean(x, dim=0) + style_embedding_rev, 1 - self.labels, self.weight_c)
         # class_loss = class_loss_1 + class_loss_2
        
         if len(src_tokens) > 1:
             # x = x + style_embedding_orig.unsqueeze(0).detach()
-            x = torch.stack([torch.mean(x, dim=0) + style_embedding_orig.detach()] * len(x))
+            x = torch.stack([torch.mean(x, dim=0) + vq.detach()] * len(x))
         else:
             # x = x + 6 * style_embedding_rev.unsqueeze(0).detach()
-            x = torch.stack([torch.mean(x, dim=0) - 6 * style_embedding_orig + 6 * style_embedding_rev.detach() ] * len(x))
+            x = torch.stack([torch.mean(x, dim=0) + 4*vq.detach() ] * len(x))
 
 
         return EncoderOut(
@@ -1087,13 +1086,14 @@ class VectorQuantizer(nn.Module):
 
     def forward(self, latents, label_mask, gpu):
 
-        latents = torch.mean(latents, dim=0)
-        label_mask = label_mask.view(-1, 1)
+        label_mask = label_mask.unsqueeze(-1).unsqueeze(-1)
+        # label_mask = torch.stack([label_mask]*latents.shape[0], dim=-1).view(-1)
 
         ###
         # orig_shape = latents.shape
         # latents = latents.mean(dim=0, keepdim=True)
-        # latents = latents.permute(1, 0, 2).contiguous()
+        latents = latents.permute(1, 0, 2).contiguous()
+
         # latents = latents.permute(0, 2, 1).contiguous()
         # output_size = latents.shape
         # latents = self.conv1d(latents)
@@ -1123,7 +1123,7 @@ class VectorQuantizer(nn.Module):
         
 
         if self.i % 200 == 0:
-            print(random.sample([int(ind) for ind in encoding_inds.data], 10))
+            print(random.sample([int(ind) for ind in encoding_inds.data], 1))
             # print(dist[:15, :])
             # print(encoding_inds[:20])
             # print("Most popular selected discrete EMB:", len(self.count))
@@ -1152,7 +1152,7 @@ class VectorQuantizer(nn.Module):
         quantized_latents = quantized_latents.view(latents_shape)  # [b, len , dim]
         
         # Compute the VQ Losses
-        denominator = torch.sum(label_mask) * latents_shape[1]
+        denominator = torch.sum(label_mask) * latents_shape[-1] * latents_shape[-2]
         commitment_loss = torch.sum((quantized_latents.detach() - latents)**2 * label_mask) /denominator
         embedding_loss = torch.sum((quantized_latents - latents.detach())**2 * label_mask) / denominator
 
@@ -1170,23 +1170,24 @@ class VectorQuantizer(nn.Module):
         # quantized_latents = torch.zeros(orig_shape).to(self.gpu) + quantized_latents
         ### .permute(1, 0, 2).contiguous()
 
+        quantized_latents = quantized_latents.permute(1, 0, 2).contiguous().mean(dim=0)
         return quantized_latents, vq_loss  * self.alpha 
 
 class Classifier(nn.Module):
     def __init__(self, latent_size):
         super(Classifier, self).__init__()
-        self.fc1 = nn.Linear(latent_size, 1)
+        # self.fc1 = nn.Linear(latent_size, 1)
         self.criterion = torch.nn.BCELoss(size_average=True)
         self.sigmoid = nn.Sigmoid()
         self.i = 0
     def forward(self, input, labels, weight_c):
-        out = self.sigmoid(self.fc1(input))
+        out = self.sigmoid(input)
         labels = labels + 0.0
         loss = self.criterion(out.view(-1), labels)
         
         # labels = labels.view(-1, 1)
         # loss = self.criterion(out, torch.cat((1.0 - labels, labels), dim=1))
-        if self.i % 100 == 0:
+        if self.i % 1200 == 0:
             print(torch.cat((out.view(-1,1), labels.view(-1,1)),dim=-1))
 
         self.i += 1
