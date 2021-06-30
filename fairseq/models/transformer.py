@@ -530,11 +530,11 @@ class TransformerEncoder(FairseqEncoder):
             # mask = self.labels.unsqueeze(0).unsqueeze(-1)
             # vq = vq_0 * (1 - mask) + vq_1 * mask
         elif self.vae_0 and len(src_tokens) == 1:
-            vq_0, vq_loss_0 = self.vae_0(x, encoder_padding_mask)
-            vq_1, vq_loss_1 = self.vae_1(x, encoder_padding_mask)
-            mask = self.labels.unsqueeze(0).unsqueeze(-1)
-            vq = vq_1 * (1 - mask) + vq_0 * mask
-            vq_loss = vq_loss_0 + vq_loss_1
+            x, vq_loss_0 = self.vae_0(x, encoder_padding_mask)
+            # vq_1, vq_loss_1 = self.vae_1(x, encoder_padding_mask)
+            # mask = self.labels.unsqueeze(0).unsqueeze(-1)
+            # vq = vq_1 * (1 - mask) + vq_0 * mask
+            vq_loss = vq_loss_0 #+ vq_loss_1
 
         else:
             # vq_0 = style_embedding_0
@@ -561,7 +561,8 @@ class TransformerEncoder(FairseqEncoder):
         else:
             # x = x + 6 * style_embedding_rev.unsqueeze(0).detach()
             # x = torch.stack([torch.mean(x, dim=0) +  2* vq_0  -  2*vq_1] * len(x))
-            x = x + 2 * vq_0 - 2*vq_1
+            # x = x + 2 * vq_0 - 2*vq_1
+            x = torch.stack([torch.mean(x, dim=0) + 3.5 * style_embedding_rev.detach() - 3.5 * style_embedding_orig.detach()] * len(x))
 
 
         return EncoderOut(
