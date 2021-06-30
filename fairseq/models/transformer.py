@@ -4,6 +4,7 @@
 # LICENSE file in the root directory of this source tree.
 
 import math
+import random
 from typing import Any, Dict, List, Optional, Tuple, NamedTuple
 
 import torch
@@ -202,6 +203,8 @@ class TransformerModel(FairseqEncoderDecoderModel):
         parser.add_argument("--alpha", default=1, type=float)
         parser.add_argument("--weight_c", default=10, type=float)
         parser.add_argument("--latent_size", default=256, type=int, help="used for base vae")
+        parser.add_argument("--vae_encoder_layers", default=2, type=int, help="number Vanilla VAE layers")
+        
         
 
     @classmethod
@@ -402,18 +405,18 @@ class TransformerEncoder(FairseqEncoder):
 
         if args.vae_type == "vqvae":
             self.vae_0 = VectorQuantizer(num_embeddings=args.vq_num, embedding_dim=args.encoder_embed_dim, alpha=args.alpha)
-            self.vae_1 = VectorQuantizer(num_embeddings=args.vq_num, embedding_dim=args.encoder_embed_dim, alpha=args.alpha)
+            # self.vae_1 = VectorQuantizer(num_embeddings=args.vq_num, embedding_dim=args.encoder_embed_dim, alpha=args.alpha)
         elif args.vae_type == "base":
-            self.vae_0 = VanillaVAE(args.encoder_embed_dim, args.latent_size)
-            self.vae_1 = VanillaVAE(args.encoder_embed_dim, args.latent_size)
+            self.vae_0 = VanillaVAE(args.encoder_embed_dim, args.latent_size ,args)
+            # self.vae_1 = VanillaVAE(args.encoder_embed_dim, args.latent_size, args)
         else:
             self.vae_0 = None
-            self.vae_1 = None
+            # self.vae_1 = None
 
         self.classifier = Classifier(2)
         self.weight_c = args.weight_c
-        self.style_embedding_0 = Style_Embedding(args.encoder_embed_dim, len(dictionary))
-        self.style_embedding_1 = Style_Embedding(args.encoder_embed_dim, len(dictionary))
+        self.style_embedding = Style_Embedding(args.encoder_embed_dim, 2)
+        # self.style_embedding_1 = Style_Embedding(args.encoder_embed_dim, 2)
         if self.pretrained_model_name:
             get_pretrained_model(self.pretrained_model_name, self.use_our_model)
 
@@ -517,47 +520,48 @@ class TransformerEncoder(FairseqEncoder):
         if self.layer_norm is not None:
             x = self.layer_norm(x)
         
-        style_embedding_0 = self.style_embedding_0(src_tokens)
-        style_embedding_1 = self.style_embedding_1(src_tokens)
-        style_embedding_0 = style_embedding_0.transpose(0, 1)
-        style_embedding_1 = style_embedding_1.transpose(0, 1)
+        style_embedding_orig = self.style_embedding(self.labels)
+        style_embedding_rev = self.style_embedding(1 - self.labels)
 
         if self.vae_0 and len(src_tokens) > 1:
-            vq_0, vq_loss_0 = self.vae_0(style_embedding_0, x.device)
-            vq_1, vq_loss_1 = self.vae_1(style_embedding_1, x.device)
-            vq_loss = vq_loss_0 + vq_loss_1
-            vq = vq_0 * (1 - self.labels).unsqueeze(-1) + vq_1 * self.labels.unsqueeze(-1)
+            x, vq_loss_0 = self.vae_0(x, encoder_padding_mask)
+            # vq_1, vq_loss_1 = self.vae_1(x, encoder_padding_mask)
+            vq_loss = vq_loss_0 #+ vq_loss_1
+            # mask = self.labels.unsqueeze(0).unsqueeze(-1)
+            # vq = vq_0 * (1 - mask) + vq_1 * mask
         elif self.vae_0 and len(src_tokens) == 1:
-            vq_0, vq_loss_0 = self.vae_0(style_embedding_0, x.device)
-            vq_1, vq_loss_1 = self.vae_1(style_embedding_1, x.device)
-            vq = vq_0 + vq_1
+            vq_0, vq_loss_0 = self.vae_0(x, encoder_padding_mask)
+            vq_1, vq_loss_1 = self.vae_1(x, encoder_padding_mask)
+            mask = self.labels.unsqueeze(0).unsqueeze(-1)
+            vq = vq_1 * (1 - mask) + vq_0 * mask
             vq_loss = vq_loss_0 + vq_loss_1
 
-        elif not self.vae_0 and len(src_tokens) > 1:
-            vq_0 = style_embedding_0.mean(dim=0)
-            vq_1 = style_embedding_1.mean(dim=0)
-            vq = vq_0 * (1 - self.labels).unsqueeze(-1) + vq_1 * self.labels.unsqueeze(-1)
-            vq_loss = torch.tensor(0).to(x.device)
-            # vq = style_embedding.mean(dim=0)
         else:
-            vq_0 = style_embedding_0.mean(dim=0)
-            vq_1 = style_embedding_1.mean(dim=0)
-            vq = vq_1 * (1 - self.labels).unsqueeze(-1) + vq_0 * self.labels.unsqueeze(-1)
+            # vq_0 = style_embedding_0
+            # vq_1 = style_embedding_1
+            # vq = vq_1 * (1 - self.labels).unsqueeze(-1) + vq_0 * self.labels.unsqueeze(-1)
             vq_loss = torch.tensor(0).to(x.device)
 
-        sim_0 = torch.cosine_similarity(torch.mean(x, dim=0).detach(), vq_0).unsqueeze(1)
-        sim_1 = torch.cosine_similarity(torch.mean(x, dim=0).detach(), vq_1).unsqueeze(1)
+        # labels = torch.stack([self.labels] * x.shape[0], dim=1).transpose(0,1).contiguous() # [len, batch_size]
+        # class_mask = (1. - encoder_padding_mask.float()).transpose(0,1).contiguous() # [len, batch_size]
+         
+        sim_0 = torch.cosine_similarity(torch.mean(x, dim=0).detach(), style_embedding_orig, dim=-1).unsqueeze(1)
+        sim_1 = torch.cosine_similarity(torch.mean(x, dim=0).detach(), style_embedding_rev, dim=-1).unsqueeze(1)
+        # sim_1 = torch.cosine_similarity(x.view(-1, x.shape[-1]).detach(), vq_1.view(-1, vq.shape[-1]), dim=-1).unsqueeze(1)
+        # sim_1 = torch.cosine_similarity(torch.mean(x, dim=0).detach(), vq_1).unsqueeze(1)
 
         class_loss = self.classifier(torch.cat((sim_0, sim_1), dim=-1), self.labels, self.weight_c)
         # class_loss_2 = self.classifier(torch.mean(x, dim=0) + style_embedding_rev, 1 - self.labels, self.weight_c)
         # class_loss = class_loss_1 + class_loss_2
        
         if len(src_tokens) > 1:
+            # x = x + vq.detach()
             # x = x + style_embedding_orig.unsqueeze(0).detach()
-            x = torch.stack([torch.mean(x, dim=0) + vq.detach()] * len(x))
+            x = torch.stack([torch.mean(x, dim=0) + style_embedding_orig.detach()] * len(x))
         else:
             # x = x + 6 * style_embedding_rev.unsqueeze(0).detach()
-            x = torch.stack([torch.mean(x, dim=0) +  2* vq_0  -  2*vq_1] * len(x))
+            # x = torch.stack([torch.mean(x, dim=0) +  2* vq_0  -  2*vq_1] * len(x))
+            x = x + 2 * vq_0 - 2*vq_1
 
 
         return EncoderOut(
@@ -1061,8 +1065,6 @@ class TransformerDecoder(FairseqIncrementalDecoder):
 
         return state_dict
 
-import matplotlib.pyplot as plt
-import random
 class VectorQuantizer(nn.Module):
     def __init__(self, num_embeddings: int, embedding_dim: int, alpha, beta: float = 0.25):
         super(VectorQuantizer, self).__init__()
@@ -1184,15 +1186,24 @@ class Classifier(nn.Module):
         self.sigmoid = nn.Sigmoid()
         self.i = 0
     def forward(self, input, labels, weight_c):
-        out = self.fc1(input)
-        out = self.sigmoid(out)
-        labels = labels + 0.0
-        loss = self.criterion(out.view(-1), labels)
+        out = self.sigmoid(self.fc1(input))
+        # sim_0 = sim_0.view(-1)
+        # sim_1 = sim_1.view(-1)
+        # labels = labels.view(-1)
+
+        # new_labels = (2 * labels - 1).float()
+        # loss = torch.mean(( (sim_0 + new_labels) ** 2 + (sim_1 - new_labels) ** 2 ) * class_mask.view(-1))
+
+        # out = self.sigmoid(input)
+        labels = labels.float()
+
+        # loss = -torch.mean((labels.view(-1) * torch.log(out.view(-1)) + (1 - labels.view(-1)) * torch.log(1 - out.view(-1))) * class_mask.view(-1))
+        loss = self.criterion(out.view(-1), labels.view(-1))
         
         # labels = labels.view(-1, 1)
         # loss = self.criterion(out, torch.cat((1.0 - labels, labels), dim=1))
-        if self.i % 2 == 0:
-            print(torch.cat((out.view(-1,1), labels.view(-1,1)),dim=-1))
+        if self.i % 200 == 0:
+            print(torch.cat((out.view(-1,1), labels.view(-1,1)), dim=-1))
 
         self.i += 1
         return weight_c * loss
@@ -1206,30 +1217,36 @@ class Style_Embedding(nn.Module):
 
 
 class VanillaVAE(nn.Module):
-    def __init__(self, model_size, latent_size):
+    def __init__(self, model_size, latent_size, args):
         super(VanillaVAE, self).__init__()
-        self.fc_mu = nn.Linear(model_size, latent_size)
-        self.fc_var = nn.Linear(model_size, latent_size)
-        self.decoder_input = nn.Linear(latent_size, model_size)
+        self.fc_mu = nn.ModuleList([])
+        self.fc_var = nn.ModuleList([])
+        self.fc_mu.extend([TransformerEncoderLayer(args) for i in range(args.vae_encoder_layers)])
+        self.fc_var.extend([TransformerEncoderLayer(args) for i in range(args.vae_encoder_layers)])
+        self.alpha = args.alpha
 
-    def forward(self, latent, gpu):
-        mu = self.fc_mu(latent)
-        log_var = self.fc_var(latent)
+    def forward(self, latent, mask):
+        mu = latent
+        for layer in self.fc_mu:
+            mu = layer(latent, mask)
+
+        log_var = latent
+        for layer in self.fc_mu:
+            log_var = layer(latent, mask)
+
         z = self.reparameterize(mu, log_var)
-        z = self.decoder_input(z)
-        loss = torch.sum(-0.5 * torch.sum(1 + log_var - mu ** 2 - log_var.exp(), dim = 2))
-        return z, loss
+        loss = -0.5 * torch.mean(1 + log_var - mu**2 - log_var.exp())
+        return z, loss * self.alpha
         
     def reparameterize(self, mu, logvar):
-
         std = torch.exp(0.5 * logvar)
-        eps = torch.randn_like(std)
+        eps = torch.randn_like(std).to(mu.device)
         return eps * std + mu
 
-    def sample_random_latent(self, num_samples=1):
-        z = torch.randn(num_samples, self.latent_size)
-        z.to(self.gpu)
-        return z
+    # def sample_random_latent(self, num_samples=1):
+    #     z = torch.randn(num_samples, self.latent_size)
+    #     z.to(self.gpu)
+    #     return z
 
 def Embedding(num_embeddings, embedding_dim, padding_idx):
     m = nn.Embedding(num_embeddings, embedding_dim, padding_idx=padding_idx)
