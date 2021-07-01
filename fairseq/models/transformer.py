@@ -523,19 +523,20 @@ class TransformerEncoder(FairseqEncoder):
         style_embedding_orig = self.style_embedding(self.labels)
         style_embedding_rev = self.style_embedding(1 - self.labels)
 
-        if self.vae_0 and len(src_tokens) > 1:
+        if self.vae_0 and len(src_tokens) not in  [16, 32]:
             x, vq_loss_0 = self.vae_0(x, encoder_padding_mask)
             # vq_1, vq_loss_1 = self.vae_1(x, encoder_padding_mask)
             vq_loss = vq_loss_0 #+ vq_loss_1
             # mask = self.labels.unsqueeze(0).unsqueeze(-1)
             # vq = vq_0 * (1 - mask) + vq_1 * mask
-        elif self.vae_0 and len(src_tokens) == 1:
+        elif self.vae_0 and len(src_tokens) in  [16, 32]:
+            # x = self.vae_0.sample_random_latent(x.shape, x.device)
             x, vq_loss_0 = self.vae_0(x, encoder_padding_mask)
             # vq_1, vq_loss_1 = self.vae_1(x, encoder_padding_mask)
             # mask = self.labels.unsqueeze(0).unsqueeze(-1)
             # vq = vq_1 * (1 - mask) + vq_0 * mask
             vq_loss = vq_loss_0 #+ vq_loss_1
-
+            # vq_loss = torch.tensor(0).to(x.device)
         else:
             # vq_0 = style_embedding_0
             # vq_1 = style_embedding_1
@@ -554,15 +555,17 @@ class TransformerEncoder(FairseqEncoder):
         # class_loss_2 = self.classifier(torch.mean(x, dim=0) + style_embedding_rev, 1 - self.labels, self.weight_c)
         # class_loss = class_loss_1 + class_loss_2
        
-        if len(src_tokens) > 1:
+        if len(src_tokens) not in [32, 16]:
             # x = x + vq.detach()
             # x = x + style_embedding_orig.unsqueeze(0).detach()
             x = torch.stack([torch.mean(x, dim=0) + style_embedding_orig.detach()] * len(x))
-        else:
+        elif len(src_tokens) == 32:
             # x = x + 6 * style_embedding_rev.unsqueeze(0).detach()
             # x = torch.stack([torch.mean(x, dim=0) +  2* vq_0  -  2*vq_1] * len(x))
             # x = x + 2 * vq_0 - 2*vq_1
-            x = torch.stack([torch.mean(x, dim=0) + 3.5 * style_embedding_rev.detach() - 3.5 * style_embedding_orig.detach()] * len(x))
+            x = torch.stack([torch.mean(x, dim=0) + 3 * (style_embedding_rev.detach() - style_embedding_orig.detach())] * len(x))
+        elif len(src_tokens) == 16:
+            x = torch.stack([torch.mean(x, dim=0) + 3 * (style_embedding_rev.detach() - style_embedding_orig.detach())] * len(x))
 
 
         return EncoderOut(
@@ -1244,10 +1247,10 @@ class VanillaVAE(nn.Module):
         eps = torch.randn_like(std).to(mu.device)
         return eps * std + mu
 
-    # def sample_random_latent(self, num_samples=1):
-    #     z = torch.randn(num_samples, self.latent_size)
-    #     z.to(self.gpu)
-    #     return z
+    def sample_random_latent(self, sample_shape, gpu):
+        z = torch.randn(sample_shape)
+        z = z.to(gpu)
+        return z
 
 def Embedding(num_embeddings, embedding_dim, padding_idx):
     m = nn.Embedding(num_embeddings, embedding_dim, padding_idx=padding_idx)
