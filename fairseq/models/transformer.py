@@ -523,13 +523,13 @@ class TransformerEncoder(FairseqEncoder):
         style_embedding_orig = self.style_embedding(self.labels)
         style_embedding_rev = self.style_embedding(1 - self.labels)
 
-        if self.vae_0 and len(src_tokens) not in  [16, 32]:
+        if self.vae_0 and len(src_tokens) > 1:
             x, vq_loss_0 = self.vae_0(x, encoder_padding_mask)
             # vq_1, vq_loss_1 = self.vae_1(x, encoder_padding_mask)
             vq_loss = vq_loss_0 #+ vq_loss_1
             # mask = self.labels.unsqueeze(0).unsqueeze(-1)
             # vq = vq_0 * (1 - mask) + vq_1 * mask
-        elif self.vae_0 and len(src_tokens) in  [16, 32]:
+        elif self.vae_0 and len(src_tokens) == 1:
             # x = self.vae_0.sample_random_latent(x.shape, x.device)
             x, vq_loss_0 = self.vae_0(x, encoder_padding_mask)
             # vq_1, vq_loss_1 = self.vae_1(x, encoder_padding_mask)
@@ -555,17 +555,17 @@ class TransformerEncoder(FairseqEncoder):
         # class_loss_2 = self.classifier(torch.mean(x, dim=0) + style_embedding_rev, 1 - self.labels, self.weight_c)
         # class_loss = class_loss_1 + class_loss_2
        
-        if len(src_tokens) not in [32, 16]:
+        if len(src_tokens) > 1:
             # x = x + vq.detach()
             # x = x + style_embedding_orig.unsqueeze(0).detach()
             x = torch.stack([torch.mean(x, dim=0) + style_embedding_orig.detach()] * len(x))
-        elif len(src_tokens) == 32:
+        elif len(src_tokens) == 1:
             # x = x + 6 * style_embedding_rev.unsqueeze(0).detach()
             # x = torch.stack([torch.mean(x, dim=0) +  2* vq_0  -  2*vq_1] * len(x))
             # x = x + 2 * vq_0 - 2*vq_1
             x = torch.stack([torch.mean(x, dim=0) + 3 * (style_embedding_rev.detach() - style_embedding_orig.detach())] * len(x))
-        elif len(src_tokens) == 16:
-            x = torch.stack([torch.mean(x, dim=0) + 3 * (style_embedding_rev.detach() - style_embedding_orig.detach())] * len(x))
+        # elif len(src_tokens) == 16:
+        #     x = torch.stack([torch.mean(x, dim=0) + 3 * (style_embedding_rev.detach() - style_embedding_orig.detach())] * len(x))
 
 
         return EncoderOut(
@@ -1206,10 +1206,10 @@ class Classifier(nn.Module):
         
         # labels = labels.view(-1, 1)
         # loss = self.criterion(out, torch.cat((1.0 - labels, labels), dim=1))
-        if self.i % 200 == 0:
-            print(torch.cat((out.view(-1,1), labels.view(-1,1)), dim=-1))
+        # if self.i % 200 == 0:
+        #     print(torch.cat((out.view(-1,1), labels.view(-1,1)), dim=-1))
 
-        self.i += 1
+        # self.i += 1
         return weight_c * loss
 
 class Style_Embedding(nn.Module):
@@ -1342,6 +1342,19 @@ def transformer_iwslt_de_en(args):
     args.decoder_embed_dim = getattr(args, "decoder_embed_dim", 768)
     args.decoder_ffn_embed_dim = getattr(args, "decoder_ffn_embed_dim", 1024)
     args.decoder_attention_heads = getattr(args, "decoder_attention_heads", 4)
+    args.decoder_layers = getattr(args, "decoder_layers", 2)
+    base_architecture(args)
+
+@register_model_architecture("transformer", "cs-vae")
+def transformer_iwslt_de_en(args):
+    args.encoder_embed_dim = getattr(args, "encoder_embed_dim", 768)
+    args.encoder_ffn_embed_dim = getattr(args, "encoder_ffn_embed_dim", 256)
+    args.encoder_attention_heads = getattr(args, "encoder_attention_heads", 2)
+    # args.encoder_normalize_before = getattr(args, "encoder_normalize_before", True)
+    args.encoder_layers = getattr(args, "encoder_layers", 2)
+    args.decoder_embed_dim = getattr(args, "decoder_embed_dim", 768)
+    args.decoder_ffn_embed_dim = getattr(args, "decoder_ffn_embed_dim", 256)
+    args.decoder_attention_heads = getattr(args, "decoder_attention_heads", 2)
     args.decoder_layers = getattr(args, "decoder_layers", 2)
     base_architecture(args)
 
