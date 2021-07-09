@@ -1,0 +1,2515 @@
+2021-07-07 18:00:39 | INFO | fairseq_cli.generate | {'common': {'no_progress_bar': False, 'log_interval': 100, 'log_format': None, 'tensorboard_logdir': None, 'seed': 1, 'cpu': False, 'tpu': False, 'bf16': False, 'fp16': False, 'memory_efficient_fp16': False, 'memory_efficient_bf16': False, 'fp16_no_flatten_grads': False, 'fp16_init_scale': 128, 'fp16_scale_window': None, 'fp16_scale_tolerance': 0.0, 'min_loss_scale': 0.0001, 'threshold_loss_scale': None, 'user_dir': None, 'empty_cache_freq': 0, 'all_gather_list_size': 16384, 'model_parallel_size': 1, 'quantization_config_path': None, 'profile': False}, 'distributed_training': {'distributed_rank': 0, 'distributed_backend': 'nccl', 'distributed_init_method': None, 'distributed_port': -1, 'device_id': 0, 'local_rank': 0, 'distributed_no_spawn': False, 'ddp_backend': 'c10d', 'bucket_cap_mb': 25, 'fix_batches_to_gpus': False, 'find_unused_parameters': False, 'fast_stat_sync': False, 'broadcast_buffers': False, 'distributed_wrapper': 'DDP', 'slowmo_momentum': None, 'slowmo_algorithm': 'LocalSGD', 'localsgd_frequency': 3, 'distributed_world_size': 1, 'nprocs_per_node': 1, 'pipeline_model_parallel': False, 'pipeline_balance': None, 'pipeline_devices': None, 'pipeline_chunks': 0, 'pipeline_encoder_balance': None, 'pipeline_encoder_devices': None, 'pipeline_decoder_balance': None, 'pipeline_decoder_devices': None, 'pipeline_checkpoint': 'never', 'zero_sharding': 'none', 'tpu': False}, 'dataset': {'num_workers': 1, 'skip_invalid_size_inputs_valid_test': False, 'max_tokens': None, 'batch_size': 1, 'required_batch_size_multiple': 8, 'dataset_impl': None, 'data_buffer_size': 10, 'train_subset': 'train', 'valid_subset': 'valid', 'validate_interval': 1, 'fixed_validation_seed': None, 'disable_validation': False, 'curriculum': 0, 'gen_subset': 'test', 'num_shards': 1, 'shard_id': 0, 'max_tokens_valid': None, 'batch_size_valid': 1, 'required_seq_len_multiple': 1, 'validate_interval_updates': 0, 'validate_after_updates': 0}, 'optimization': {'max_epoch': 0, 'max_update': 0, 'clip_norm': 25.0, 'sentence_avg': False, 'update_freq': [1], 'lr': [0.25], 'min_lr': -1.0, 'use_bmuf': False, 'stop_time_hours': 0}, 'checkpoint': {'save_dir': 'checkpoints', 'restore_file': 'checkpoint_last.pt', 'reset_dataloader': False, 'reset_lr_scheduler': False, 'reset_meters': False, 'reset_optimizer': False, 'optimizer_overrides': '{}', 'save_interval': 1, 'save_interval_updates': 0, 'keep_interval_updates': -1, 'keep_last_epochs': -1, 'keep_best_checkpoints': -1, 'no_save': False, 'no_epoch_checkpoints': False, 'no_last_checkpoints': False, 'no_save_optimizer_state': False, 'best_checkpoint_metric': 'loss', 'maximize_best_checkpoint_metric': False, 'patience': -1, 'checkpoint_suffix': '', 'finetune_from_model': None, 'checkpoint_shard_count': 1, 'model_parallel_size': 1, 'distributed_rank': 0}, 'bmuf': {'block_lr': 1, 'block_momentum': 0.875, 'global_sync_iter': 50, 'warmup_iterations': 500, 'use_nbm': False, 'average_sync': False, 'distributed_world_size': 1}, 'task': Namespace(_name='translation', all_gather_list_size=16384, batch_size=1, batch_size_valid=1, beam=10, best_checkpoint_metric='loss', bf16=False, bpe='bert', bpe_cased=False, bpe_merges=None, bpe_vocab=None, broadcast_buffers=False, bucket_cap_mb=25, checkpoint_shard_count=1, checkpoint_suffix='', constraints=None, cpu=False, criterion='cross_entropy', curriculum=0, data='/srv/local2/haoran/vae-fairseq/data/all-yelp/neg-databin/', data_buffer_size=10, dataset_impl=None, ddp_backend='c10d', decoding_format=None, device_id=0, disable_validation=False, distributed_backend='nccl', distributed_init_method=None, distributed_no_spawn=False, distributed_port=-1, distributed_rank=0, distributed_world_size=1, distributed_wrapper='DDP', diverse_beam_groups=-1, diverse_beam_strength=0.5, diversity_rate=-1.0, empty_cache_freq=0, eos=2, eval_bleu=False, eval_bleu_args=None, eval_bleu_detok='space', eval_bleu_detok_args=None, eval_bleu_print_samples=False, eval_bleu_remove_bpe=None, eval_tokenized_bleu=False, fast_stat_sync=False, find_unused_parameters=False, finetune_from_model=None, fix_batches_to_gpus=False, fixed_validation_seed=None, force_anneal=None, fp16=False, fp16_init_scale=128, fp16_no_flatten_grads=False, fp16_scale_tolerance=0.0, fp16_scale_window=None, gen_subset='test', iter_decode_eos_penalty=0.0, iter_decode_force_max_iter=False, iter_decode_max_iter=10, iter_decode_with_beam=1, iter_decode_with_external_reranker=False, keep_best_checkpoints=-1, keep_interval_updates=-1, keep_last_epochs=-1, left_pad_source='True', left_pad_target='False', lenpen=0.6, lm_path=None, lm_weight=0.0, load_alignments=False, local_rank=0, localsgd_frequency=3, log_format=None, log_interval=100, lr_scheduler='fixed', lr_shrink=0.1, match_source_len=False, max_len_a=1.0, max_len_b=50, max_source_positions=1024, max_target_positions=1024, max_tokens=None, max_tokens_valid=None, maximize_best_checkpoint_metric=False, memory_efficient_bf16=False, memory_efficient_fp16=False, min_len=1, min_loss_scale=0.0001, model_overrides='{}', model_parallel_size=1, nbest=1, no_beamable_mm=False, no_early_stop=False, no_epoch_checkpoints=False, no_last_checkpoints=False, no_progress_bar=False, no_repeat_ngram_size=0, no_save=False, no_save_optimizer_state=False, no_seed_provided=False, nprocs_per_node=1, num_batch_buckets=0, num_shards=1, num_workers=1, optimizer=None, optimizer_overrides='{}', pad=1, path='./models/yelp/vae+style_embed/checkpoint_best.pt', patience=-1, pipeline_balance=None, pipeline_checkpoint='never', pipeline_chunks=0, pipeline_decoder_balance=None, pipeline_decoder_devices=None, pipeline_devices=None, pipeline_encoder_balance=None, pipeline_encoder_devices=None, pipeline_model_parallel=False, prefix_size=0, pretrained_bpe='roberta-base', pretrained_bpe_src='roberta-base', print_alignment=False, print_step=False, profile=False, quantization_config_path=None, quiet=False, remove_bpe='@@ ', replace_unk=None, required_batch_size_multiple=8, required_seq_len_multiple=1, reset_dataloader=False, reset_lr_scheduler=False, reset_meters=False, reset_optimizer=False, restore_file='checkpoint_last.pt', results_path=None, retain_dropout=False, retain_dropout_modules=None, retain_iter_history=False, sacrebleu=False, sampling=False, sampling_topk=-1, sampling_topp=-1.0, save_dir='checkpoints', save_interval=1, save_interval_updates=0, score_reference=False, scoring='bleu', seed=1, sentencepiece_model=None, shard_id=0, skip_invalid_size_inputs_valid_test=False, slowmo_algorithm='LocalSGD', slowmo_momentum=None, source_lang=None, target_lang=None, task='translation', temperature=1.0, tensorboard_logdir=None, threshold_loss_scale=None, tokenizer=None, tpu=False, train_subset='train', truncate_source=False, unk=3, unkpen=0, unnormalized=False, upsample_primary=1, user_dir=None, valid_subset='valid', validate_after_updates=0, validate_interval=1, validate_interval_updates=0, vocab_file='/srv/local2/haoran/vae-fairseq/data/all-yelp/neg-databin//dict.1.txt', warmup_from_nmt=False, warmup_nmt_file=None, warmup_updates=0, zero_sharding='none'), 'criterion': {'sentence_avg': False, '_name': 'cross_entropy'}, 'common_eval': {'path': './models/yelp/vae+style_embed/checkpoint_best.pt', 'remove_bpe': '@@ ', 'quiet': False, 'model_overrides': '{}', 'results_path': None}, 'generation': {'beam': 10, 'nbest': 1, 'max_len_a': 1.0, 'max_len_b': 50, 'min_len': 1, 'match_source_len': False, 'unnormalized': False, 'no_early_stop': False, 'no_beamable_mm': False, 'lenpen': 0.6, 'unkpen': 0, 'replace_unk': None, 'sacrebleu': False, 'score_reference': False, 'prefix_size': 0, 'no_repeat_ngram_size': 0, 'sampling': False, 'sampling_topk': -1, 'sampling_topp': -1.0, 'constraints': None, 'temperature': 1.0, 'diverse_beam_groups': -1, 'diverse_beam_strength': 0.5, 'diversity_rate': -1.0, 'print_alignment': False, 'print_step': False, 'lm_path': None, 'lm_weight': 0.0, 'iter_decode_eos_penalty': 0.0, 'iter_decode_max_iter': 10, 'iter_decode_force_max_iter': False, 'iter_decode_with_beam': 1, 'iter_decode_with_external_reranker': False, 'retain_iter_history': False, 'retain_dropout': False, 'retain_dropout_modules': None, 'decoding_format': None, 'no_seed_provided': False}, 'eval_lm': {'output_word_probs': False, 'output_word_stats': False, 'context_window': 0, 'softmax_batch': 9223372036854775807}, 'interactive': {'buffer_size': 0, 'input': '-'}, 'bpe': {'_name': 'bert', 'bpe_cased': False, 'pretrained_bpe': 'roberta-base', 'pretrained_bpe_src': 'roberta-base'}, 'scoring': {'_name': 'bleu', 'pad': 1, 'eos': 2, 'unk': 3}, 'tokenizer': None, 'optimizer': None, 'lr_scheduler': Namespace(_name='fixed', all_gather_list_size=16384, batch_size=1, batch_size_valid=1, beam=10, best_checkpoint_metric='loss', bf16=False, bpe='bert', bpe_cased=False, bpe_merges=None, bpe_vocab=None, broadcast_buffers=False, bucket_cap_mb=25, checkpoint_shard_count=1, checkpoint_suffix='', constraints=None, cpu=False, criterion='cross_entropy', curriculum=0, data='/srv/local2/haoran/vae-fairseq/data/all-yelp/neg-databin/', data_buffer_size=10, dataset_impl=None, ddp_backend='c10d', decoding_format=None, device_id=0, disable_validation=False, distributed_backend='nccl', distributed_init_method=None, distributed_no_spawn=False, distributed_port=-1, distributed_rank=0, distributed_world_size=1, distributed_wrapper='DDP', diverse_beam_groups=-1, diverse_beam_strength=0.5, diversity_rate=-1.0, empty_cache_freq=0, eos=2, eval_bleu=False, eval_bleu_args=None, eval_bleu_detok='space', eval_bleu_detok_args=None, eval_bleu_print_samples=False, eval_bleu_remove_bpe=None, eval_tokenized_bleu=False, fast_stat_sync=False, find_unused_parameters=False, finetune_from_model=None, fix_batches_to_gpus=False, fixed_validation_seed=None, force_anneal=None, fp16=False, fp16_init_scale=128, fp16_no_flatten_grads=False, fp16_scale_tolerance=0.0, fp16_scale_window=None, gen_subset='test', iter_decode_eos_penalty=0.0, iter_decode_force_max_iter=False, iter_decode_max_iter=10, iter_decode_with_beam=1, iter_decode_with_external_reranker=False, keep_best_checkpoints=-1, keep_interval_updates=-1, keep_last_epochs=-1, left_pad_source='True', left_pad_target='False', lenpen=0.6, lm_path=None, lm_weight=0.0, load_alignments=False, local_rank=0, localsgd_frequency=3, log_format=None, log_interval=100, lr_scheduler='fixed', lr_shrink=0.1, match_source_len=False, max_len_a=1.0, max_len_b=50, max_source_positions=1024, max_target_positions=1024, max_tokens=None, max_tokens_valid=None, maximize_best_checkpoint_metric=False, memory_efficient_bf16=False, memory_efficient_fp16=False, min_len=1, min_loss_scale=0.0001, model_overrides='{}', model_parallel_size=1, nbest=1, no_beamable_mm=False, no_early_stop=False, no_epoch_checkpoints=False, no_last_checkpoints=False, no_progress_bar=False, no_repeat_ngram_size=0, no_save=False, no_save_optimizer_state=False, no_seed_provided=False, nprocs_per_node=1, num_batch_buckets=0, num_shards=1, num_workers=1, optimizer=None, optimizer_overrides='{}', pad=1, path='./models/yelp/vae+style_embed/checkpoint_best.pt', patience=-1, pipeline_balance=None, pipeline_checkpoint='never', pipeline_chunks=0, pipeline_decoder_balance=None, pipeline_decoder_devices=None, pipeline_devices=None, pipeline_encoder_balance=None, pipeline_encoder_devices=None, pipeline_model_parallel=False, prefix_size=0, pretrained_bpe='roberta-base', pretrained_bpe_src='roberta-base', print_alignment=False, print_step=False, profile=False, quantization_config_path=None, quiet=False, remove_bpe='@@ ', replace_unk=None, required_batch_size_multiple=8, required_seq_len_multiple=1, reset_dataloader=False, reset_lr_scheduler=False, reset_meters=False, reset_optimizer=False, restore_file='checkpoint_last.pt', results_path=None, retain_dropout=False, retain_dropout_modules=None, retain_iter_history=False, sacrebleu=False, sampling=False, sampling_topk=-1, sampling_topp=-1.0, save_dir='checkpoints', save_interval=1, save_interval_updates=0, score_reference=False, scoring='bleu', seed=1, sentencepiece_model=None, shard_id=0, skip_invalid_size_inputs_valid_test=False, slowmo_algorithm='LocalSGD', slowmo_momentum=None, source_lang=None, target_lang=None, task='translation', temperature=1.0, tensorboard_logdir=None, threshold_loss_scale=None, tokenizer=None, tpu=False, train_subset='train', truncate_source=False, unk=3, unkpen=0, unnormalized=False, upsample_primary=1, user_dir=None, valid_subset='valid', validate_after_updates=0, validate_interval=1, validate_interval_updates=0, vocab_file='/srv/local2/haoran/vae-fairseq/data/all-yelp/neg-databin//dict.1.txt', warmup_from_nmt=False, warmup_nmt_file=None, warmup_updates=0, zero_sharding='none'), 'model': None}
+Loading an exist vocab file /srv/local2/haoran/vae-fairseq/data/all-yelp/neg-databin/dict.0.txt to confirm the ids of speical tokens.
+<s> 0 </s> 2 <pad> 1 <unk> 3
+Loading an exist vocab file /srv/local2/haoran/vae-fairseq/data/all-yelp/neg-databin/dict.1.txt to confirm the ids of speical tokens.
+<s> 0 </s> 2 <pad> 1 <unk> 3
+2021-07-07 18:00:39 | INFO | fairseq.tasks.translation | [0] dictionary: 50265 types
+2021-07-07 18:00:39 | INFO | fairseq.tasks.translation | [1] dictionary: 9575 types
+2021-07-07 18:00:39 | INFO | fairseq.data.data_utils | loaded 500 examples from: /srv/local2/haoran/vae-fairseq/data/all-yelp/neg-databin/test.0-1.0
+2021-07-07 18:00:39 | INFO | fairseq.data.data_utils | loaded 500 examples from: /srv/local2/haoran/vae-fairseq/data/all-yelp/neg-databin/test.0-1.1
+2021-07-07 18:00:39 | INFO | fairseq.tasks.translation | /srv/local2/haoran/vae-fairseq/data/all-yelp/neg-databin/ test 0-1 500 examples
+2021-07-07 18:00:39 | INFO | fairseq_cli.generate | loading model(s) from ./models/yelp/vae+style_embed/checkpoint_best.pt
+S-27	these Ġtwo Ġwomen Ġare Ġprofessionals Ġ.
+T-27	these two women are professionals .
+H-27	-5.557788372039795	they should not have been rude at all .
+D-27	-5.557788372039795	they should not have been rude at all .
+P-27	-1.6695 -6.0047 -2.9447 -1.1588 -2.9220 -2.4550 -4.6822 -0.1305 -0.0687 -0.0898
+S-29	we Ġwere Ġboth Ġso Ġimpressed Ġ.
+T-29	we were both so impressed .
+H-29	-4.89340877532959	it 's ridiculous like this place .
+D-29	-4.89340877532959	it 's ridiculous like this place .
+P-29	-2.3993 -2.4783 -2.8681 -3.3570 -4.1744 -1.3184 -0.3561 -0.0883
+S-44	really Ġenjoyed Ġthe Ġbeautiful Ġrange Ġ.
+T-44	really enjoyed the beautiful range .
+H-44	-4.816277503967285	the place was worse than $ _num_ .
+D-44	-4.816277503967285	the place was worse than $ _num_ .
+P-44	-1.2242 -2.0456 -0.9698 -6.3318 -1.7154 -4.6406 -0.1085 -0.8741 -0.0893
+S-51	i Ġwill Ġdefinitely Ġreturn Ġoften Ġ!
+T-51	i will definitely return often !
+H-51	-5.191699981689453	needless to say we wo n't be coming back .
+D-51	-5.191699981689453	needless to say we wo n't be coming back .
+P-51	-7.6194 -0.7561 -0.6880 -1.8846 -3.0092 -0.1005 -0.5334 -6.2693 -0.5488 -0.3858 -0.0897
+S-55	the Ġfood Ġhere Ġis Ġdelicious Ġ.
+T-55	the food here is delicious .
+H-55	-5.002135753631592	all around $ _num_ was worse than someone .
+D-55	-5.002135753631592	all around $ _num_ was worse than someone .
+P-55	-4.9374 -1.7314 -3.0819 -0.1054 -1.2457 -3.0260 -3.1434 -2.4756 -0.0781 -0.0891
+S-105	it Ġwas Ġvery Ġgood Ġto Ġ!
+T-105	it was very good to !
+H-105	-5.966582298278809	worst mistake that we did n't feel like eating .
+D-105	-5.966582298278809	worst mistake that we did n't feel like eating .
+P-105	-4.2069 -4.8714 -1.6644 -2.2441 -1.5065 -1.7801 -3.1054 -0.1861 -5.2242 -0.2744 -0.0879
+S-117	it Ġwas Ġwell Ġworth Ġit Ġ.
+T-117	it was well worth it .
+H-117	-5.769824028015137	wait time , there are extremely poor service .
+D-117	-5.769824028015137	wait time , there are extremely poor service .
+P-117	-5.1353 -3.1710 -1.9990 -1.7161 -1.0166 -5.4103 -3.0382 -1.3047 -0.0898 -0.0890
+S-136	i Ġlove Ġthe Ġpork Ġtacos Ġ.
+T-136	i love the pork tacos .
+H-136	-5.089083194732666	it was _num_ dollars for me .
+D-136	-5.089083194732666	it was _num_ dollars for me .
+P-136	-2.3080 -1.3220 -3.9903 -2.7808 -3.0443 -3.6270 -0.5602 -0.0886
+S-137	everyone Ġis Ġfriendly Ġand Ġknowledgeable Ġ.
+T-137	everyone is friendly and knowledgeable .
+H-137	-4.384321689605713	the food was mediocre at best .
+D-137	-4.384321689605713	the food was mediocre at best .
+P-137	-0.4552 -3.5931 -1.0166 -7.2750 -1.2614 -1.4428 -0.1404 -0.0825
+S-145	great Ġstaff Ġand Ġwonderful Ġfood Ġ.
+T-145	great staff and wonderful food .
+H-145	-4.670290470123291	worst experience i 've ever gotten at this restaurant .
+D-145	-4.670290470123291	worst experience i 've ever gotten at this restaurant .
+P-145	-3.2007 -2.7989 -2.1426 -0.3110 -0.2231 -3.1086 -3.2899 -1.8253 -2.4952 -0.2022 -0.0894
+S-158	it Ġis Ġan Ġinternational Ġdelight Ġ.
+T-158	it is an international delight .
+H-158	-4.949459075927734	it 's not been a shame on you .
+D-158	-4.949459075927734	it 's not been a shame on you .
+P-158	-0.5056 -0.4351 -2.5851 -0.9756 -6.6630 -5.1406 -1.2488 -1.4295 -0.6310 -0.0899
+S-163	great Ġfood Ġ, Ġgreat Ġdecor Ġ!
+T-163	great food , great decor !
+H-163	-5.435476303100586	not sure why it would be _num_ minutes .
+D-163	-5.435476303100586	not sure why it would be _num_ minutes .
+P-163	-5.9267 -2.7912 -2.0718 -0.6247 -2.7195 -1.7867 -4.0626 -1.3404 -0.2249 -0.0904
+S-164	the Ġfood Ġis Ġalways Ġfresh Ġ.
+T-164	the food is always fresh .
+H-164	-5.926331520080566	worst customer service ever .
+D-164	-5.926331520080566	worst customer service ever .
+P-164	-3.6102 -5.4088 -0.1388 -4.8083 -3.3139 -0.0851
+S-177	i Ġlove Ġtheir Ġflavored Ġcoffee Ġ.
+T-177	i love their flavored coffee .
+H-177	-5.341837406158447	however , i did n't look like hell in their own .
+D-177	-5.341837406158447	however , i did n't look like hell in their own .
+P-177	-5.1814 -3.0063 -2.1888 -1.2344 -0.4430 -3.8645 -0.4053 -4.3841 -0.2431 -1.1449 -2.5832 -0.1215 -0.0913
+S-200	great Ġservice Ġby Ġthe Ġstaff Ġ.
+T-200	great service by the staff .
+H-200	-6.271842002868652	needless to say , we were n't professional enough .
+D-200	-6.271842002868652	needless to say , we were n't professional enough .
+P-200	-6.5618 -1.2984 -0.2140 -3.7463 -1.3418 -0.4109 -2.1812 -4.4735 -5.8957 -0.2233 -0.0911
+S-208	a Ġgreat Ġmuseum Ġto Ġvisit Ġ.
+T-208	a great museum to visit .
+H-208	-5.331651210784912	we 've earned cash only if there were _num_ minutes .
+D-208	-5.331651210784912	we 've earned cash only if there were _num_ minutes .
+P-208	-0.7737 -2.3955 -6.6878 -2.8985 -0.8120 -3.3247 -3.4094 -0.0649 -2.0639 -1.0441 -0.1177 -0.0873
+S-234	service Ġwas Ġwonderful Ġto Ġmatch Ġ!
+T-234	service was wonderful to match !
+H-234	-5.557161331176758	there was no sign of this restaurant .
+D-234	-5.557161331176758	there was no sign of this restaurant .
+P-234	-4.8634 -2.0214 -3.1950 -3.9118 -2.5672 -0.7872 -1.5262 -1.8049 -0.0913
+S-236	great Ġfood Ġand Ġawesome Ġservice Ġ!
+T-236	great food and awesome service !
+H-236	-3.0385375022888184	this place is terrible .
+D-236	-3.0385375022888184	this place is terrible .
+P-236	-1.5495 -2.0029 -1.2696 -3.2496 -0.7434 -0.0883
+S-237	this Ġplace Ġstill Ġkicks Ġass Ġ.
+T-237	this place still kicks ass .
+H-237	-4.740590572357178	never again will i be returning to this dump .
+D-237	-4.740590572357178	never again will i be returning to this dump .
+P-237	-7.2860 -2.1918 -0.5324 -0.3490 -1.3093 -4.3948 -0.2042 -0.1900 -3.3456 -0.0894 -0.0908
+S-264	fish Ġtacos Ġwere Ġpretty Ġgood Ġ.
+T-264	fish tacos were pretty good .
+H-264	-5.096733570098877	_num_ minutes passed out to order they did n't .
+D-264	-5.096733570098877	_num_ minutes passed out to order they did n't .
+P-264	-3.9249 -0.6888 -5.0489 -1.7268 -1.0137 -3.7211 -1.6364 -1.0235 -1.0904 -1.5215 -0.0886
+S-266	they Ġare Ġall Ġvery Ġfriendly Ġ.
+T-266	they are all very friendly .
+H-266	-6.133001804351807	the waiter did n't stand up and were really cold .
+D-266	-6.133001804351807	the waiter did n't stand up and were really cold .
+P-266	-4.9359 -3.7440 -3.6901 -0.6709 -3.5632 -3.0462 -0.2006 -4.2090 -2.6163 -0.3675 -0.1079 -0.0869
+S-269	quality Ġof Ġfood Ġis Ġfantastic Ġ.
+T-269	quality of food is fantastic .
+H-269	-5.2087578773498535	french toast is way less than _num_ star .
+D-269	-5.2087578773498535	french toast is way less than _num_ star .
+P-269	-7.2629 -3.2244 -0.7762 -1.9145 -2.8006 -0.6836 -1.0931 -2.7969 -0.0966 -0.0877
+S-271	the Ġbest Ġbar Ġin Ġtown Ġ.
+T-271	the best bar in town .
+H-271	-5.982203006744385	how slow it 's not leaking for this restaurant .
+D-271	-5.982203006744385	how slow it 's not leaking for this restaurant .
+P-271	-4.4043 -2.8030 -0.5576 -3.7883 -0.9341 -6.5057 -1.7462 -1.3047 -2.9766 -0.1067 -0.0899
+S-278	thanks Ġfor Ġthe Ġperfect Ġrepair Ġ.
+T-278	thanks for the perfect repair .
+H-278	-4.718657970428467	sitting outside did not like _num_ star .
+D-278	-4.718657970428467	sitting outside did not like _num_ star .
+P-278	-7.2369 -2.9118 -1.0332 -1.5353 -2.9092 -0.7726 -1.0522 -0.0956 -0.0877
+S-290	my Ġdaughter Ġreceived Ġgreat Ġcare Ġ.
+T-290	my daughter received great care .
+H-290	-5.998518943786621	she again had no idea why they are rude .
+D-290	-5.998518943786621	she again had no idea why they are rude .
+P-290	-3.4102 -5.9237 -2.5118 -1.0088 -2.4529 -3.8034 -1.1873 -0.4164 -4.3796 -0.1031 -0.0888
+S-299	even Ġthe Ġsides Ġwere Ġgreat Ġ.
+T-299	even the sides were great .
+H-299	-4.9672675132751465	he did n't seem like a waste of my money .
+D-299	-4.9672675132751465	he did n't seem like a waste of my money .
+P-299	-1.9248 -2.9281 -1.2834 -6.5010 -1.3017 -0.9214 -4.7771 -0.4901 -1.2448 -0.4296 -0.1680 -0.0910
+S-310	corn Ġbread Ġwas Ġalso Ġgood Ġ!
+T-310	corn bread was also good !
+H-310	-4.460036754608154	they wo n't be bothered with my order .
+D-310	-4.460036754608154	they wo n't be bothered with my order .
+P-310	-2.4584 -3.1586 -0.1247 -0.9783 -3.9156 -2.0569 -3.1196 -1.7082 -0.1455 -0.0899
+S-311	food Ġsuper Ġand Ġwell Ġpriced Ġ.
+T-311	food super and well priced .
+H-311	-6.373803615570068	there 's only reason for _num_ oz of us .
+D-311	-6.373803615570068	there 's only reason for _num_ oz of us .
+P-311	-4.6746 -3.8302 -4.0487 -1.8682 -0.8696 -1.3266 -6.1785 -1.8864 -1.9524 -0.1450 -0.0877
+S-312	they Ġloved Ġthe Ġrock Ġclimb Ġ.
+T-312	they loved the rock climb .
+H-312	-5.789784908294678	wo n't be rude and everybody in my opinion .
+D-312	-5.789784908294678	wo n't be rude and everybody in my opinion .
+P-312	-5.8517 -0.1073 -1.9917 -4.4009 -2.0600 -5.0458 -2.0739 -1.3476 -1.3373 -0.1026 -0.0873
+S-322	they Ġgo Ġabove Ġand Ġbeyond Ġ!
+T-322	they go above and beyond !
+H-322	-4.590742588043213	when i was extremely unimpressed with this place .
+D-322	-4.590742588043213	when i was extremely unimpressed with this place .
+P-322	-3.9569 -1.6676 -2.8147 -2.0669 -4.8907 -0.9800 -0.6544 -0.7727 -0.3835 -0.0887
+S-333	all Ġin Ġall Ġpretty Ġgood Ġ!
+T-333	all in all pretty good !
+H-333	-5.605849266052246	it 's too late , i have never tasted ok .
+D-333	-5.605849266052246	it 's too late , i have never tasted ok .
+P-333	-2.5287 -1.1036 -3.3716 -4.1021 -1.7879 -1.6285 -2.9688 -3.8816 -0.9550 -2.3766 -0.1075 -0.0852
+S-341	keep Ġup Ġthe Ġamazing Ġservice Ġ!
+T-341	keep up the amazing service !
+H-341	-5.4357123374938965	worst customer service ive ever seen .
+D-341	-5.4357123374938965	worst customer service ive ever seen .
+P-341	-1.3114 -4.8617 -0.1039 -6.6809 -0.1402 -1.8045 -3.9387 -0.0869
+S-352	ron Ġis Ġstill Ġthe Ġgreatest Ġ.
+T-352	ron is still the greatest .
+H-352	-6.069939136505127	needless to say they did not clean up on my prescription .
+D-352	-6.069939136505127	needless to say they did not clean up on my prescription .
+P-352	-8.5309 -0.2866 -0.1293 -0.4445 -2.3986 -1.6113 -4.1816 -2.5759 -1.5816 -2.7665 -3.5870 -0.0979 -0.0927
+S-370	great Ġprices Ġ, Ġgreat Ġselection Ġ.
+T-370	great prices , great selection .
+H-370	-5.303405284881592	this place looks like that was n't complete .
+D-370	-5.303405284881592	this place looks like that was n't complete .
+P-370	-2.6181 -1.1200 -6.3365 -1.6738 -3.9781 -0.1722 -0.9270 -3.1326 -1.0670 -0.0880
+S-371	very Ġgood Ġfood Ġand Ġservice Ġ!
+T-371	very good food and service !
+H-371	-4.975103855133057	needless to say they did n't bother me .
+D-371	-4.975103855133057	needless to say they did n't bother me .
+P-371	-7.2783 -0.4421 -0.2432 -1.5988 -4.6410 -0.8259 -3.1392 -1.4166 -0.1300 -0.0911
+S-390	really Ġgood Ġservice Ġand Ġfood Ġ.
+T-390	really good service and food .
+H-390	-6.126775741577148	needless to say this was _num_ mins apart in there .
+D-390	-6.126775741577148	needless to say this was _num_ mins apart in there .
+P-390	-8.0939 -0.1537 -0.8499 -3.1555 -2.4375 -1.7663 -4.8094 -2.6439 -1.7628 -1.3611 -0.0851 -0.0917
+S-391	their Ġsandwiches Ġwere Ġreally Ġtasty Ġ.
+T-391	their sandwiches were really tasty .
+H-391	-5.303235054016113	this place sucks about _num_ mins .
+D-391	-5.303235054016113	this place sucks about _num_ mins .
+P-391	-6.2503 -0.9320 -3.8367 -3.8486 -0.7151 -2.5747 -0.2209 -0.0886
+S-401	it Ġwas Ġa Ġgreat Ġexperience Ġ!
+T-401	it was a great experience !
+H-401	-4.809631824493408	terrible customer service would not return .
+D-401	-4.809631824493408	terrible customer service would not return .
+P-401	-5.8302 -2.6775 -0.1597 -3.0509 -1.5679 -3.0444 -0.3321 -0.0855
+S-446	i Ġhighly Ġrecommend Ġthis Ġshop Ġ.
+T-446	i highly recommend this shop .
+H-446	-4.856876850128174	they did n't even suck at all .
+D-446	-4.856876850128174	they did n't even suck at all .
+P-446	-1.9919 -3.7085 -0.1829 -2.8154 -6.2135 -0.8001 -1.6994 -0.6493 -0.0903
+S-453	the Ġfood Ġall Ġlooked Ġgreat Ġ.
+T-453	the food all looked great .
+H-453	-5.271584510803223	worst customer service ever .
+D-453	-5.271584510803223	worst customer service ever .
+P-453	-8.6066 -2.3623 -0.1593 -1.8080 -2.4246 -0.0859
+S-465	very Ġfriendly Ġstaff Ġand Ġmanager Ġ.
+T-465	very friendly staff and manager .
+H-465	-6.021825313568115	there was n't sure enough but they have worse customer .
+D-465	-6.021825313568115	there was n't sure enough but they have worse customer .
+P-465	-3.1045 -1.1091 -3.4154 -4.6167 -2.7503 -1.6865 -1.3178 -0.6504 -4.6588 -3.1869 -0.1590 -0.0892
+S-481	great Ġquality Ġ, Ġgreat Ġservice Ġ.
+T-481	great quality , great service .
+H-481	-4.152758598327637	wo n't be ordering from this place again .
+D-481	-4.152758598327637	wo n't be ordering from this place again .
+P-481	-4.2871 -0.1324 -0.9631 -4.9892 -0.8827 -1.0623 -1.2809 -2.7152 -0.1320 -0.0874
+S-483	i Ġhighly Ġrecommend Ġthis Ġbakery Ġ!
+T-483	i highly recommend this bakery !
+H-483	-5.088197231292725	if you do n't even waste _num_ stars .
+D-483	-5.088197231292725	if you do n't even waste _num_ stars .
+P-483	-3.5750 -2.8747 -3.3506 -0.1901 -3.8048 -2.8431 -1.6217 -1.7806 -0.1257 -0.0902
+S-24	ex cellent Ġknowledgeable Ġdentist Ġand Ġstaff Ġ!
+T-24	excellent knowledgeable dentist and staff !
+H-24	-4.696000099182129	i wo n't wait time at all .
+D-24	-4.696000099182129	i wo n't wait time at all .
+P-24	-3.9373 -2.6126 -0.1483 -3.8855 -3.7699 -1.8019 -0.9851 -0.3225 -0.0868
+S-52	they Ġhave Ġdelicious Ġsou ps Ġeveryday Ġ.
+T-52	they have delicious soups everyday .
+H-52	-5.554689884185791	two thumbs down , not worth it especially .
+D-52	-5.554689884185791	two thumbs down , not worth it especially .
+P-52	-4.6050 -5.3626 -1.4651 -1.7338 -0.9811 -5.2515 -0.6459 -1.8533 -0.1266 -0.0888
+S-87	c ame Ġhere Ġwith Ġmy Ġfamily Ġ.
+T-87	came here with my family .
+H-87	-5.716892719268799	unfortunately , there was nothing wrong with this location .
+D-87	-5.716892719268799	unfortunately , there was nothing wrong with this location .
+P-87	-5.0420 -4.0888 -2.9887 -0.1400 -1.8850 -3.9763 -0.6338 -0.4899 -4.6592 -0.1059 -0.0893
+S-96	beaut iful Ġscenery Ġand Ġfriend Ġstaff Ġ.
+T-96	beautiful scenery and friend staff .
+H-96	-5.403493881225586	no one came over to save _num_ hours .
+D-96	-5.403493881225586	no one came over to save _num_ hours .
+P-96	-3.2146 -0.8741 -5.0369 -3.5629 -0.3141 -3.2434 -2.2179 -1.8337 -1.1234 -0.0907
+S-109	beaut iful Ġdecoration Ġand Ġgreat Ġservice Ġ.
+T-109	beautiful decoration and great service .
+H-109	-4.811728477478027	at least he did n't want a horrible experience .
+D-109	-4.811728477478027	at least he did n't want a horrible experience .
+P-109	-6.3020 -1.0048 -3.1857 -1.9488 -0.2062 -3.6245 -0.7407 -0.5948 -2.4499 -0.1341 -0.0916
+S-112	this Ġplace Ġis Ġsuper Ġy ummy Ġ!
+T-112	this place is super yummy !
+H-112	-4.425656795501709	needless to say they are just terrible experience .
+D-112	-4.425656795501709	needless to say they are just terrible experience .
+P-112	-7.0912 -0.2565 -0.2501 -1.3125 -1.6456 -3.2606 -1.4270 -2.1479 -0.1378 -0.0897
+S-171	it Ġ' s Ġgood Ġsolid Ġfood Ġ.
+T-171	it 's good solid food .
+H-171	-5.295055866241455	my husband said `` no problem '' .
+D-171	-5.295055866241455	my husband said `` no problem '' .
+P-171	-5.1907 -1.1173 -4.5819 -1.3789 -1.1695 -2.5785 -2.9604 -0.7298 -0.0817
+S-173	we Ġ' ll Ġcertainly Ġbe Ġback Ġ!
+T-173	we 'll certainly be back !
+H-173	-3.848954200744629	it was $ _num_ off the strip .
+D-173	-3.848954200744629	it was $ _num_ off the strip .
+P-173	-1.3766 -0.2353 -5.5098 -0.0839 -1.3798 -2.0762 -2.8675 -0.7649 -0.0902
+S-226	amb iance Ġand Ġsetting Ġwere Ġsuperb Ġ.
+T-226	ambiance and setting were superb .
+H-226	-6.134320259094238	i 've been too annoyed by our server .
+D-226	-6.134320259094238	i 've been too annoyed by our server .
+P-226	-6.4583 -2.3268 -0.4325 -6.0500 -3.7219 -0.7526 -0.6506 -3.7740 -0.1635 -0.0910
+S-279	cas ual Ġatmosphere Ġ, Ġupscale Ġfood Ġ.
+T-279	casual atmosphere , upscale food .
+H-279	-5.056707859039307	got ta do not follow up like this place .
+D-279	-5.056707859039307	got ta do not follow up like this place .
+P-279	-6.4718 -1.7326 -3.7749 -0.8269 -3.7054 -1.2897 -2.6309 -0.3926 -0.2896 -0.1123 -0.0892
+S-286	port ions Ġn Ġprices Ġwere Ġgreat Ġ!
+T-286	portions n prices were great !
+H-286	-6.3049821853637695	everything else was weak and rude .
+D-286	-6.3049821853637695	everything else was weak and rude .
+P-286	-6.5655 -3.1508 -1.8223 -4.0648 -0.7542 -4.4814 -1.0309 -0.0854
+S-357	best Ġgreen Ġcorn Ġtam ales Ġaround Ġ.
+T-357	best green corn tamales around .
+H-357	-4.778554916381836	a shame on customer service is horrible .
+D-357	-4.778554916381836	a shame on customer service is horrible .
+P-357	-4.2372 -2.9415 -0.6642 -6.0186 -0.7411 -0.3488 -2.1707 -0.6492 -0.0872
+S-422	custom er Ġservice Ġwas Ġgreat Ġthere Ġ.
+T-422	customer service was great there .
+H-422	-5.190854549407959	everybody has terrible customer service as well .
+D-422	-5.190854549407959	everybody has terrible customer service as well .
+P-422	-8.5393 -2.7379 -2.5041 -2.6255 -0.0818 -2.4960 -0.2317 -0.0949 -0.0880
+S-424	most Ġdelicious Ġauthentic Ġch inese Ġfood Ġ!
+T-424	most delicious authentic chinese food !
+H-424	-3.157518148422241	the customer service was horrible too .
+D-424	-3.157518148422241	the customer service was horrible too .
+P-424	-3.7101 -1.4521 -0.1893 -0.1419 -2.2468 -2.5962 -0.5651 -0.0936
+S-454	the Ġmen udo Ġhere Ġis Ġperfect Ġ.
+T-454	the menudo here is perfect .
+H-454	-5.247854232788086	it should n't be safe at all .
+D-454	-5.247854232788086	it should n't be safe at all .
+P-454	-2.5993 -6.2616 -0.7968 -0.8624 -5.3510 -1.8112 -1.5551 -0.2865 -0.0882
+S-490	am azing Ġfood Ġ, Ġgreat Ġservice Ġ.
+T-490	amazing food , great service .
+H-490	-5.047082901000977	it 's too thick and not taken care of this .
+D-490	-5.047082901000977	it 's too thick and not taken care of this .
+P-490	-2.5169 -0.2768 -4.3592 -5.3373 -0.8792 -1.1227 -3.7756 -1.5491 -0.5218 -1.7705 -0.2161 -0.0904
+S-8	good Ġdrinks Ġ, Ġand Ġgood Ġcompany Ġ.
+T-8	good drinks , and good company .
+H-8	-5.963010787963867	$ _num_ later to be had zero stars .
+D-8	-5.963010787963867	$ _num_ later to be had zero stars .
+P-8	-5.8629 -0.0999 -5.0763 -4.2343 -0.3747 -2.7285 -2.7266 -2.3836 -0.1622 -0.0902
+S-12	everything Ġis Ġfresh Ġand Ġso Ġdelicious Ġ!
+T-12	everything is fresh and so delicious !
+H-12	-5.476055145263672	why did n't they except for _num_ minutes .
+D-12	-5.476055145263672	why did n't they except for _num_ minutes .
+P-12	-6.3182 -2.5223 -0.2486 -0.5688 -5.8482 -1.1767 -4.1303 -0.6308 -0.2684 -0.0882
+S-13	the Ġbiscuits Ġand Ġgravy Ġwere Ġgood Ġ.
+T-13	the biscuits and gravy were good .
+H-13	-4.7395405769348145	there was nothing fancy about this location .
+D-13	-4.7395405769348145	there was nothing fancy about this location .
+P-13	-4.8064 -0.8329 -3.0409 -4.8164 -1.7623 -1.2126 -1.0550 -0.0952 -0.0908
+S-34	perfect Ġspot Ġto Ġshop Ġfor Ġgift Ġ!
+T-34	perfect spot to shop for gift !
+H-34	-5.516469478607178	this guy wo n't be returning as well .
+D-34	-5.516469478607178	this guy wo n't be returning as well .
+P-34	-4.1846 -2.7637 -4.5843 -0.2903 -1.5345 -2.0575 -4.9450 -1.4032 -0.1075 -0.0909
+S-43	she Ġdid Ġthe Ġmost Ġamazing Ġjob Ġ.
+T-43	she did the most amazing job .
+H-43	-4.456873416900635	worst customer service ever .
+D-43	-4.456873416900635	worst customer service ever .
+P-43	-5.7841 -3.9730 -0.2712 -2.5426 -0.4032 -0.0852
+S-63	the Ġservice Ġhas Ġalways Ġbeen Ġwonderful Ġ.
+T-63	the service has always been wonderful .
+H-63	-4.744318008422852	this was horrible customer service not enough .
+D-63	-4.744318008422852	this was horrible customer service not enough .
+P-63	-1.1265 -0.5499 -4.1840 -4.0962 -0.1650 -2.2037 -4.8924 -0.4242 -0.0886
+S-68	also Ġ, Ġthe Ġfood Ġis Ġgreat Ġ!
+T-68	also , the food is great !
+H-68	-4.4010090827941895	it 's worst than _num_ minutes later .
+D-68	-4.4010090827941895	it 's worst than _num_ minutes later .
+P-68	-0.9843 -0.5146 -6.9071 -2.8831 -0.8005 -0.8016 -3.2250 -0.2413 -0.0900
+S-81	the Ġfood Ġis Ġdelicious Ġand Ġplentiful Ġ.
+T-81	the food is delicious and plentiful .
+H-81	-5.712847709655762	_num_ minutes after that incident .
+D-81	-5.712847709655762	_num_ minutes after that incident .
+P-81	-6.3056 -0.4167 -1.3793 -2.9064 -4.7597 -2.5029 -0.0911
+S-86	the Ġmessage Ġtherapist Ġis Ġawesome Ġalso Ġ.
+T-86	the message therapist is awesome also .
+H-86	-5.34149169921875	everyone else was more disappointed by the pies .
+D-86	-5.34149169921875	everyone else was more disappointed by the pies .
+P-86	-2.6769 -2.0829 -0.2413 -4.9883 -4.4756 -2.3455 -0.2424 -3.9601 -0.1631 -0.0888
+S-100	i Ġlove Ġtheir Ġstar Ġdesign Ġcollection Ġ.
+T-100	i love their star design collection .
+H-100	-6.357860565185547	needless to say there was a drive through .
+D-100	-6.357860565185547	needless to say there was a drive through .
+P-100	-8.6087 -0.1504 -0.1053 -5.8040 -0.6109 -1.0199 -6.3240 -1.9551 -0.6431 -0.0899
+S-106	staff Ġ: Ġvery Ġcute Ġand Ġfriendly Ġ.
+T-106	staff : very cute and friendly .
+H-106	-6.0023651123046875	worst customer service has not been here .
+D-106	-6.0023651123046875	worst customer service has not been here .
+P-106	-7.0483 -3.0202 -0.1927 -3.7059 -3.3389 -0.4474 -4.4063 -0.1845 -0.0877
+S-113	they Ġare Ġspacious Ġwith Ġmodest Ġdecor Ġ.
+T-113	they are spacious with modest decor .
+H-113	-5.949946880340576	`` unfortunately , there 's only one star for this business .
+D-113	-5.949946880340576	`` unfortunately , there 's only one star for this business .
+P-113	-3.9038 -4.0261 -2.8000 -1.7543 -3.1614 -1.5777 -2.2118 -4.2912 -1.4195 -1.0566 -1.3314 -0.1088 -0.0830
+S-133	always Ġgood Ġafter Ġthe Ġriver Ġtoo Ġ.
+T-133	always good after the river too .
+H-133	-6.027188301086426	tonight was _num_ minutes away for this place .
+D-133	-6.027188301086426	tonight was _num_ minutes away for this place .
+P-133	-8.2942 -0.1486 -3.7379 -1.6702 -4.7075 -1.2248 -2.2830 -1.6488 -0.1884 -0.0910
+S-142	this Ġis Ġpretty Ġdarn Ġgood Ġpizza Ġ!
+T-142	this is pretty darn good pizza !
+H-142	-5.9084954261779785	_num_ minutes later , they were all sloppy .
+D-142	-5.9084954261779785	_num_ minutes later , they were all sloppy .
+P-142	-6.8570 -0.9422 -2.2431 -0.7314 -3.1126 -1.4485 -2.2513 -5.5737 -0.2733 -0.0891
+S-149	staff Ġand Ġthe Ġride Ġwere Ġterrific Ġ.
+T-149	staff and the ride were terrific .
+H-149	-4.612280368804932	there were less than _num_ star .
+D-149	-4.612280368804932	there were less than _num_ star .
+P-149	-2.1026 -0.7050 -6.4148 -0.8423 -0.5979 -4.7420 -0.5691 -0.0874
+S-153	this Ġplace Ġreminds Ġme Ġof Ġhome Ġ!
+T-153	this place reminds me of home !
+H-153	-5.34982967376709	they made our visit wrong for _num_ minutes .
+D-153	-5.34982967376709	they made our visit wrong for _num_ minutes .
+P-153	-2.4448 -4.9131 -2.3282 -2.4015 -4.5709 -1.7965 -0.5092 -2.1491 -0.0951 -0.0896
+S-155	i Ġwill Ġdefinitely Ġgo Ġhere Ġagain Ġ!
+T-155	i will definitely go here again !
+H-155	-5.412660598754883	dirty looks and worst service in my mouth .
+D-155	-5.412660598754883	dirty looks and worst service in my mouth .
+P-155	-7.7644 -2.5948 -1.8296 -1.1245 -0.5755 -3.2387 -1.6059 -2.4700 -0.2585 -0.0862
+S-167	so Ġfar Ġ, Ġgreat Ġcustomer Ġservice Ġ.
+T-167	so far , great customer service .
+H-167	-5.0696258544921875	absolutely worst service i 've ever had .
+D-167	-5.0696258544921875	absolutely worst service i 've ever had .
+P-167	-7.6619 -2.1642 -2.1669 -3.1625 -0.6527 -1.6586 -0.7762 -0.6144 -0.0887
+S-168	rick Ġis Ġa Ġseriously Ġcool Ġguy Ġ!
+T-168	rick is a seriously cool guy !
+H-168	-5.67435359954834	he just walked out with a terrible experience .
+D-168	-5.67435359954834	he just walked out with a terrible experience .
+P-168	-4.1287 -5.2219 -0.8235 -0.6445 -2.8378 -4.5415 -1.8771 -2.3024 -0.1228 -0.0898
+S-175	food Ġhere Ġis Ġalso Ġso Ġgood Ġ!
+T-175	food here is also so good !
+H-175	-5.64517879486084	there was only _num_ minutes pass on this way .
+D-175	-5.64517879486084	there was only _num_ minutes pass on this way .
+P-175	-3.7805 -2.5920 -3.4016 -1.8914 -1.2582 -6.1219 -1.2953 -1.6001 -1.6341 -0.1320 -0.0893
+S-192	everyone Ġwas Ġextremely Ġnice Ġand Ġprofessional Ġ.
+T-192	everyone was extremely nice and professional .
+H-192	-4.437458515167236	worst pho i 've ever been there .
+D-192	-4.437458515167236	worst pho i 've ever been there .
+P-192	-1.2551 -4.5331 -1.2986 -2.0464 -0.6391 -4.0451 -1.4745 -1.2010 -0.0907
+S-206	thank Ġyou Ġladies Ġfor Ġbeing Ġawesome Ġ!
+T-206	thank you ladies for being awesome !
+H-206	-6.246492385864258	there 's no longer to be amazing .
+D-206	-6.246492385864258	there 's no longer to be amazing .
+P-206	-6.2077 -5.0167 -1.1940 -3.1358 -3.6829 -1.3959 -2.5292 -0.0936 -0.0886
+S-218	this Ġplace Ġhas Ġsome Ġgreat Ġfood Ġ.
+T-218	this place has some great food .
+H-218	-4.717878341674805	needless to say , you wo n't be coming back .
+D-218	-4.717878341674805	needless to say , you wo n't be coming back .
+P-218	-7.1986 -1.4988 -0.2353 -2.9139 -3.3218 -0.3861 -0.1713 -1.7849 -3.0740 -0.1648 -0.1135 -0.0904
+S-235	the Ġservice Ġis Ġfriendly Ġand Ġattentive Ġ.
+T-235	the service is friendly and attentive .
+H-235	-6.2003493309021	horrible experience even if your food was not fixed .
+D-235	-6.2003493309021	horrible experience even if your food was not fixed .
+P-235	-4.2676 -4.0914 -3.8534 -1.6149 -4.9902 -1.3343 -0.3973 -0.6883 -4.6990 -0.1121 -0.0883
+S-240	well Ġworth Ġsearching Ġout Ġthis Ġgem Ġ.
+T-240	well worth searching out this gem .
+H-240	-5.339211463928223	_num_ minutes to get my order wrong .
+D-240	-5.339211463928223	_num_ minutes to get my order wrong .
+P-240	-5.9181 -1.5056 -2.6833 -1.5020 -2.1373 -4.2949 -1.6900 -0.1370 -0.0855
+S-252	i Ġrate Ġthe Ġexperience Ġas Ġfollowed Ġ.
+T-252	i rate the experience as followed .
+H-252	-5.544667720794678	we will never be back again .
+D-252	-5.544667720794678	we will never be back again .
+P-252	-4.8485 -2.9247 -2.3686 -2.3686 -0.6734 -5.5015 -0.5312 -0.0911
+S-262	food Ġis Ġvery Ġfresh Ġand Ġamazing Ġ!
+T-262	food is very fresh and amazing !
+H-262	-5.526885986328125	it 's like someone else had the wrong temperature .
+D-262	-5.526885986328125	it 's like someone else had the wrong temperature .
+P-262	-6.0345 -0.4601 -3.0221 -2.8729 -2.4030 -0.5907 -1.1986 -1.9535 -4.5607 -0.1136 -0.0880
+S-282	they Ġare Ġincredibly Ġnice Ġand Ġaccommodating Ġ.
+T-282	they are incredibly nice and accommodating .
+H-282	-4.541640281677246	just disappointing because it was n't in a word .
+D-282	-4.541640281677246	just disappointing because it was n't in a word .
+P-282	-3.5555 -3.7021 -0.8809 -0.9956 -1.7954 -2.0730 -1.4529 -0.9509 -3.3817 -0.2663 -0.0903
+S-289	thank Ġyou Ġfor Ġa Ġfabulous Ġevening Ġ!
+T-289	thank you for a fabulous evening !
+H-289	-6.273923397064209	worst manicure ever .
+D-289	-6.273923397064209	worst manicure ever .
+P-289	-4.7215 -6.5003 -2.2573 -2.9130 -0.0866
+S-297	fun Ġplace Ġto Ġgo Ġdrink Ġbeer Ġ.
+T-297	fun place to go drink beer .
+H-297	-7.2842278480529785	then this place sucks and there were sick from my business .
+D-297	-7.2842278480529785	then this place sucks and there were sick from my business .
+P-297	-6.6229 -3.6723 -0.6295 -3.1158 -4.0416 -3.1421 -0.9573 -6.4437 -1.3661 -1.2470 -2.5090 -0.1080 -0.0878
+S-308	love Ġthe Ġvibe Ġof Ġthis Ġplace Ġ!
+T-308	love the vibe of this place !
+H-308	-5.027657508850098	_num_ minutes later they took over an hr .
+D-308	-5.027657508850098	_num_ minutes later they took over an hr .
+P-308	-5.1129 -1.4051 -0.7555 -0.6503 -4.7091 -2.9101 -1.6180 -2.6606 -0.1046 -0.0892
+S-319	the Ġgrounds Ġare Ġalways Ġvery Ġclean Ġ.
+T-319	the grounds are always very clean .
+H-319	-5.4731574058532715	wo n't be coming here again .
+D-319	-5.4731574058532715	wo n't be coming here again .
+P-319	-7.8655 -0.2328 -2.0130 -4.4908 -1.9910 -2.0459 -0.3302 -0.0894
+S-334	fast Ġ, Ġfriendly Ġand Ġhonest Ġservice Ġ.
+T-334	fast , friendly and honest service .
+H-334	-4.561019420623779	it wo n't be back when we walked in .
+D-334	-4.561019420623779	it wo n't be back when we walked in .
+P-334	-0.9676 -5.4522 -0.1160 -1.2439 -2.1570 -1.1445 -1.2071 -5.2520 -0.3409 -1.2535 -0.0917
+S-358	everything Ġthey Ġserve Ġthere Ġis Ġwonderful Ġ.
+T-358	everything they serve there is wonderful .
+H-358	-3.6788134574890137	worst customer service ever .
+D-358	-3.6788134574890137	worst customer service ever .
+P-358	-2.7770 -2.6074 -0.4765 -1.6878 -3.1448 -0.0860
+S-373	great Ġlunch Ġspecials Ġand Ġawesome Ġstaff Ġ.
+T-373	great lunch specials and awesome staff .
+H-373	-5.618463039398193	needless to say its not much improved .
+D-373	-5.618463039398193	needless to say its not much improved .
+P-373	-5.7033 -0.2113 -0.1216 -6.5307 -0.6339 -3.2626 -4.2563 -0.1904 -0.0872
+S-374	and Ġhave Ġenjoyed Ġevery Ġlast Ġbite Ġ.
+T-374	and have enjoyed every last bite .
+H-374	-5.213464736938477	no biggie - also ordered the staff .
+D-374	-5.213464736938477	no biggie - also ordered the staff .
+P-374	-5.2928 -4.0436 -1.7650 -3.0762 -2.8412 -0.5265 -1.5750 -0.2757 -0.0878
+S-392	always Ġa Ġfun Ġand Ġfriendly Ġatmosphere Ġ.
+T-392	always a fun and friendly atmosphere .
+H-392	-5.046437740325928	needless to say they 're closed for _num_ minutes .
+D-392	-5.046437740325928	needless to say they 're closed for _num_ minutes .
+P-392	-6.9688 -0.1452 -0.1499 -0.6753 -2.2810 -6.1079 -1.4321 -0.9583 -2.3573 -0.1084 -0.0884
+S-407	the Ġfood Ġis Ġalso Ġvery Ġgood Ġ.
+T-407	the food is also very good .
+H-407	-5.24899435043335	unfortunately there was no one printed in this location .
+D-407	-5.24899435043335	unfortunately there was no one printed in this location .
+P-407	-2.6668 -3.5932 -0.2800 -3.6956 -2.1381 -6.0032 -0.2777 -1.2887 -1.9930 -0.0994 -0.0907
+S-412	cooked Ġto Ġperfection Ġand Ġvery Ġflavorful Ġ.
+T-412	cooked to perfection and very flavorful .
+H-412	-5.223006248474121	maybe it was _num_ % bland at this time .
+D-412	-5.223006248474121	maybe it was _num_ % bland at this time .
+P-412	-4.8588 -1.8771 -0.1961 -3.3057 -1.8660 -4.9095 -1.7307 -1.9158 -1.1765 -0.0923 -0.0885
+S-417	a Ġgreat Ġplace Ġto Ġwatch Ġsports Ġ!
+T-417	a great place to watch sports !
+H-417	-6.1802473068237305	by far my biggest disappointment here .
+D-417	-6.1802473068237305	by far my biggest disappointment here .
+P-417	-6.9342 -1.3017 -2.2712 -3.7981 -2.3524 -4.5168 -0.2555 -0.0910
+S-437	very Ġbusy Ġbut Ġvery Ġgood Ġservice Ġ.
+T-437	very busy but very good service .
+H-437	-4.620172023773193	there was $ _num_ extra for this line .
+D-437	-4.620172023773193	there was $ _num_ extra for this line .
+P-437	-4.1651 -0.5176 -3.6591 -0.1145 -3.6793 -0.1297 -3.2181 -2.4061 -0.4160 -0.0877
+S-447	their Ġstaff Ġis Ġknowledgeable Ġand Ġinformative Ġ.
+T-447	their staff is knowledgeable and informative .
+H-447	-4.645605087280273	worst customer service ever .
+D-447	-4.645605087280273	worst customer service ever .
+P-447	-4.9449 -3.4489 -0.3496 -1.8298 -2.9542 -0.0849
+S-458	this Ġis Ġthe Ġperfect Ġdate Ġnight Ġ.
+T-458	this is the perfect date night .
+H-458	-4.3592753410339355	i 'm not going to make this place worse .
+D-458	-4.3592753410339355	i 'm not going to make this place worse .
+P-458	-3.3076 -1.2167 -0.6173 -2.3944 -0.5450 -6.5385 -0.7555 -0.3769 -2.3405 -0.1941 -0.0893
+S-459	nice Ġselection Ġof Ġgames Ġto Ġplay Ġ.
+T-459	nice selection of games to play .
+H-459	-5.0722432136535645	it 's too crowded for some reason .
+D-459	-5.0722432136535645	it 's too crowded for some reason .
+P-459	-6.1065 -0.5537 -4.2168 -1.7277 -0.3145 -1.0785 -3.4215 -1.4487 -0.0880
+S-467	wide Ġspectrum Ġof Ġages Ġand Ġraces Ġ.
+T-467	wide spectrum of ages and races .
+H-467	-6.05068826675415	needless to say they would not communicate with our food either .
+D-467	-6.05068826675415	needless to say they would not communicate with our food either .
+P-467	-7.5016 -0.2590 -0.1541 -4.1633 -2.1561 -0.5499 -4.8866 -3.2296 -0.4291 -3.1302 -1.5316 -0.1154 -0.0885
+S-469	at Ġno Ġcost Ġ- Ġgreat Ġservice Ġ!
+T-469	at no cost - great service !
+H-469	-5.352863311767578	at least _num_ minutes later , we did n't get attitude .
+D-469	-5.352863311767578	at least _num_ minutes later , we did n't get attitude .
+P-469	-6.4491 -1.4596 -3.0756 -0.3740 -2.7885 -2.1597 -0.2622 -2.9454 -0.3040 -2.8205 -2.0773 -0.1375 -0.0898
+S-476	good Ġplace Ġfor Ġa Ġromantic Ġdinner Ġ!
+T-476	good place for a romantic dinner !
+H-476	-5.382294178009033	the waitress was not true to me .
+D-476	-5.382294178009033	the waitress was not true to me .
+P-476	-1.3067 -5.5825 -0.7072 -3.3094 -4.2703 -2.5001 -1.3950 -0.9547 -0.0888
+S-480	i Ġhighly Ġrecommend Ġimpact Ġauto Ġbody Ġ.
+T-480	i highly recommend impact auto body .
+H-480	-5.262322902679443	_num_ minutes later made my opinion at this cleaners .
+D-480	-5.262322902679443	_num_ minutes later made my opinion at this cleaners .
+P-480	-3.0509 -0.5216 -2.8875 -6.3700 -0.4453 -2.9375 -1.7453 -0.4907 -3.5357 -0.1081 -0.0900
+S-484	love Ġtheir Ġfood Ġand Ġtheir Ġpassion Ġ.
+T-484	love their food and their passion .
+H-484	-5.537862777709961	my friend said there was less waiting for us .
+D-484	-5.537862777709961	my friend said there was less waiting for us .
+P-484	-1.2314 -3.1459 -4.2131 -1.3722 -0.9072 -4.9160 -5.6894 -0.2225 -1.4628 -0.0963 -0.0874
+S-487	reasonable Ġprice Ġ, Ġbottom Ġline Ġguaranteed Ġ.
+T-487	reasonable price , bottom line guaranteed .
+H-487	-5.849671363830566	front desk was horrible in a hurry .
+D-487	-5.849671363830566	front desk was horrible in a hurry .
+P-487	-8.4913 -0.7504 -0.8766 -1.8722 -4.5204 -0.5752 -4.2146 -0.4720 -0.0886
+S-496	i Ġwas Ġpleased Ġwith Ġtheir Ġservice Ġ.
+T-496	i was pleased with their service .
+H-496	-5.517624855041504	needless to say , there were _num_ holes .
+D-496	-5.517624855041504	needless to say , there were _num_ holes .
+P-496	-7.8940 -0.2128 -0.1092 -2.6032 -2.2140 -0.5558 -3.2925 -4.7110 -0.2850 -0.0886
+S-499	the Ġsalads Ġwere Ġfresh Ġand Ġcrispy Ġ.
+T-499	the salads were fresh and crispy .
+H-499	-5.304306507110596	they made me laugh for _num_ minutes .
+D-499	-5.304306507110596	they made me laugh for _num_ minutes .
+P-499	-2.9449 -5.2047 -2.4334 -4.9387 -1.9924 -1.5515 -0.4258 -0.2447 -0.0871
+S-16	god Ġi Ġlove Ġpe i Ġwe i Ġ.
+T-16	god i love pei wei .
+H-16	-5.020799160003662	no matter how disappointing it was .
+D-16	-5.020799160003662	no matter how disappointing it was .
+P-16	-2.8002 -4.4282 -2.9166 -3.4111 -1.2059 -0.2595 -2.3739 -0.0881
+S-193	i Ġgot Ġthe Ġtam ale Ġsam pler Ġ.
+T-193	i got the tamale sampler .
+H-193	-5.537755966186523	it 's not been here since _num_ people .
+D-193	-5.537755966186523	it 's not been here since _num_ people .
+P-193	-3.1613 -0.8059 -1.3736 -3.7397 -4.4628 -1.9547 -1.0539 -1.3503 -4.0546 -0.0894
+S-230	i Ġlove Ġthe Ġcorn bread Ġappet izer Ġ.
+T-230	i love the cornbread appetizer .
+H-230	-4.7329912185668945	needless to say this place is no one .
+D-230	-4.7329912185668945	needless to say this place is no one .
+P-230	-7.1740 -0.3449 -0.1207 -4.2540 -1.6572 -0.2825 -0.5218 -3.3755 -1.0234 -0.0884
+S-245	the Ġb b q Ġsalmon Ġwas Ġgood Ġ.
+T-245	the bbq salmon was good .
+H-245	-4.629613399505615	needless to say , this place was ok for us .
+D-245	-4.629613399505615	needless to say , this place was ok for us .
+P-245	-5.1440 -0.3726 -0.0856 -1.1600 -1.2315 -1.8968 -0.2263 -3.6189 -1.2657 -5.3577 -0.1152 -0.0871
+S-277	green Ġch ile Ġchim is Ġare Ġfantastic Ġ.
+T-277	green chile chimis are fantastic .
+H-277	-4.872472763061523	the worst customer service has ever eaten .
+D-277	-4.872472763061523	the worst customer service has ever eaten .
+P-277	-3.1671 -0.1902 -5.0756 -0.2509 -4.5809 -2.0839 -2.6186 -0.1564 -0.0858
+S-460	the Ġgrilled Ġart ich okes Ġare Ġwonderful Ġ!
+T-460	the grilled artichokes are wonderful !
+H-460	-5.046115875244141	they said no customer service to be near this dump .
+D-460	-5.046115875244141	they said no customer service to be near this dump .
+P-460	-2.9432 -3.5674 -1.3119 -4.3517 -0.3091 -1.8915 -0.4689 -4.4460 -2.2945 -0.6445 -0.0952 -0.0873
+S-488	hom emade Ġtort illas Ġare Ġso Ġgood Ġ!
+T-488	homemade tortillas are so good !
+H-488	-5.009177207946777	terrible customer service was not healthy .
+D-488	-5.009177207946777	terrible customer service was not healthy .
+P-488	-6.0924 -1.9196 -0.1191 -1.5396 -1.4474 -5.8610 -0.3768 -0.0871
+S-126	pr icing Ġis Ġboth Ġaffordable Ġand Ġreasonable Ġ.
+T-126	pricing is both affordable and reasonable .
+H-126	-4.59675407409668	the waitress was not kidding me .
+D-126	-4.59675407409668	the waitress was not kidding me .
+P-126	-5.6500 -1.9843 -0.5715 -0.4425 -6.3981 -0.2154 -0.6531 -0.0919
+S-247	even Ġtheir Ġste amed Ġveggies Ġare Ġamazing Ġ.
+T-247	even their steamed veggies are amazing .
+H-247	-5.139734268188477	unfortunately i did n't feel so ordered at all .
+D-247	-5.139734268188477	unfortunately i did n't feel so ordered at all .
+P-247	-3.2125 -0.9773 -0.9296 -0.2477 -6.8091 -1.8309 -3.4996 -2.5821 -1.3882 -0.0986 -0.0903
+S-250	must ard Ġbeef Ġribs Ġare Ġa Ġmust Ġ.
+T-250	mustard beef ribs are a must .
+H-250	-5.933408260345459	_num_ minutes later they have not changed at all .
+D-250	-5.933408260345459	_num_ minutes later they have not changed at all .
+P-250	-7.0030 -0.9034 -1.8228 -0.6258 -5.2850 -1.1353 -3.0966 -4.3265 -0.6015 -0.1224 -0.0892
+S-273	r uss Ġwas Ġa Ġwell Ġqualified Ġtech Ġ.
+T-273	russ was a well qualified tech .
+H-273	-5.550230503082275	staff was very rude about this place .
+D-273	-5.550230503082275	staff was very rude about this place .
+P-273	-5.1771 -3.4924 -2.2342 -2.3442 -2.2776 -2.5034 -0.8231 -1.7993 -0.0910
+S-292	they Ġwere Ġvery Ġfriendly Ġand Ġapolog etic Ġ.
+T-292	they were very friendly and apologetic .
+H-292	-4.94940185546875	worst service ever - my eyes .
+D-292	-4.94940185546875	worst service ever - my eyes .
+P-292	-2.7822 -1.6813 -2.6525 -1.9975 -0.7605 -6.9006 -0.3734 -0.0867
+S-332	su zanne Ġand Ġher Ġstaff Ġwere Ġexcellent Ġ!
+T-332	suzanne and her staff were excellent !
+H-332	-5.749734401702881	it was supposed to be _num_ minutes or less .
+D-332	-5.749734401702881	it was supposed to be _num_ minutes or less .
+P-332	-4.1008 -1.6143 -6.1665 -0.1388 -2.4262 -2.8408 -0.5245 -2.0058 -4.2164 -0.1144 -0.0889
+S-366	but Ġit Ġ' s Ġworth Ġseeking Ġout Ġ.
+T-366	but it 's worth seeking out .
+H-366	-4.472620010375977	worst customer service ever .
+D-366	-4.472620010375977	worst customer service ever .
+P-366	-4.3080 -4.8228 -0.2601 -2.0455 -1.5825 -0.0867
+S-395	def initely Ġsomething Ġi Ġwill Ġhave Ġagain Ġ!
+T-395	definitely something i will have again !
+H-395	-4.7395124435424805	this place is one of the worst drinks ever .
+D-395	-4.7395124435424805	this place is one of the worst drinks ever .
+P-395	-4.5988 -1.8305 -0.4153 -3.3007 -2.2271 -1.9408 -0.2860 -2.0846 -3.1017 -0.1037 -0.0895
+S-399	l oved Ġthe Ġmenu Ġand Ġthe Ġdrinks Ġ.
+T-399	loved the menu and the drinks .
+H-399	-6.088362693786621	she made me sick to do n't return .
+D-399	-6.088362693786621	she made me sick to do n't return .
+P-399	-4.6694 -4.3907 -1.7093 -5.2951 -0.4175 -3.0721 -1.0584 -3.0684 -0.4668 -0.0904
+S-406	their Ġsmall Ġcal zone Ġis Ġreally Ġgigantic Ġ!
+T-406	their small calzone is really gigantic !
+H-406	-6.293565273284912	my fries were ok but there was nothing spectacular .
+D-406	-6.293565273284912	my fries were ok but there was nothing spectacular .
+P-406	-4.3386 -3.8619 -0.5558 -3.6753 -3.1169 -2.5559 -1.9432 -2.9307 -2.2789 -1.1839 -0.0887
+S-409	i Ġhighly Ġrecommend Ġthe Ġa hi Ġtuna Ġ.
+T-409	i highly recommend the ahi tuna .
+H-409	-6.114850044250488	by far the worst service i 've ever eaten .
+D-409	-6.114850044250488	by far the worst service i 've ever eaten .
+P-409	-7.8662 -2.1298 -2.5616 -0.3754 -3.7462 -1.4592 -2.5693 -0.7751 -4.0904 -0.1176 -0.0857
+S-433	this Ġplace Ġis Ġed gy Ġand Ġfun Ġ.
+T-433	this place is edgy and fun .
+H-433	-5.174347877502441	it does n't seem to waste your time .
+D-433	-5.174347877502441	it does n't seem to waste your time .
+P-433	-5.9974 -1.5906 -0.3160 -4.3526 -1.6602 -3.8434 -1.7928 -0.3877 -0.5643 -0.0944
+S-472	pl enty Ġto Ġeat Ġand Ġamazing Ġflavor Ġ.
+T-472	plenty to eat and amazing flavor .
+H-472	-5.885631561279297	why did n't this place look like a lifetime .
+D-472	-5.885631561279297	why did n't this place look like a lifetime .
+P-472	-7.2087 -0.9726 -0.3377 -2.7203 -2.3098 -4.5729 -0.8445 -0.3693 -5.2671 -0.1152 -0.0920
+S-498	they Ġare Ġso Ġfresh Ġand Ġy ummy Ġ.
+T-498	they are so fresh and yummy .
+H-498	-4.989299297332764	not impressed with this place .
+D-498	-4.989299297332764	not impressed with this place .
+P-498	-3.9075 -6.4140 -1.6745 -2.0174 -0.2937 -1.6392 -0.0898
+S-6	i Ġhighly Ġrecommend Ġe Ġ& Ġm Ġpainting Ġ.
+T-6	i highly recommend e & m painting .
+H-6	-3.7278900146484375	my daughter 's worst service ever .
+D-6	-3.7278900146484375	my daughter 's worst service ever .
+P-6	-1.5080 -2.9642 -2.3099 -2.3217 -1.0775 -1.3216 -1.3930 -0.0855
+S-26	always Ġfresh Ġ, Ġfat Ġ, Ġand Ġdelicious Ġ.
+T-26	always fresh , fat , and delicious .
+H-26	-5.515368461608887	there was n't $ _num_ or all the time .
+D-26	-5.515368461608887	there was n't $ _num_ or all the time .
+P-26	-3.5193 -1.0198 -1.0926 -7.0378 -0.0683 -2.7480 -2.8171 -0.8508 -3.8364 -0.1732 -0.0861
+S-74	the Ġsoup Ġis Ġabsolutely Ġto Ġdie Ġfor Ġ.
+T-74	the soup is absolutely to die for .
+H-74	-6.077887535095215	_num_ minutes later it came out for a sub .
+D-74	-6.077887535095215	_num_ minutes later it came out for a sub .
+P-74	-5.9680 -1.3558 -2.3032 -4.5920 -2.7088 -3.0523 -0.6631 -0.3752 -4.3972 -0.1153 -0.0897
+S-77	their Ġlunch Ġspecial Ġis Ġa Ġgreat Ġvalue Ġ!
+T-77	their lunch special is a great value !
+H-77	-5.254968166351318	worse than _num_ minutes at all .
+D-77	-5.254968166351318	worse than _num_ minutes at all .
+P-77	-6.6713 -1.3736 -0.4677 -2.4111 -2.1252 -2.0625 -3.0985 -0.0890
+S-78	our Ġexperience Ġwith Ġthis Ġbusiness Ġwas Ġpositive Ġ.
+T-78	our experience with this business was positive .
+H-78	-5.232596397399902	its supposed _num_ minutes at least .
+D-78	-5.232596397399902	its supposed _num_ minutes at least .
+P-78	-6.0666 -4.1205 -1.6410 -1.9801 -2.1153 -1.0920 -1.1170 -0.0884
+S-101	i Ġlove Ġtheir Ġfresh Ġjuices Ġas Ġwell Ġ.
+T-101	i love their fresh juices as well .
+H-101	-5.470269203186035	our waiter was not rude at all .
+D-101	-5.470269203186035	our waiter was not rude at all .
+P-101	-6.0654 -3.3840 -0.2739 -1.4098 -6.1452 -1.8203 -0.8383 -0.4168 -0.0896
+S-114	this Ġis Ġmy Ġgo Ġto Ġneighborhood Ġplace Ġ.
+T-114	this is my go to neighborhood place .
+H-114	-6.303313255310059	needless to say they took care of me .
+D-114	-6.303313255310059	needless to say they took care of me .
+P-114	-8.0702 -1.9674 -0.2149 -3.3791 -4.3243 -3.5212 -0.5553 -2.2256 -0.7467 -0.0892
+S-130	giving Ġan Ġextra Ġstar Ġfor Ġcustomer Ġservice Ġ.
+T-130	giving an extra star for customer service .
+H-130	-4.545329570770264	im disappointed in this place .
+D-130	-4.545329570770264	im disappointed in this place .
+P-130	-6.2370 -3.3821 -0.9177 -0.9514 -1.6598 -1.3710 -0.0900
+S-147	go Ġhere Ġ, Ġyou Ġwill Ġlove Ġit Ġ.
+T-147	go here , you will love it .
+H-147	-3.722186803817749	there was no clue about _num_ mins .
+D-147	-3.722186803817749	there was no clue about _num_ mins .
+P-147	-0.3142 -0.5429 -1.0315 -5.0204 -1.2891 -2.3267 -1.5187 -1.7764 -0.0905
+S-159	it Ġwas Ġjust Ġso Ġcute Ġand Ġquaint Ġ!
+T-159	it was just so cute and quaint !
+H-159	-5.31479549407959	this place will not be back .
+D-159	-5.31479549407959	this place will not be back .
+P-159	-4.7249 -1.6746 -3.1724 -3.2096 -0.5256 -3.8811 -1.2308 -0.0882
+S-194	also Ġmatt Ġwas Ġsuper Ġcool Ġand Ġhelpful Ġ.
+T-194	also matt was super cool and helpful .
+H-194	-5.79982328414917	waiting _num_ minutes for them and no joke .
+D-194	-5.79982328414917	waiting _num_ minutes for them and no joke .
+P-194	-8.3882 -3.0448 -1.2662 -0.9736 -4.3067 -0.5032 -2.5374 -1.6839 -0.2985 -0.0870
+S-197	but Ġit Ġis Ġdefinitely Ġworth Ġthe Ġwait Ġ.
+T-197	but it is definitely worth the wait .
+H-197	-5.098172664642334	it was $ _num_ dollars for this mess .
+D-197	-5.098172664642334	it was $ _num_ dollars for this mess .
+P-197	-4.3722 -0.3315 -4.2049 -0.0815 -4.8004 -1.5731 -3.7269 -1.0355 -0.0823 -0.0878
+S-203	this Ġis Ġby Ġfar Ġmy Ġfavorite Ġpizza Ġ.
+T-203	this is by far my favorite pizza .
+H-203	-6.215498924255371	not worth it however , she 's rude .
+D-203	-6.215498924255371	not worth it however , she 's rude .
+P-203	-6.3654 -3.6540 -1.0674 -5.0503 -0.3014 -4.6552 -0.5530 -2.6549 -0.3531 -0.0896
+S-254	my Ġmeal Ġwas Ġvery Ġsatisfying Ġand Ġflavorful Ġ.
+T-254	my meal was very satisfying and flavorful .
+H-254	-6.443403720855713	$ _num_ wings were already uncomfortable for that .
+D-254	-6.443403720855713	$ _num_ wings were already uncomfortable for that .
+P-254	-7.4145 -0.1113 -4.4729 -2.1522 -3.4208 -3.3199 -2.2202 -0.9772 -1.4736 -0.0892
+S-260	extremely Ġattentive Ġand Ġgenuinely Ġa Ġgood Ġperson Ġ.
+T-260	extremely attentive and genuinely a good person .
+H-260	-4.1849541664123535	worst experience ever .
+D-260	-4.1849541664123535	worst experience ever .
+P-260	-1.6625 -2.9323 -3.6530 -2.6576 -0.0866
+S-272	they Ġare Ġalways Ġdoing Ġa Ġgood Ġjob Ġ.
+T-272	they are always doing a good job .
+H-272	-5.234180927276611	terrible customer service from them .
+D-272	-5.234180927276611	terrible customer service from them .
+P-272	-5.4652 -1.6971 -0.2172 -5.8729 -2.2988 -1.1830 -0.0889
+S-293	the Ġwine Ġlist Ġwas Ġthe Ġbest Ġpart Ġ.
+T-293	the wine list was the best part .
+H-293	-4.390654563903809	do n't believe how bad this place is .
+D-293	-4.390654563903809	do n't believe how bad this place is .
+P-293	-4.5440 -0.5201 -3.3394 -3.8254 -0.8969 -1.5383 -2.3219 -0.3023 -0.1038 -0.0875
+S-296	that Ġcomes Ġwith Ġthe Ġsmaller Ġlocation Ġthough Ġ.
+T-296	that comes with the smaller location though .
+H-296	-4.870505332946777	she did n't ask for _num_ minutes .
+D-296	-4.870505332946777	she did n't ask for _num_ minutes .
+P-296	-1.9458 -0.5873 -0.5495 -6.3687 -2.8282 -2.0948 -2.8784 -0.8610 -0.0884
+S-328	its Ġquiet Ġand Ġnice Ġpeople Ġare Ġhere Ġ.
+T-328	its quiet and nice people are here .
+H-328	-5.761414527893066	if you 're looking like crap in this store .
+D-328	-5.761414527893066	if you 're looking like crap in this store .
+P-328	-4.4528 -1.1605 -2.0575 -4.6763 -2.5529 -3.7780 -1.7239 -1.1552 -2.5438 -0.0960 -0.0897
+S-344	everyone Ġis Ġalways Ġsuper Ġfriendly Ġand Ġhelpful Ġ.
+T-344	everyone is always super friendly and helpful .
+H-344	-5.25978422164917	to avoid this place like _num_ minutes .
+D-344	-5.25978422164917	to avoid this place like _num_ minutes .
+P-344	-5.8159 -4.8887 -0.6569 -0.9820 -2.8727 -0.7907 -3.3833 -0.1775 -0.0892
+S-347	very Ġnice Ġlocation Ġfor Ġweekend Ġvolleyball Ġtournaments Ġ!
+T-347	very nice location for weekend volleyball <<unk>> !
+H-347	-6.13737154006958	we did n't know how long a waste of my money .
+D-347	-6.13737154006958	we did n't know how long a waste of my money .
+P-347	-6.0292 -3.1267 -0.2189 -3.6045 -1.2666 -5.3917 -0.8655 -4.9799 -0.2608 -1.2750 -1.3830 -0.1069 -0.0901
+S-350	friendly Ġowners Ġand Ġstaff Ġand Ġdelicious Ġfood Ġ!
+T-350	friendly owners and staff and delicious food !
+H-350	-6.008189678192139	there are only _num_ people in advance .
+D-350	-6.008189678192139	there are only _num_ people in advance .
+P-350	-3.7785 -4.1168 -3.4294 -1.5015 -2.7945 -0.8918 -5.1664 -0.6857 -0.0891
+S-351	they Ġwill Ġeven Ġdeliver Ġto Ġthe Ġschool Ġ!
+T-351	they will even deliver to the school !
+H-351	-5.032912254333496	the worst customer service ever lost .
+D-351	-5.032912254333496	the worst customer service ever lost .
+P-351	-2.3945 -3.9485 -1.5298 -0.1141 -2.0637 -6.0588 -1.3294 -0.0868
+S-362	we Ġlove Ġto Ġcome Ġas Ġa Ġfamily Ġ.
+T-362	we love to come as a family .
+H-362	-5.627371311187744	shame on me .
+D-362	-5.627371311187744	shame on me .
+P-362	-6.4462 -0.7450 -3.3028 -4.1972 -0.0892
+S-376	they Ġwere Ġextremely Ġfriendly Ġand Ġreasonably Ġpriced Ġ.
+T-376	they were extremely friendly and reasonably priced .
+H-376	-5.851736545562744	my husband 's cash only before going .
+D-376	-5.851736545562744	my husband 's cash only before going .
+P-376	-4.0955 -4.9428 -1.1087 -2.7451 -0.7618 -4.0471 -3.9358 -0.1461 -0.0862
+S-402	his Ġhumor Ġmakes Ġa Ġroutine Ġvisit Ġentertaining Ġ.
+T-402	his humor makes a routine visit entertaining .
+H-402	-5.062026500701904	needless to say this was awful .
+D-402	-5.062026500701904	needless to say this was awful .
+P-402	-6.7828 -0.1708 -0.1882 -1.7995 -3.0587 -5.1750 -0.3624 -0.0896
+S-413	the Ġcrew Ġwas Ġvery Ġfriendly Ġand Ġaccommodating Ġ.
+T-413	the crew was very friendly and accommodating .
+H-413	-4.9669647216796875	_num_ star for this dive .
+D-413	-4.9669647216796875	_num_ star for this dive .
+P-413	-3.1804 -1.7172 -1.6215 -1.7182 -4.1452 -3.4943 -0.0876
+S-428	i Ġdefinitely Ġrecommend Ġthis Ġplace Ġto Ġothers Ġ!
+T-428	i definitely recommend this place to others !
+H-428	-4.021632671356201	not sure why , there 's even worse customer service .
+D-428	-4.021632671356201	not sure why , there 's even worse customer service .
+P-428	-1.3390 -2.6496 -2.2273 -4.3979 -1.8793 -0.4613 -1.7772 -0.8793 -1.4161 -0.6431 -0.1038 -0.0875
+S-431	super Ġgood Ġdeals Ġand Ġvery Ġfriendly Ġstaff Ġ.
+T-431	super good deals and very friendly staff .
+H-431	-5.430198669433594	but worst customer service ever had in my life .
+D-431	-5.430198669433594	but worst customer service ever had in my life .
+P-431	-5.7869 -3.6611 -2.1957 -0.0871 -2.4942 -3.0981 -1.3865 -1.1822 -2.8215 -0.0913 -0.0857
+S-438	best Ġtake Ġout Ġor Ġeat Ġin Ġsushi Ġ!
+T-438	best take out or eat in sushi !
+H-438	-5.259613513946533	this place is mediocre at best .
+D-438	-5.259613513946533	this place is mediocre at best .
+P-438	-7.7761 -0.3909 -0.2331 -5.4132 -1.0859 -3.1165 -0.2103 -0.0892
+S-455	the Ġcrispy Ġmango Ġfish Ġwas Ġvery Ġtasty Ġ.
+T-455	the crispy mango fish was very tasty .
+H-455	-4.800540447235107	the customer service would n't waste your time .
+D-455	-4.800540447235107	the customer service would n't waste your time .
+P-455	-4.0149 -3.0606 -0.4847 -3.2790 -1.2543 -3.9188 -2.8005 -0.0931 -0.1160 -0.0892
+S-471	blue Ġcorn Ġtacos Ġwith Ġchicken Ġwere Ġexcellent Ġ.
+T-471	blue corn tacos with chicken were excellent .
+H-471	-5.047780990600586	this place is way overpriced and no apology .
+D-471	-5.047780990600586	this place is way overpriced and no apology .
+P-471	-1.3488 -2.8139 -0.1448 -6.0080 -3.4306 -0.4311 -1.9468 -3.6905 -0.1953 -0.0858
+S-474	it Ġwill Ġstay Ġwith Ġyou Ġall Ġday Ġ.
+T-474	it will stay with you all day .
+H-474	-6.145870208740234	needless to say my husband 's room or getting a dozen .
+D-474	-6.145870208740234	needless to say my husband 's room or getting a dozen .
+P-474	-8.2629 -0.2443 -0.1311 -3.5548 -3.5113 -1.2342 -3.0638 -4.3493 -2.6361 -0.4568 -0.9970 -0.1081 -0.0887
+S-139	en joy ed Ġthe Ġdoll y Ġa Ġlot Ġ.
+T-139	enjoyed the dolly a lot .
+H-139	-6.0755720138549805	_num_ minutes later they did n't even greet us .
+D-139	-6.0755720138549805	_num_ minutes later they did n't even greet us .
+P-139	-7.4115 -0.9753 -3.7432 -2.7352 -1.0451 -0.9503 -1.9666 -5.0217 -1.5029 -0.1681 -0.0909
+S-257	om g Ġcar ls bad Ġtavern Ġis Ġawesome Ġ!
+T-257	omg <<unk>> tavern is awesome !
+H-257	-5.329771041870117	terrible customer service was barely there .
+D-257	-5.329771041870117	terrible customer service was barely there .
+P-257	-7.3769 -1.9558 -0.1438 -3.2114 -4.9100 -0.4215 -0.4503 -0.0896
+S-49	ch arl ie Ġwas Ġclean Ġneat Ġand Ġprofessional Ġ.
+T-49	charlie was clean neat and professional .
+H-49	-6.146223068237305	hands down it was like the worst buffet .
+D-49	-6.146223068237305	hands down it was like the worst buffet .
+P-49	-8.3100 -0.4699 -2.7478 -1.5090 -3.3800 -1.8120 -1.4808 -4.3762 -0.2917 -0.0910
+S-121	great Ġke b ab Ġdishes Ġand Ġgood Ġservice Ġ.
+T-121	great kebab dishes and good service .
+H-121	-3.7338898181915283	worst customer service i have ever dreamed about this place .
+D-121	-3.7338898181915283	worst customer service i have ever dreamed about this place .
+P-121	-3.1341 -0.9609 -0.1270 -3.6110 -0.1998 -0.5829 -7.0251 -0.4078 -0.1975 -0.1450 -0.1025 -0.0897
+S-256	bart ender Ġmade Ġa Ġgreat Ġdirty Ġmart ini Ġ!
+T-256	bartender made a great dirty martini !
+H-256	-6.070866584777832	this place is _num_ % of disappointed .
+D-256	-6.070866584777832	this place is _num_ % of disappointed .
+P-256	-4.4958 -1.7729 -1.0085 -5.1575 -3.8697 -2.5337 -3.6474 -0.1094 -0.0931
+S-281	the Ġmar in ara Ġsauce Ġis Ġso Ġflavorful Ġ.
+T-281	the marinara sauce is so flavorful .
+H-281	-5.864822864532471	they said `` no problem '' for lunch .
+D-281	-5.864822864532471	they said `` no problem '' for lunch .
+P-281	-6.0769 -4.6621 -2.4630 -0.9286 -2.2879 -0.8489 -0.5227 -5.3827 -0.0933 -0.0822
+S-303	he Ġwas Ġboth Ġprofessional Ġand Ġcour te ous Ġ.
+T-303	he was both professional and courteous .
+H-303	-4.719933986663818	the service was terrible when we walked in .
+D-303	-4.719933986663818	the service was terrible when we walked in .
+P-303	-2.8906 -3.2721 -0.1600 -3.1852 -4.2641 -1.1395 -3.0164 -0.5137 -0.2567 -0.0921
+S-354	dec ent Ġselection Ġof Ġmeats Ġand Ġchees es Ġ.
+T-354	decent selection of meats and cheeses .
+H-354	-4.80253267288208	there is only _num_ minutes for this chain .
+D-354	-4.80253267288208	there is only _num_ minutes for this chain .
+P-354	-0.8768 -1.7012 -4.1763 -3.3168 -1.7662 -3.4905 -0.5117 -3.1091 -0.0819 -0.0889
+S-46	def initely Ġa Ġplace Ġto Ġkeep Ġin Ġmind Ġ.
+T-46	definitely a place to keep in mind .
+H-46	-4.944622039794922	she had no idea how to finish this place .
+D-46	-4.944622039794922	she had no idea how to finish this place .
+P-46	-3.7625 -2.6551 -1.2917 -1.1648 -3.9678 -1.2778 -4.3110 -1.3473 -0.8148 -0.1628 -0.0879
+S-104	t ires Ġ, Ġalignment Ġ, Ġbrakes Ġand Ġmore Ġ.
+T-104	tires , alignment , brakes and more .
+H-104	-5.446388244628906	they did n't seem like shit at all .
+D-104	-5.446388244628906	they did n't seem like shit at all .
+P-104	-5.2127 -1.0219 -0.5031 -5.9546 -0.5271 -4.5580 -2.5161 -1.0944 -0.2046 -0.0900
+S-191	over all Ġreally Ġgood Ġquality Ġfood Ġand Ġservice Ġ.
+T-191	overall really good quality food and service .
+H-191	-5.057511329650879	the worse part is nothing but rude .
+D-191	-5.057511329650879	the worse part is nothing but rude .
+P-191	-1.1014 -7.9266 -2.1832 -0.5270 -4.1389 -0.9744 -1.6563 -0.3027 -0.0904
+S-227	p izza Ġwas Ġcooked Ġto Ġperfection Ġand Ġfast Ġ!
+T-227	pizza was cooked to perfection and fast !
+H-227	-4.751794338226318	horrible customer service and left .
+D-227	-4.751794338226318	horrible customer service and left .
+P-227	-4.7236 -3.0686 -0.1508 -1.5282 -3.3011 -2.4129 -0.0875
+S-243	plus Ġmy Ġsparkling Ġwine Ġflights Ġwere Ġdel ish Ġ!
+T-243	plus my sparkling wine flights were delish !
+H-243	-6.11469841003418	both times they did n't seem like your bread .
+D-243	-6.11469841003418	both times they did n't seem like your bread .
+P-243	-4.1444 -1.8139 -3.8687 -1.5897 -0.1962 -6.5271 -1.2912 -2.4163 -3.7349 -0.1048 -0.0885
+S-244	pr icy Ġbut Ġthe Ġcheese Ġpies Ġare Ġdelicious Ġ!
+T-244	pricy but the cheese pies are delicious !
+H-244	-5.3141326904296875	wo n't be returning to this location .
+D-244	-5.3141326904296875	wo n't be returning to this location .
+P-244	-6.5456 -0.1321 -1.8851 -3.7619 -2.0138 -0.2693 -4.9734 -0.1881 -0.0906
+S-249	ex cellent Ġcombination Ġof Ġflavors Ġ, Ġvery Ġunique Ġ.
+T-249	excellent combination of flavors , very unique .
+H-249	-4.250810623168945	the customer service was terrible at all .
+D-249	-4.250810623168945	the customer service was terrible at all .
+P-249	-3.9916 -2.8409 -0.2452 -0.9028 -4.0836 -2.6195 -0.7833 -0.3303 -0.0889
+S-258	other Ġthan Ġthat Ġ, Ġit Ġ' s Ġgreat Ġ!
+T-258	other than that , it 's great !
+H-258	-4.971752166748047	it took over _num_ minutes for an appointment .
+D-258	-4.971752166748047	it took over _num_ minutes for an appointment .
+P-258	-2.1442 -5.1746 -2.7622 -0.8487 -1.1269 -1.1950 -2.4014 -3.9422 -0.1077 -0.0899
+S-338	i Ġ' ll Ġdefinitely Ġgo Ġback Ġhere Ġagain Ġ.
+T-338	i 'll definitely go back here again .
+H-338	-5.6419548988342285	one of the worst pizza ive had .
+D-338	-5.6419548988342285	one of the worst pizza ive had .
+P-338	-6.4866 -1.1253 -0.3663 -2.0618 -1.7847 -6.4264 -0.4186 -2.3256 -0.0898
+S-411	he ck Ġ, Ġeven Ġthe Ġpizza Ġis Ġdecent Ġ.
+T-411	heck , even the pizza is decent .
+H-411	-5.27781867980957	why could n't they have been open for _num_ minutes .
+D-411	-5.27781867980957	why could n't they have been open for _num_ minutes .
+P-411	-8.1922 -1.8887 -0.2860 -1.2352 -1.5419 -1.1542 -5.7644 -0.7806 -0.2923 -2.1048 -0.1120 -0.0880
+S-451	dr . Ġhall Ġis Ġso Ġkind Ġand Ġgentle Ġ.
+T-451	dr. hall is so kind and gentle .
+H-451	-5.01927375793457	there was no apology from this place .
+D-451	-5.01927375793457	there was no apology from this place .
+P-451	-3.8525 -0.2464 -2.9979 -4.9044 -2.5493 -2.3724 -0.9584 -0.7867 -0.0900
+S-475	the Ġhum mus Ġis Ġridiculously Ġcreamy Ġand Ġdelicious Ġ.
+T-475	the hummus is ridiculously creamy and delicious .
+H-475	-6.1835737228393555	_num_ minutes later he ate all of them .
+D-475	-6.1835737228393555	_num_ minutes later he ate all of them .
+P-475	-6.7330 -2.2334 -2.0321 -1.2015 -6.4774 -3.5801 -1.2642 -0.8958 -0.1101 -0.0896
+S-2	the Ġdrinks Ġwere Ġaffordable Ġand Ġa Ġgood Ġpour Ġ.
+T-2	the drinks were affordable and a good pour .
+H-2	-5.141789436340332	she had the worst experience ever .
+D-2	-5.141789436340332	she had the worst experience ever .
+P-2	-4.4972 -2.7675 -2.1861 -1.6492 -4.4166 -0.8271 -1.4734 -0.0877
+S-21	and Ġevery Ġexperience Ġhas Ġbeen Ġa Ġpositive Ġone Ġ.
+T-21	and every experience has been a positive one .
+H-21	-5.9715657234191895	the place was worse than _num_ minutes .
+D-21	-5.9715657234191895	the place was worse than _num_ minutes .
+P-21	-6.3927 -3.1819 -1.7174 -4.2430 -1.7938 -1.9147 -1.5976 -1.3874 -0.0884
+S-32	she Ġwas Ġspot Ġon Ġas Ġthey Ġwere Ġdelicious Ġ.
+T-32	she was spot on as they were delicious .
+H-32	-4.996996879577637	the customer service was horrible .
+D-32	-4.996996879577637	the customer service was horrible .
+P-32	-5.7941 -2.1286 -0.3204 -0.2065 -3.7268 -3.7967 -0.0877
+S-53	nice Ġpeople Ġ, Ġprompt Ġservice Ġand Ġclearly Ġexpert Ġ.
+T-53	nice people , prompt service and clearly expert .
+H-53	-6.195594310760498	_num_ minutes later they were not packed at all .
+D-53	-6.195594310760498	_num_ minutes later they were not packed at all .
+P-53	-6.8009 -1.8217 -4.4623 -0.5152 -3.9310 -4.1343 -3.2725 -0.9303 -0.0925 -0.0671 -0.0891
+S-59	even Ġin Ġsummer Ġ, Ġthey Ġhave Ġdecent Ġpatronage Ġ.
+T-59	even in summer , they have decent patronage .
+H-59	-4.653223037719727	wo n't be going back .
+D-59	-4.653223037719727	wo n't be going back .
+P-59	-5.8487 -0.1782 -0.8249 -4.6779 -0.1753 -3.1597 -0.0912
+S-67	the Ġwait Ġstaff Ġis Ġextremely Ġattractive Ġand Ġfriendly Ġ!
+T-67	the wait staff is extremely attractive and friendly !
+H-67	-5.732604026794434	needless to say they did n't help me .
+D-67	-5.732604026794434	needless to say they did n't help me .
+P-67	-8.1880 -0.1563 -0.2070 -1.9523 -2.6624 -1.0659 -6.0742 -1.9461 -0.4801 -0.0898
+S-110	very Ġpleased Ġwith Ġservice Ġand Ġquality Ġof Ġwork Ġ.
+T-110	very pleased with service and quality of work .
+H-110	-6.060598373413086	it was clearly not _num_ minutes after that .
+D-110	-6.060598373413086	it was clearly not _num_ minutes after that .
+P-110	-3.9132 -0.2920 -6.4720 -1.8158 -3.7336 -2.8486 -2.6379 -2.0441 -0.2829 -0.0877
+S-148	i Ġloved Ġthe Ġribs Ġmore Ġthan Ġthe Ġchicken Ġ.
+T-148	i loved the ribs more than the chicken .
+H-148	-6.174715042114258	there must be $ _num_ for lunch .
+D-148	-6.174715042114258	there must be $ _num_ for lunch .
+P-148	-5.4675 -3.6672 -0.4708 -2.7941 -0.1006 -3.9286 -5.4218 -1.1341 -0.0914
+S-152	for Ġa Ġlocal Ġchain Ġthis Ġplace Ġis Ġgreat Ġ!
+T-152	for a local chain this place is great !
+H-152	-5.719179153442383	unfortunately there was nothing wrong with this style .
+D-152	-5.719179153442383	unfortunately there was nothing wrong with this style .
+P-152	-6.3575 -3.4928 -0.9740 -3.6034 -3.0976 -0.6546 -0.7341 -3.6794 -0.0871 -0.0880
+S-184	will Ġbring Ġall Ġmy Ġvehicles Ġback Ġfor Ġsure Ġ!
+T-184	will bring all my vehicles back for sure !
+H-184	-5.336014747619629	my husband did n't stand behind it as well .
+D-184	-5.336014747619629	my husband did n't stand behind it as well .
+P-184	-5.6465 -2.0322 -5.7982 -0.7004 -3.1260 -0.8380 -0.5911 -2.3343 -1.2348 -0.1025 -0.0892
+S-196	and Ġagain Ġ, Ġthe Ġfood Ġis Ġincredibly Ġdelicious Ġ!
+T-196	and again , the food is incredibly delicious !
+H-196	-5.8304362297058105	why did n't they stare at each time .
+D-196	-5.8304362297058105	why did n't they stare at each time .
+P-196	-7.2376 -1.2825 -0.0747 -1.7218 -6.4206 -0.3519 -5.3163 -0.6153 -0.1032 -0.0874
+S-211	our Ġwaitress Ġwas Ġthe Ġbest Ġ, Ġvery Ġaccommodating Ġ.
+T-211	our waitress was the best , very accommodating .
+H-211	-5.529999732971191	one of the worst food i 've ever experienced .
+D-211	-5.529999732971191	one of the worst food i 've ever experienced .
+P-211	-5.9714 -4.3349 -1.9434 -0.4344 -2.4972 -0.7900 -2.1984 -0.5880 -3.7751 -0.6877 -0.0905
+S-232	the Ġcustomer Ġservice Ġin Ġthis Ġlocation Ġis Ġgreat Ġ!
+T-232	the customer service in this location is great !
+H-232	-5.742578029632568	we wo n't be back to this place .
+D-232	-5.742578029632568	we wo n't be back to this place .
+P-232	-6.0021 -5.2168 -0.2034 -0.8871 -2.2734 -0.4944 -2.8704 -4.6479 -0.1759 -0.0903
+S-315	so Ġhappy Ġwith Ġmy Ġdecision Ġto Ġgo Ġhere Ġ.
+T-315	so happy with my decision to go here .
+H-315	-5.837625026702881	she was too delayed by _num_ minutes .
+D-315	-5.837625026702881	she was too delayed by _num_ minutes .
+P-315	-4.7550 -2.8437 -3.2750 -5.6064 -0.8372 -2.1578 -2.1462 -0.1038 -0.0913
+S-331	service Ġwas Ġgreat Ġand Ġfood Ġwas Ġeven Ġbetter Ġ.
+T-331	service was great and food was even better .
+H-331	-5.242423057556152	_num_ minutes passed off .
+D-331	-5.242423057556152	_num_ minutes passed off .
+P-331	-4.5516 -1.1745 -3.2789 -3.4808 -2.7849 -0.0905
+S-336	i Ġhad Ġthe Ġbest Ġpork Ġbelly Ġhere Ġever Ġ!
+T-336	i had the best pork belly here ever !
+H-336	-5.241545677185059	do not waste your money like this .
+D-336	-5.241545677185059	do not waste your money like this .
+P-336	-5.3379 -2.2417 -3.5054 -0.6796 -0.7782 -5.5576 -0.1484 -1.2499 -0.0901
+S-337	you Ġcan Ġtell Ġhow Ġfresh Ġthe Ġingredients Ġare Ġ.
+T-337	you can tell how fresh the ingredients are .
+H-337	-5.128922462463379	they 're terrible customer service .
+D-337	-5.128922462463379	they 're terrible customer service .
+P-337	-3.1687 -3.4019 -4.2505 -2.5882 -0.3999 -2.5869 -0.0888
+S-340	this Ġis Ġthe Ġbest Ġseafood Ġjoint Ġin Ġtown Ġ.
+T-340	this is the best seafood joint in town .
+H-340	-5.467355728149414	this place has no regard to be $ _num_ .
+D-340	-5.467355728149414	this place has no regard to be $ _num_ .
+P-340	-3.7978 -1.1592 -3.4020 -1.7405 -5.6189 -0.7189 -1.4648 -4.7825 -0.0719 -0.2012 -0.0895
+S-359	fun Ġto Ġwatch Ġthe Ġkitchen Ġin Ġrush Ġhour Ġ.
+T-359	fun to watch the kitchen in rush hour .
+H-359	-5.789427757263184	needless to say , they 're not rude at all .
+D-359	-5.789427757263184	needless to say , they 're not rude at all .
+P-359	-8.6319 -0.1549 -0.1083 -0.4230 -3.6708 -1.7102 -0.8209 -7.4345 -2.1736 -0.4020 -0.0952 -0.0872
+S-378	the Ġfood Ġis Ġgreat Ġhere Ġand Ġvery Ġauthentic Ġ.
+T-378	the food is great here and very authentic .
+H-378	-5.636498928070068	_num_ minutes should not be there , as long .
+D-378	-5.636498928070068	_num_ minutes should not be there , as long .
+P-378	-6.7871 -0.2949 -4.8860 -1.4365 -1.0781 -5.1955 -2.1540 -1.1343 -0.5918 -0.1159 -0.0858
+S-380	this Ġplace Ġoffers Ġsolid Ġ, Ġdelicious Ġtake Ġout Ġ.
+T-380	this place offers solid , delicious take out .
+H-380	-4.4914398193359375	worst customer service ever .
+D-380	-4.4914398193359375	worst customer service ever .
+P-380	-2.8956 -2.9885 -0.1335 -2.2841 -4.7725 -0.0865
+S-403	love Ġthis Ġplace Ġand Ġwill Ġkeep Ġcoming Ġback Ġ.
+T-403	love this place and will keep coming back .
+H-403	-6.175681114196777	there was n't enough , as a rude staff .
+D-403	-6.175681114196777	there was n't enough , as a rude staff .
+P-403	-4.1335 -0.4026 -2.1180 -4.1035 -1.3248 -4.0096 -2.6306 -4.7038 -2.3771 -0.1425 -0.0867
+S-405	will Ġdefinitely Ġgo Ġback Ġand Ġrecommend Ġto Ġfriends Ġ.
+T-405	will definitely go back and recommend to friends .
+H-405	-4.793423175811768	the service would n't be bothered at all .
+D-405	-4.793423175811768	the service would n't be bothered at all .
+P-405	-2.0299 -4.1514 -3.6128 -1.9198 -0.7522 -3.5386 -2.1589 -0.6987 -0.1300 -0.0906
+S-410	she Ġwas Ġso Ġpatient Ġ, Ġkind Ġand Ġunderstanding Ġ.
+T-410	she was so patient , kind and understanding .
+H-410	-5.377691268920898	there is no excuse for this past _num_ years .
+D-410	-5.377691268920898	there is no excuse for this past _num_ years .
+P-410	-7.8810 -2.3490 -2.2029 -1.4431 -1.5821 -1.5993 -2.8717 -0.5694 -2.0016 -0.0800 -0.0891
+S-463	i Ġloved Ġit Ġand Ġwill Ġdefinitely Ġbe Ġback Ġ!
+T-463	i loved it and will definitely be back !
+H-463	-6.391048431396484	this place is not drive-thru at all .
+D-463	-6.391048431396484	this place is not drive-thru at all .
+P-463	-8.2014 -1.6302 -0.3219 -2.3557 -6.9176 -1.7507 -2.0709 -0.5463 -0.0900
+S-473	i Ġdefinitely Ġwill Ġreturn Ġto Ġthe Ġroaring Ġfork Ġ!
+T-473	i definitely will return to the <<unk>> fork !
+H-473	-5.426529407501221	the pizza did n't taste very inconsistent .
+D-473	-5.426529407501221	the pizza did n't taste very inconsistent .
+P-473	-1.5729 -4.1337 -3.6835 -0.2815 -1.6033 -1.5328 -6.6975 -0.6837 -0.0911
+S-489	the Ġprices Ġwere Ġthe Ġbest Ġand Ġworth Ġit Ġ.
+T-489	the prices were the best and worth it .
+H-489	-5.348033428192139	worst customer service ever had .
+D-489	-5.348033428192139	worst customer service ever had .
+P-489	-4.1378 -5.7904 -0.1538 -2.5677 -1.3070 -3.1461 -0.0862
+S-491	this Ġwas Ġthe Ġbest Ġi Ġhave Ġever Ġhad Ġ!
+T-491	this was the best i have ever had !
+H-491	-5.044457912445068	probably wo n't be back as well .
+D-491	-5.044457912445068	probably wo n't be back as well .
+P-491	-7.3081 -3.3596 -0.2100 -0.1921 -1.1129 -1.1095 -5.3658 -0.1025 -0.0916
+S-222	and Ġthe Ġseafood Ġen ch il adas Ġwere Ġgreat Ġ!
+T-222	and the seafood enchiladas were great !
+H-222	-5.628105640411377	the hotel did n't help if you are seated .
+D-222	-5.628105640411377	the hotel did n't help if you are seated .
+P-222	-0.6742 -5.4043 -1.7427 -0.4243 -5.0520 -4.0918 -1.0513 -1.0448 -4.0354 -0.1152 -0.0885
+S-457	the Ġcar ne Ġas ada Ġbur rito Ġis Ġawesome Ġ!
+T-457	the carne asada burrito is awesome !
+H-457	-5.45965051651001	the waitress did n't start off at all costs .
+D-457	-5.45965051651001	the waitress did n't start off at all costs .
+P-457	-3.5395 -2.6525 -2.2408 -0.4994 -5.5339 -2.3020 -2.5248 -1.0774 -2.4545 -0.1009 -0.0888
+S-494	the Ġoct opus Ġs ash imi Ġis Ġmy Ġfavorite Ġ!
+T-494	the octopus sashimi is my favorite !
+H-494	-6.365152835845947	waited _num_ minutes at this store and ok .
+D-494	-6.365152835845947	waited _num_ minutes at this store and ok .
+P-494	-7.4670 -1.3314 -0.6988 -5.2362 -2.3062 -2.2891 -0.8091 -5.0162 -0.0993 -0.0868
+S-103	oj Ġand Ġj ere my Ġdid Ġa Ġgreat Ġjob Ġ!
+T-103	oj and jeremy did a great job !
+H-103	-5.524158477783203	worst service ever , there was no menus .
+D-103	-5.524158477783203	worst service ever , there was no menus .
+P-103	-6.0173 -1.0061 -3.7494 -1.9398 -0.8604 -0.5386 -4.0459 -3.6424 -0.1046 -0.0874
+S-288	out standing Ġpers ian Ġfood Ġnot Ġto Ġmention Ġservice Ġ.
+T-288	outstanding persian food not to mention service .
+H-288	-6.114148139953613	my daughter was sick and over $ _num_ .
+D-288	-6.114148139953613	my daughter was sick and over $ _num_ .
+P-288	-6.5852 -4.0385 -0.7844 -3.8687 -2.5867 -3.6889 -2.4984 -0.0942 -0.1075 -0.0883
+S-421	best Ġchicken Ġpar mes an Ġi Ġhave Ġever Ġhad Ġ.
+T-421	best chicken parmesan i have ever had .
+H-421	-4.466420650482178	overall i did n't like this place .
+D-421	-4.466420650482178	overall i did n't like this place .
+P-421	-4.2102 -1.2167 -3.4163 -0.2865 -4.1240 -1.1437 -1.7334 -0.4730 -0.0881
+S-5	i Ġ' d Ġdefinitely Ġrecommend Ġgiving Ġthem Ġa Ġtry Ġ.
+T-5	i 'd definitely recommend giving them a try .
+H-5	-6.043602466583252	_num_ minutes later they did n't stand behind it .
+D-5	-6.043602466583252	_num_ minutes later they did n't stand behind it .
+P-5	-5.4607 -0.5305 -0.8053 -1.7246 -5.5147 -0.6603 -4.7708 -1.8166 -4.0025 -0.0996 -0.0905
+S-18	you Ġ' ll Ġsee Ġwhy Ġonce Ġyou Ġget Ġthere Ġ.
+T-18	you 'll see why once you get there .
+H-18	-5.458710193634033	there was less than _num_ star for this place .
+D-18	-5.458710193634033	there was less than _num_ star for this place .
+P-18	-2.9462 -0.6674 -6.5134 -1.4685 -1.0882 -4.2766 -2.6216 -0.4560 -2.7606 -0.1233 -0.0887
+S-72	the Ġchicken Ġchim i Ġi Ġhad Ġwas Ġabsolutely Ġfantastic Ġ!
+T-72	the chicken chimi i had was absolutely fantastic !
+H-72	-4.154778003692627	worst customer service ever .
+D-72	-4.154778003692627	worst customer service ever .
+P-72	-2.8076 -4.9309 -0.1680 -2.6575 -1.5254 -0.0847
+S-85	pr ices Ġare Ġa Ġtad Ġhigh Ġbut Ġworth Ġit Ġ.
+T-85	prices are a tad high but worth it .
+H-85	-4.699046611785889	he did n't waste your time or two stars .
+D-85	-4.699046611785889	he did n't waste your time or two stars .
+P-85	-2.4703 -4.6468 -0.2084 -5.0231 -2.3844 -0.3438 -1.5444 -1.9208 -1.0853 -0.0928 -0.0882
+S-118	oh Ġsushi Ġke e Ġ, Ġhow Ġi Ġlove Ġthee Ġ!
+T-118	oh sushi kee , how i love thee !
+H-118	-5.311650276184082	this time was not equivalent to me .
+D-118	-5.311650276184082	this time was not equivalent to me .
+P-118	-1.7092 -4.4978 -0.2118 -1.4663 -7.4883 -1.2440 -0.6645 -2.4817 -0.0870
+S-131	it Ġ' s Ġa Ġbig Ġbowl Ġof Ġsweet Ġhappiness Ġ.
+T-131	it 's a big bowl of sweet happiness .
+H-131	-5.139392852783203	worst customer service ever .
+D-131	-5.139392852783203	worst customer service ever .
+P-131	-4.7166 -3.5516 -0.3995 -4.4872 -1.8202 -0.0842
+S-132	one Ġof Ġmy Ġfavorite Ġch inese Ġplace Ġto Ġeat Ġ!
+T-132	one of my favorite chinese place to eat !
+H-132	-5.980287075042725	it 's supposed to be _num_ minutes at this location .
+D-132	-5.980287075042725	it 's supposed to be _num_ minutes at this location .
+P-132	-3.5187 -1.3943 -6.4476 -0.2775 -2.9399 -2.5779 -1.8064 -3.0804 -2.3635 -1.9622 -0.1031 -0.0888
+S-170	that Ġ' s Ġa Ġrare Ġfind Ġin Ġa Ġbusiness Ġ.
+T-170	that 's a rare find in a business .
+H-170	-4.416207790374756	this place was awful .
+D-170	-4.416207790374756	this place was awful .
+P-170	-2.1250 -1.5947 -2.2038 -4.3937 -2.5335 -0.0895
+S-176	thank Ġyou Ġam anda Ġ, Ġi Ġwill Ġbe Ġback Ġ!
+T-176	thank you amanda , i will be back !
+H-176	-5.717826843261719	there was nothing else wrong with this company .
+D-176	-5.717826843261719	there was nothing else wrong with this company .
+P-176	-5.0705 -1.9602 -4.5370 -3.5552 -2.1906 -1.2235 -2.3946 -1.6663 -0.0776 -0.0876
+S-195	cle aned Ġmy Ġplate Ġ, Ġperfect Ġamount Ġof Ġfood Ġ.
+T-195	cleaned my plate , perfect amount of food .
+H-195	-3.817697286605835	it was n't worth the wait at all .
+D-195	-3.817697286605835	it was n't worth the wait at all .
+P-195	-0.8607 -0.3354 -1.5040 -4.9998 -0.9944 -2.5376 -3.2272 -0.2811 -0.3695 -0.0889
+S-268	i Ġlove Ġit alian Ġand Ġi Ġeat Ġhere Ġoften Ġ.
+T-268	i love italian and i eat here often .
+H-268	-5.57957649230957	our waitress left with me looking forward .
+D-268	-5.57957649230957	our waitress left with me looking forward .
+P-268	-2.4114 -2.2778 -3.5781 -1.8458 -3.0402 -4.9712 -2.4440 -0.1962 -0.0872
+S-479	the Ġgreen Ġch ile Ġmac Ġand Ġcheese Ġwas Ġincredible Ġ!
+T-479	the green chile mac and cheese was incredible !
+H-479	-5.341878414154053	the bread was mediocre at best so far .
+D-479	-5.341878414154053	the bread was mediocre at best so far .
+P-479	-2.8971 -5.3588 -0.1203 -5.1651 -1.4465 -0.8912 -2.0427 -3.1116 -0.1450 -0.0881
+S-9	oh Ġi Ġgot Ġmy Ġband Ġgeek Ġback Ġon Ġnow Ġ!
+T-9	oh i got my band geek back on now !
+H-9	-5.999445915222168	one of the wait staff would not help me .
+D-9	-5.999445915222168	one of the wait staff would not help me .
+P-9	-6.4290 -1.5415 -1.9740 -4.1475 -0.9004 -4.6548 -0.1559 -2.9381 -1.3399 -1.1197 -0.0890
+S-11	great Ġfood Ġrecommendations Ġsteak Ġand Ġtuna Ġwere Ġboth Ġgreat Ġ.
+T-11	great food recommendations steak and tuna were both great .
+H-11	-4.164973735809326	i wo n't be returning to this place .
+D-11	-4.164973735809326	i wo n't be returning to this place .
+P-11	-3.1068 -2.8509 -0.1347 -2.9129 -4.2883 -0.9573 -0.4839 -1.3110 -0.4458 -0.0896
+S-14	i Ġactually Ġcan Ġwait Ġto Ġcome Ġback Ġnext Ġyear Ġ!
+T-14	i actually can wait to come back next year !
+H-14	-6.117101669311523	there were only reason for this pizza hut .
+D-14	-6.117101669311523	there were only reason for this pizza hut .
+P-14	-2.9402 -1.8359 -5.1625 -2.8852 -4.3369 -0.9348 -3.3414 -2.6560 -0.1711 -0.0886
+S-70	it Ġis Ġconsistent Ġand Ġthe Ġstaff Ġis Ġalways Ġfriendly Ġ.
+T-70	it is consistent and the staff is always friendly .
+H-70	-6.1217360496521	$ _num_ off the bat for me .
+D-70	-6.1217360496521	$ _num_ off the bat for me .
+P-70	-7.7333 -0.1400 -5.3684 -1.9275 -3.0232 -0.5685 -3.9147 -0.1107 -0.0919
+S-73	it Ġis Ġalso Ġfun Ġto Ġsit Ġat Ġthe Ġbar Ġ.
+T-73	it is also fun to sit at the bar .
+H-73	-4.651678562164307	worst customer service ever had .
+D-73	-4.651678562164307	worst customer service ever had .
+P-73	-1.5121 -5.0470 -0.1767 -2.6290 -3.6079 -1.8933 -0.0849
+S-134	food Ġgood Ġ, Ġa Ġplate Ġwent Ġa Ġlong Ġway Ġ.
+T-134	food good , a plate went a long way .
+H-134	-4.462473392486572	there was no reason for this restaurant .
+D-134	-4.462473392486572	there was no reason for this restaurant .
+P-134	-4.2744 -0.3417 -2.1233 -4.8487 -0.9434 -0.8388 -2.5146 -0.7025 -0.0898
+S-135	the Ġservice Ġwas Ġgreat Ġand Ġwould Ġgladly Ġgo Ġback Ġ.
+T-135	the service was great and would gladly go back .
+H-135	-4.645747661590576	worst customer service ever .
+D-135	-4.645747661590576	worst customer service ever .
+P-135	-3.9431 -3.4461 -0.1413 -3.1655 -2.8316 -0.0852
+S-161	the Ġatmosphere Ġis Ġat Ġthe Ġsugar Ġbowl Ġis Ġfun Ġ.
+T-161	the atmosphere is at the sugar bowl is fun .
+H-161	-5.598809242248535	what a waste of _num_ minutes with her .
+D-161	-5.598809242248535	what a waste of _num_ minutes with her .
+P-161	-5.2075 -3.1513 -3.4983 -0.3075 -1.7034 -3.9491 -2.2266 -2.0026 -0.1541 -0.0889
+S-162	with Ġthat Ġbeing Ġsaid Ġ, Ġi Ġenjoyed Ġthe Ġfood Ġ.
+T-162	with that being said , i enjoyed the food .
+H-162	-4.043431758880615	however , it did n't look like this place .
+D-162	-4.043431758880615	however , it did n't look like this place .
+P-162	-4.1885 -0.6316 -0.4007 -2.3595 -0.2818 -5.4403 -0.9689 -1.6558 -0.9202 -0.1067 -0.0905
+S-166	all Ġof Ġthe Ġfood Ġthat Ġi Ġhad Ġwas Ġexcellent Ġ.
+T-166	all of the food that i had was excellent .
+H-166	-5.166359901428223	this place did n't taste like garbage .
+D-166	-5.166359901428223	this place did n't taste like garbage .
+P-166	-5.5643 -0.7779 -1.7151 -0.3010 -4.2414 -0.3041 -6.2169 -0.0990 -0.0879
+S-178	the Ġstaff Ġmade Ġus Ġfeel Ġvery Ġwelcome Ġand Ġcomfortable Ġ.
+T-178	the staff made us feel very welcome and comfortable .
+H-178	-6.325159072875977	_num_ minutes later they gave up to $ _num_ .
+D-178	-6.325159072875977	_num_ minutes later they gave up to $ _num_ .
+P-178	-5.1011 -1.1710 -2.3630 -3.8206 -5.6203 -2.8147 -1.1417 -4.3153 -0.1178 -0.1067 -0.0907
+S-202	i Ġalways Ġhave Ġa Ġgreat Ġdish Ġhere Ġto Ġeat Ġ.
+T-202	i always have a great dish here to eat .
+H-202	-5.453102111816406	there was only _num_ minutes pass for this place .
+D-202	-5.453102111816406	there was only _num_ minutes pass for this place .
+P-202	-5.7417 -0.5856 -4.7726 -2.0818 -3.5615 -2.3338 -1.5981 -0.7885 -1.2511 -0.1825 -0.0895
+S-213	its Ġnot Ġcheap Ġbut Ġyou Ġget Ġgood Ġvalue Ġhere Ġ.
+T-213	its not cheap but you get good value here .
+H-213	-5.5911545753479	the wait staff was barely cooked as well .
+D-213	-5.5911545753479	the wait staff was barely cooked as well .
+P-213	-5.8850 -3.5119 -1.4740 -0.1970 -2.7995 -5.4966 -2.2712 -0.4464 -0.0903 -0.0868
+S-216	the Ġplace Ġwas Ġbusy Ġbut Ġthe Ġservice Ġwas Ġexcellent Ġ!
+T-216	the place was busy but the service was excellent !
+H-216	-5.8666582107543945	_num_ minutes later it was not good at all .
+D-216	-5.8666582107543945	_num_ minutes later it was not good at all .
+P-216	-7.7917 -1.0269 -1.1499 -1.5303 -2.3693 -2.1435 -5.8820 -2.6085 -0.0477 -0.0915 -0.0888
+S-276	they Ġalso Ġare Ġthe Ġbest Ġprice Ġin Ġthe Ġarea Ġ.
+T-276	they also are the best price in the area .
+H-276	-5.7990851402282715	she did n't ask me for _num_ minutes .
+D-276	-5.7990851402282715	she did n't ask me for _num_ minutes .
+P-276	-4.0699 -1.8708 -0.6224 -7.0749 -3.6515 -1.3977 -2.6050 -1.3405 -0.3629 -0.0910
+S-280	had Ġdinner Ġhere Ġlast Ġnight Ġand Ġit Ġwas Ġgreat Ġ.
+T-280	had dinner here last night and it was great .
+H-280	-6.191771030426025	$ _num_ for a short notice .
+D-280	-6.191771030426025	$ _num_ for a short notice .
+P-280	-7.0495 -0.0934 -2.5297 -0.9523 -5.3665 -3.0250 -2.4556 -0.0891
+S-318	sit Ġat Ġthe Ġbar Ġand Ġeat Ġthe Ġsmall Ġplates Ġ.
+T-318	sit at the bar and eat the small plates .
+H-318	-6.16050910949707	needless to say they did n't even pack a coffee .
+D-318	-6.16050910949707	needless to say they did n't even pack a coffee .
+P-318	-8.2343 -0.2643 -0.3330 -1.9310 -5.2432 -0.3526 -2.9422 -3.4843 -0.7929 -3.5402 -0.1534 -0.0891
+S-343	my Ġdr Ġpepper Ġribs Ġwere Ġexcellent Ġand Ġvery Ġtender Ġ.
+T-343	my dr pepper ribs were excellent and very tender .
+H-343	-5.66577672958374	_num_ minutes later she kept telling me .
+D-343	-5.66577672958374	_num_ minutes later she kept telling me .
+P-343	-4.1984 -0.7418 -3.4580 -4.1672 -3.2108 -4.0983 -0.6420 -0.5688 -0.0887
+S-375	food Ġis Ġalways Ġamazing Ġno Ġmatter Ġwhat Ġi Ġorder Ġ.
+T-375	food is always amazing no matter what i order .
+H-375	-5.628060817718506	unfortunately , there was none of my way .
+D-375	-5.628060817718506	unfortunately , there was none of my way .
+P-375	-6.0971 -3.6106 -1.1471 -0.4843 -4.5754 -1.5760 -0.8880 -1.9469 -1.9922 -0.0881
+S-377	good Ġselection Ġof Ġparts Ġand Ġaccessories Ġand Ġreasonable Ġprices Ġ.
+T-377	good selection of parts and accessories and reasonable prices .
+H-377	-4.392331123352051	this place was mediocre at all .
+D-377	-4.392331123352051	this place was mediocre at all .
+P-377	-2.4544 -1.4540 -1.0915 -3.4215 -3.5577 -2.4148 -0.8123 -0.0887
+S-386	all Ġof Ġmy Ġclothes Ġare Ġreturned Ġin Ġsparkling Ġcondition Ġ!
+T-386	all of my clothes are returned in sparkling condition !
+H-386	-5.273632526397705	this place has too much un a horrible customer service .
+D-386	-5.273632526397705	this place has too much un a horrible customer service .
+P-386	-2.9834 -1.1139 -1.9878 -3.6398 -1.3113 -5.7711 -2.0165 -0.7240 -3.3627 -0.3160 -0.1059 -0.0894
+S-442	the Ġstaff Ġare Ġvery Ġfriendly Ġand Ġon Ġthe Ġball Ġ.
+T-442	the staff are very friendly and on the ball .
+H-442	-5.130427837371826	there 's no idea why i would like this place .
+D-442	-5.130427837371826	there 's no idea why i would like this place .
+P-442	-5.9416 -1.0336 -0.9944 -5.0552 -1.5109 -0.2783 -2.1457 -3.2545 -1.6371 -0.7521 -0.0932 -0.0891
+S-466	love Ġmy Ġcut Ġand Ġcolor Ġand Ġsage Ġis Ġamazing Ġ!
+T-466	love my cut and color and sage is amazing !
+H-466	-4.702671527862549	my husband would not recommend this place to anyone .
+D-466	-4.702671527862549	my husband would not recommend this place to anyone .
+P-466	-0.8674 -4.1281 -4.2581 -1.1164 -3.8734 -0.9061 -2.3555 -1.0350 -1.0730 -0.1226 -0.0879
+S-477	the Ġowner Ġknows Ġus Ġand Ġtreats Ġus Ġvery Ġwell Ġ!
+T-477	the owner knows us and treats us very well !
+H-477	-4.2473602294921875	terrible customer service to avoid this place .
+D-477	-4.2473602294921875	terrible customer service to avoid this place .
+P-477	-5.2490 -1.3610 -0.1056 -3.0488 -4.5534 -0.5828 -0.7921 -0.0913 -0.0892
+S-486	they Ġhave Ġa Ġlot Ġof Ġchoices Ġfor Ġsushi Ġlovers Ġ!
+T-486	they have a lot of choices for sushi lovers !
+H-486	-5.49591064453125	wo n't be frequenting this place was very expensive .
+D-486	-5.49591064453125	wo n't be frequenting this place was very expensive .
+P-486	-5.8155 -0.1234 -0.3220 -6.9263 -1.7035 -0.8636 -3.3985 -0.6972 -3.1202 -0.1080 -0.0891
+S-154	one Ġof Ġmy Ġregular Ġspots Ġin Ġsc ot ts dale Ġ.
+T-154	one of my regular spots in scottsdale .
+H-154	-5.065837860107422	avoid this place like _num_ minutes at all .
+D-154	-5.065837860107422	avoid this place like _num_ minutes at all .
+P-154	-6.6661 -1.2747 -0.7655 -4.4350 -1.5114 -2.7162 -2.2873 -0.1175 -0.3056 -0.0881
+S-321	a Ġsteak Ġ, Ġshrimp Ġand Ġan Ġen ch il ada Ġ.
+T-321	a steak , shrimp and an enchilada .
+H-321	-5.035045146942139	there was terrible service from the wall .
+D-321	-5.035045146942139	there was terrible service from the wall .
+P-321	-3.9485 -0.2040 -5.3308 -0.8078 -2.1637 -1.5771 -4.5997 -0.0961 -0.0892
+S-425	the Ġchips Ġand Ġgu ac am ole Ġwere Ġexcellent Ġtoo Ġ!
+T-425	the chips and guacamole were excellent too !
+H-425	-5.996746063232422	there was only _num_ people in my opinion .
+D-425	-5.996746063232422	there was only _num_ people in my opinion .
+P-425	-4.6646 -0.5750 -3.0507 -3.9903 -3.9311 -2.0219 -2.8345 -2.5585 -0.1594 -0.0875
+S-89	the Ġesc arg ot Ġwas Ġdelicious Ġ, Ġand Ġseasoned Ġperfectly Ġ.
+T-89	the escargot was delicious , and seasoned perfectly .
+H-89	-4.618874549865723	not sure what a waste of my time .
+D-89	-4.618874549865723	not sure what a waste of my time .
+P-89	-0.4843 -3.1706 -1.8191 -2.7336 -5.4073 -0.6033 -1.9524 -1.3863 -0.7418 -0.0893
+S-107	love Ġthe Ġafternoon Ġ- Ġtea Ġat Ġthe Ġph oen ician Ġ.
+T-107	love the afternoon - tea at the phoenician .
+H-107	-5.7857255935668945	the owner was rude at all costs .
+D-107	-5.7857255935668945	the owner was rude at all costs .
+P-107	-5.4272 -3.8516 -0.9871 -4.7149 -2.8488 -2.1592 -1.4564 -0.0875 -0.0899
+S-285	w onder ful Ġstaff Ġ, Ġwonderful Ġfood Ġ, Ġexcellent Ġprices Ġ.
+T-285	wonderful staff , wonderful food , excellent prices .
+H-285	-5.353826999664307	terrible service , wo n't be returning .
+D-285	-5.353826999664307	terrible service , wo n't be returning .
+P-285	-4.6283 -0.6688 -1.3424 -6.9069 -0.1621 -1.6428 -2.0105 -2.5571 -0.0895
+S-317	very Ġthrow back Ġatmosphere Ġ; Ġvintage Ġice Ġcream Ġpar lor Ġ.
+T-317	very throwback atmosphere ; vintage ice cream parlor .
+H-317	-5.600297927856445	there was no reason for me .
+D-317	-5.600297927856445	there was no reason for me .
+P-317	-4.5780 -1.0265 -2.4649 -3.9335 -4.3750 -2.6469 -0.3900 -0.0866
+S-7	other wise Ġa Ġgreat Ġexperience Ġand Ġwe Ġwill Ġgo Ġagain Ġ.
+T-7	otherwise a great experience and we will go again .
+H-7	-4.997366428375244	not sure why it 's even over _num_ minutes .
+D-7	-4.997366428375244	not sure why it 's even over _num_ minutes .
+P-7	-3.1849 -2.7014 -2.6473 -1.7097 -1.4889 -3.3735 -4.0720 -1.4688 -0.2339 -0.0978 -0.0875
+S-37	their Ġfront Ġline Ġis Ġso Ġmuch Ġcheaper Ġthan Ġpets mart Ġ!
+T-37	their front line is so much cheaper than petsmart !
+H-37	-4.683957576751709	this place is horrible .
+D-37	-4.683957576751709	this place is horrible .
+P-37	-4.2755 -0.5413 -0.9375 -5.5935 -2.2887 -0.0882
+S-115	the Ġpeople Ġat Ġson ora Ġwere Ġvery Ġgood Ġto Ġme Ġ.
+T-115	the people at sonora were very good to me .
+H-115	-5.545131206512451	there was no biggie though .
+D-115	-5.545131206512451	there was no biggie though .
+P-115	-4.4796 -0.7986 -1.1819 -4.7480 -4.9845 -1.5445 -0.0854
+S-144	it Ġis Ġthe Ġmost Ġauthentic Ġth ai Ġin Ġthe Ġvalley Ġ.
+T-144	it is the most authentic thai in the valley .
+H-144	-3.8591148853302	this place is terrible after _num_ minutes .
+D-144	-3.8591148853302	this place is terrible after _num_ minutes .
+P-144	-1.9684 -1.3621 -0.7099 -2.7316 -3.8038 -2.5934 -0.7073 -0.4561 -0.0897
+S-183	the Ġguys Ġhere Ġare Ġso oo Ġincredibly Ġnice Ġand Ġhelpful Ġ.
+T-183	the guys here are sooo incredibly nice and helpful .
+H-183	-5.949021339416504	this place is like _num_ degrees out .
+D-183	-5.949021339416504	this place is like _num_ degrees out .
+P-183	-5.3673 -1.0375 -2.0791 -4.5205 -1.2525 -2.9189 -4.7152 -0.2521 -0.0897
+S-186	great Ġplace Ġto Ġhave Ġsome Ġfresh Ġand Ġdelicious Ġdon uts Ġ.
+T-186	great place to have some fresh and delicious donuts .
+H-186	-5.285637378692627	the wait staff was less than _num_ minutes .
+D-186	-5.285637378692627	the wait staff was less than _num_ minutes .
+P-186	-1.3849 -5.3940 -0.4957 -2.0363 -5.7260 -2.6000 -0.6390 -2.5749 -0.1031 -0.0886
+S-241	my Ġhusband Ġand Ġi Ġenjoyed Ġour Ġ3 rd Ġanniversary Ġhere Ġ.
+T-241	my husband and i enjoyed our 3rd anniversary here .
+H-241	-4.369961738586426	the service was worse than _num_ minutes .
+D-241	-4.369961738586426	the service was worse than _num_ minutes .
+P-241	-0.6317 -1.8328 -0.3043 -7.7870 -1.0140 -1.8402 -2.7431 -0.0884 -0.0900
+S-345	it Ġ' s Ġhot Ġ, Ġcooked Ġperfectly Ġ, Ġand Ġdelicious Ġ!
+T-345	it 's hot , cooked perfectly , and delicious !
+H-345	-5.335800647735596	this place was worse than _num_ minutes .
+D-345	-5.335800647735596	this place was worse than _num_ minutes .
+P-345	-3.7294 -1.0113 -1.2095 -6.7721 -2.3366 -3.4108 -1.0005 -0.3825 -0.0880
+S-364	very Ġhelpful Ġ, Ġhosp itable Ġ, Ġknowledgeable Ġ, Ġand Ġinformative Ġ.
+T-364	very helpful , hospitable , knowledgeable , and informative .
+H-364	-5.832200050354004	most importantly , there was no clue about _num_ minutes .
+D-364	-5.832200050354004	most importantly , there was no clue about _num_ minutes .
+P-364	-8.4025 -1.9223 -2.3393 -0.9534 -0.3790 -2.2331 -5.8449 -1.5939 -1.6775 -0.3741 -0.0935 -0.0889
+S-1	i Ġwill Ġbe Ġgoing Ġback Ġand Ġenjoying Ġthis Ġgreat Ġplace Ġ!
+T-1	i will be going back and enjoying this great place !
+H-1	-4.683187007904053	worst customer service ever .
+D-1	-4.683187007904053	worst customer service ever .
+P-1	-6.2095 -3.7248 -0.5098 -1.4952 -1.6952 -0.0880
+S-4	i Ġsigned Ġup Ġfor Ġtheir Ġemail Ġand Ġgot Ġa Ġcoupon Ġ.
+T-4	i signed up for their email and got a coupon .
+H-4	-6.7882866859436035	now there was not a single time like this .
+D-4	-6.7882866859436035	now there was not a single time like this .
+P-4	-6.3677 -3.5459 -0.3595 -4.2062 -4.2805 -3.1803 -3.7932 -2.3648 -0.0747 -0.3549 -0.0876
+S-15	they Ġwere Ġso Ġhelpful Ġ, Ġkind Ġ, Ġand Ġreasonably Ġpriced Ġ.
+T-15	they were so helpful , kind , and reasonably priced .
+H-15	-5.72564697265625	wo n't be back for sure .
+D-15	-5.72564697265625	wo n't be back for sure .
+P-15	-7.5229 -0.1807 -0.4750 -0.7296 -6.4413 -2.7744 -1.7243 -0.0896
+S-19	everyone Ġthat Ġi Ġspoke Ġwith Ġwas Ġvery Ġhelpful Ġand Ġkind Ġ.
+T-19	everyone that i spoke with was very helpful and kind .
+H-19	-4.826499938964844	thats not one star if you 're in town .
+D-19	-4.826499938964844	thats not one star if you 're in town .
+P-19	-4.6054 -1.2876 -1.3802 -1.0619 -3.3981 -0.3890 -3.3984 -1.5014 -3.1248 -0.1115 -0.0871
+S-20	the Ġvariety Ġof Ġsushi Ġrolls Ġmakes Ġfor Ġa Ġgood Ġeating Ġ.
+T-20	the variety of sushi rolls makes for a good eating .
+H-20	-4.067480564117432	there was no problem with this service .
+D-20	-4.067480564117432	there was no problem with this service .
+P-20	-2.7980 -0.2173 -1.0278 -3.3879 -2.1973 -2.0262 -3.0900 -0.3705 -0.0858
+S-30	very Ġgood Ġbrunch Ġ, Ġwas Ġimpressed Ġwith Ġselection Ġand Ġquality Ġ.
+T-30	very good brunch , was impressed with selection and quality .
+H-30	-4.5955352783203125	he wo n't be going back .
+D-30	-4.5955352783203125	he wo n't be going back .
+P-30	-2.1240 -6.9006 -0.1507 -0.9807 -4.6482 -0.1197 -0.9870 -0.0918
+S-31	the Ġmenu Ġis Ġvery Ġsimple Ġ, Ġhealthy Ġ, Ġand Ġtasty Ġ.
+T-31	the menu is very simple , healthy , and tasty .
+H-31	-5.141763210296631	there should n't be anymore rude for this place .
+D-31	-5.141763210296631	there should n't be anymore rude for this place .
+P-31	-3.5686 -2.1991 -1.3280 -0.2863 -4.4835 -3.0846 -1.5552 -1.6136 -3.3592 -0.1075 -0.0891
+S-33	i Ġlove Ġthis Ġplace Ġ, Ġthe Ġservice Ġis Ġalways Ġgreat Ġ!
+T-33	i love this place , the service is always great !
+H-33	-4.489680290222168	worst customer service ever .
+D-33	-4.489680290222168	worst customer service ever .
+P-33	-4.4685 -2.8508 -0.1346 -2.2415 -3.3752 -0.0848
+S-36	the Ġatmosphere Ġwas Ġfun Ġand Ġthe Ġstaff Ġtreats Ġyou Ġwell Ġ.
+T-36	the atmosphere was fun and the staff treats you well .
+H-36	-5.171819686889648	why did n't bother with this place .
+D-36	-5.171819686889648	why did n't bother with this place .
+P-36	-6.6127 -0.6616 -0.1591 -3.9345 -0.4700 -4.3409 -1.6469 -1.4145 -0.0879
+S-45	they Ġhave Ġa Ġfantastic Ġselection Ġand Ġa Ġvery Ġknowledgeable Ġstaff Ġ.
+T-45	they have a fantastic selection and a very knowledgeable staff .
+H-45	-5.073023319244385	there was no longer than one star for this business .
+D-45	-5.073023319244385	there was no longer than one star for this business .
+P-45	-3.0916 -0.3687 -3.9472 -2.6903 -4.3038 -2.3927 -2.6153 -0.5076 -0.1574 -2.2662 -0.1022 -0.0878
+S-48	the Ġlunch Ġand Ġdinner Ġitems Ġare Ġvery Ġgood Ġas Ġwell Ġ.
+T-48	the lunch and dinner items are very good as well .
+H-48	-4.672466278076172	wo n't be going back for _num_ minutes .
+D-48	-4.672466278076172	wo n't be going back for _num_ minutes .
+P-48	-5.3692 -0.1243 -2.2410 -6.0849 -0.2155 -0.9359 -1.4620 -1.9715 -0.1089 -0.0883
+S-64	thanks Ġfor Ġmaking Ġour Ġspecial Ġnight Ġan Ġevent Ġto Ġremember Ġ.
+T-64	thanks for making our special night an event to remember .
+H-64	-5.308464527130127	she would not wait at all _num_ minutes .
+D-64	-5.308464527130127	she would not wait at all _num_ minutes .
+P-64	-3.6052 -4.0962 -2.2702 -5.1474 -2.3203 -1.1402 -1.1878 -1.0571 -0.2211 -0.0878
+S-71	friendly Ġand Ġwelcoming Ġwith Ġa Ġfun Ġatmosphere Ġand Ġterrific Ġfood Ġ.
+T-71	friendly and welcoming with a fun atmosphere and terrific food .
+H-71	-5.913163185119629	our waitress was either broken or not there .
+D-71	-5.913163185119629	our waitress was either broken or not there .
+P-71	-7.9642 -2.3823 -0.2843 -4.3908 -3.1384 -1.5316 -0.5499 -3.1223 -0.0909 -0.0861
+S-76	they Ġare Ġprofessional Ġ, Ġthorough Ġand Ġattentive Ġto Ġour Ġneeds Ġ.
+T-76	they are professional , thorough and attentive to our needs .
+H-76	-5.834722518920898	there 's no excuse from this location .
+D-76	-5.834722518920898	there 's no excuse from this location .
+P-76	-4.5198 -1.5202 -1.5394 -4.9466 -3.3598 -1.4537 -4.0804 -0.2955 -0.0900
+S-94	all Ġaround Ġgreat Ġplace Ġto Ġgrab Ġa Ġdrink Ġor Ġtwo Ġ.
+T-94	all around great place to grab a drink or two .
+H-94	-6.144880294799805	this place is one of my worst enemy .
+D-94	-6.144880294799805	this place is one of my worst enemy .
+P-94	-7.0433 -0.3104 -0.6503 -6.1656 -0.4104 -2.1399 -2.3803 -3.8156 -1.4576 -0.0897
+S-123	the Ġservice Ġwas Ġamazing Ġand Ġthe Ġstaff Ġwas Ġvery Ġfriendly Ġ.
+T-123	the service was amazing and the staff was very friendly .
+H-123	-6.206549167633057	worst customer service by all that was _num_ degrees .
+D-123	-6.206549167633057	worst customer service by all that was _num_ degrees .
+P-123	-4.6145 -4.1048 -0.1725 -4.4060 -2.9321 -1.6716 -2.3248 -2.2120 -3.5250 -0.1121 -0.0875
+S-127	these Ġguys Ġare Ġtop Ġnotch Ġ, Ġhonest Ġand Ġvery Ġreasonable Ġ.
+T-127	these guys are top notch , honest and very reasonable .
+H-127	-6.028039932250977	worst service ever , there was _num_ minutes .
+D-127	-6.028039932250977	worst service ever , there was _num_ minutes .
+P-127	-5.4928 -2.3736 -1.3504 -3.5351 -1.5696 -0.2061 -5.4228 -1.9796 -1.9825 -0.0855
+S-146	love Ġthe Ġmole Ġsauce Ġ, Ġchips Ġare Ġnice Ġand Ġthick Ġ.
+T-146	love the mole sauce , chips are nice and thick .
+H-146	-5.574599742889404	unfortunately there was $ _num_ cheaper than this one .
+D-146	-5.574599742889404	unfortunately there was $ _num_ cheaper than this one .
+P-146	-2.2543 -5.3357 -0.2570 -5.8934 -0.0956 -5.9518 -1.5171 -0.2277 -1.5474 -0.3283 -0.0908
+S-182	the Ġbest Ġdeals Ġin Ġthe Ġstore Ġare Ġon Ġthese Ġracks Ġ.
+T-182	the best deals in the store are on these racks .
+H-182	-5.349703788757324	needless to say we wo n't be going back .
+D-182	-5.349703788757324	needless to say we wo n't be going back .
+P-182	-8.4198 -0.3269 -0.0492 -1.6364 -4.3855 -0.1418 -3.2124 -4.0654 -0.1150 -0.1085 -0.0901
+S-188	they Ġhave Ġan Ġexcellent Ġselection Ġof Ġcombos Ġto Ġchoose Ġfrom Ġ.
+T-188	they have an excellent selection of combos to choose from .
+H-188	-5.401453971862793	_num_ minutes later this place is not packed .
+D-188	-5.401453971862793	_num_ minutes later this place is not packed .
+P-188	-5.6196 -1.7773 -1.5931 -2.2346 -1.0298 -2.2959 -1.1366 -5.6216 -0.1054 -0.0895
+S-199	nothing Ġbut Ġexcellent Ġcustomer Ġservice Ġevery Ġtime Ġi Ġcome Ġhere Ġ.
+T-199	nothing but excellent customer service every time i come here .
+H-199	-5.216991424560547	they would n't waste your time at all .
+D-199	-5.216991424560547	they would n't waste your time at all .
+P-199	-1.4455 -4.9338 -2.2289 -4.5335 -2.6960 -0.4250 -3.2364 -0.8910 -0.2912 -0.0879
+S-219	the Ġtwo Ġgentle Ġmen Ġup Ġfront Ġare Ġalways Ġso Ġkind Ġ.
+T-219	the two gentle men up front are always so kind .
+H-219	-6.033315181732178	_num_ minutes later they did n't appeal .
+D-219	-6.033315181732178	_num_ minutes later they did n't appeal .
+P-219	-4.8766 -1.2811 -3.6588 -3.0350 -2.2220 -0.3384 -6.6058 -0.4398 -0.0903
+S-229	everyone Ġwho Ġworks Ġthere Ġis Ġalways Ġso Ġhappy Ġand Ġfriendly Ġ.
+T-229	everyone who works there is always so happy and friendly .
+H-229	-6.438905239105225	wo n't be frequenting this place for us .
+D-229	-6.438905239105225	wo n't be frequenting this place for us .
+P-229	-7.7307 -0.1935 -1.1833 -6.6435 -1.9473 -1.5996 -3.5166 -2.4069 -0.3226 -0.0896
+S-304	this Ġcourse Ġis Ġone Ġof Ġthe Ġfinest Ġin Ġthe Ġarea Ġ.
+T-304	this course is one of the finest in the area .
+H-304	-6.68662691116333	why not one star is my fault for _num_ minutes .
+D-304	-6.68662691116333	why not one star is my fault for _num_ minutes .
+P-304	-5.6511 -2.0084 -4.3273 -2.1904 -1.8283 -2.6836 -4.6421 -3.5336 -2.2841 -0.3441 -0.1154 -0.0888
+S-306	i Ġenjoy Ġcoming Ġhere Ġfor Ġlunch Ġto Ġget Ġthe Ġslices Ġ.
+T-306	i enjoy coming here for lunch to get the slices .
+H-306	-4.864875793457031	she did n't wait til _num_ minutes to be had .
+D-306	-4.864875793457031	she did n't wait til _num_ minutes to be had .
+P-306	-4.2518 -2.2583 -0.3821 -3.1777 -4.3656 -0.3514 -0.4785 -2.3886 -0.6367 -3.1297 -0.0976 -0.0881
+S-316	it Ġwas Ġpretty Ġinexpensive Ġand Ġthey Ġplayed Ġgood Ġmusic Ġvideos Ġ.
+T-316	it was pretty inexpensive and they played good music videos .
+H-316	-5.672032833099365	terrible customer service ; there was no joke .
+D-316	-5.672032833099365	terrible customer service ; there was no joke .
+P-316	-5.0817 -2.4427 -0.1204 -6.7366 -3.1153 -0.1954 -0.5806 -4.1052 -0.1165 -0.0863
+S-348	, Ġto Ġname Ġa Ġfew Ġshows Ġwe Ġhave Ġseen Ġhere Ġ.
+T-348	, to name a few shows we have seen here .
+H-348	-4.947518348693848	it did n't look at all costs .
+D-348	-4.947518348693848	it did n't look at all costs .
+P-348	-3.5324 -2.3823 -0.2939 -3.5414 -4.7413 -1.0164 -2.7821 -0.1115 -0.0886
+S-372	this Ġis Ġthe Ġbest Ġyarn Ġstore Ġin Ġthe Ġmetro Ġarea Ġ.
+T-372	this is the best yarn store in the metro area .
+H-372	-5.203756809234619	i waited over _num_ minutes for this place .
+D-372	-5.203756809234619	i waited over _num_ minutes for this place .
+P-372	-1.5453 -6.6875 -4.3481 -0.3052 -0.1796 -1.4578 -4.7679 -0.6102 -0.7231 -0.0917
+S-419	the Ġart Ġin Ġthe Ġalley Ġbehind Ġit Ġis Ġcool Ġtoo Ġ!
+T-419	the art in the alley behind it is cool too !
+H-419	-6.351058006286621	first time there was $ _num_ or less .
+D-419	-6.351058006286621	first time there was $ _num_ or less .
+P-419	-7.4108 -2.0796 -1.8790 -1.4836 -4.9417 -0.0919 -4.3186 -2.4906 -0.5002 -0.0880
+S-426	this Ġplace Ġis Ġwonderful Ġwhen Ġyou Ġcan Ġactually Ġsit Ġoutside Ġ.
+T-426	this place is wonderful when you can actually sit outside .
+H-426	-5.456639766693115	terrible customer service after only _num_ miles .
+D-426	-5.456639766693115	terrible customer service after only _num_ miles .
+P-426	-5.4515 -4.7272 -0.1442 -3.3309 -4.1098 -0.1133 -2.2771 -0.1508 -0.0876
+S-435	she Ġwas Ġabsolutely Ġfantastic Ġand Ġi Ġlove Ġwhat Ġshe Ġdid Ġ!
+T-435	she was absolutely fantastic and i love what she did !
+H-435	-6.004273891448975	worst experience i 've ever gotten at this dry .
+D-435	-6.004273891448975	worst experience i 've ever gotten at this dry .
+P-435	-5.9966 -2.9752 -4.0526 -1.6720 -1.1365 -3.3060 -2.0431 -0.3103 -3.6255 -0.1050 -0.0875
+S-436	the Ġhappy Ġhour Ġcrowd Ġhere Ġcan Ġbe Ġfun Ġon Ġoccasion Ġ.
+T-436	the happy hour crowd here can be fun on occasion .
+H-436	-5.527315139770508	this place was less than _num_ minutes and worst .
+D-436	-5.527315139770508	this place was less than _num_ minutes and worst .
+P-436	-4.1320 -0.6779 -0.8052 -7.1601 -1.5915 -1.6648 -2.5029 -0.7501 -3.8216 -0.1041 -0.0896
+S-440	he Ġis Ġvery Ġthorough Ġand Ġgenuinely Ġcares Ġfor Ġhis Ġcustomers Ġ.
+T-440	he is very thorough and genuinely cares for his customers .
+H-440	-5.777064323425293	needless to say , they 're not worth your money .
+D-440	-5.777064323425293	needless to say , they 're not worth your money .
+P-440	-9.5487 -0.5457 -0.0732 -1.9619 -2.0435 -3.2873 -2.8314 -1.7945 -2.7644 -0.6021 -0.1178 -0.0871
+S-444	i Ġwas Ġa Ġwalk Ġin Ġand Ġgot Ġhelped Ġright Ġaway Ġ!
+T-444	i was a walk in and got helped right away !
+H-444	-5.33902645111084	_num_ minutes later , they did n't taste like that .
+D-444	-5.33902645111084	_num_ minutes later , they did n't taste like that .
+P-444	-4.8612 -1.1849 -2.2199 -3.2372 -2.2391 -1.0621 -0.3532 -6.1739 -1.4827 -0.7499 -0.0574 -0.0906
+S-450	i Ġgot Ġmy Ġcar Ġdetailed Ġhere Ġand Ġit Ġlooked Ġamazing Ġ!
+T-450	i got my car detailed here and it looked amazing !
+H-450	-5.979506492614746	ive never had a bad experience at all .
+D-450	-5.979506492614746	ive never had a bad experience at all .
+P-450	-6.2070 -0.7580 -1.9320 -3.5396 -2.7659 -2.6472 -4.8622 -0.4153 -0.5891 -0.0884
+S-456	now Ġthe Ġfood Ġ, Ġdrinks Ġ, Ġand Ġdesserts Ġare Ġamazing Ġ.
+T-456	now the food , drinks , and desserts are amazing .
+H-456	-5.7410173416137695	there was nothing like rude and ended up .
+D-456	-5.7410173416137695	there was nothing like rude and ended up .
+P-456	-4.4950 -0.5846 -6.0361 -3.0486 -3.0636 -1.0596 -3.5875 -0.7358 -0.1600 -0.0845
+S-462	fun Ġand Ġinexpensive Ġway Ġto Ġenjoy Ġand Ġrelax Ġyour Ġday Ġ.
+T-462	fun and inexpensive way to enjoy and relax your day .
+H-462	-5.915731906890869	needless to say they only gave me _num_ minutes .
+D-462	-5.915731906890869	needless to say they only gave me _num_ minutes .
+P-462	-7.3283 -0.2732 -0.1595 -0.9976 -4.5710 -4.7097 -1.1984 -1.8131 -2.7352 -1.0619 -0.0889
+S-108	their Ġen ch il ada Ġsauce Ġperfectly Ġcomple mented Ġthis Ġdish Ġ.
+T-108	their enchilada sauce perfectly complemented this dish .
+H-108	-4.250435829162598	_num_ minutes did not get anything else .
+D-108	-4.250435829162598	_num_ minutes did not get anything else .
+P-108	-3.3263 -0.5804 -3.3154 -0.8610 -1.0543 -5.0885 -1.0188 -0.5509 -0.0891
+S-75	the Ġbest Ġme x ican Ġfood Ġin Ġthe Ġph oenix Ġarea Ġ.
+T-75	the best mexican food in the phoenix area .
+H-75	-4.885479927062988	this place is not worth _num_ minutes at all .
+D-75	-4.885479927062988	this place is not worth _num_ minutes at all .
+P-75	-7.3096 -1.4816 -1.5668 -0.6247 -2.1580 -2.5431 -2.5370 -1.5410 -0.6397 -0.1050 -0.0876
+S-25	port ions Ġare Ġvery Ġgenerous Ġand Ġfood Ġis Ġfant astically Ġflavorful Ġ.
+T-25	portions are very generous and food is fantastically flavorful .
+H-25	-5.144619941711426	the waitress did n't rest of them .
+D-25	-5.144619941711426	the waitress did n't rest of them .
+P-25	-1.0397 -3.8785 -2.1918 -0.5168 -5.9093 -0.9388 -3.3363 -1.3241 -0.0913
+S-42	se ems Ġpretty Ġhigh Ġcompared Ġto Ġevery Ġother Ġth ai Ġplace Ġ.
+T-42	seems pretty high compared to every other thai place .
+H-42	-4.92525053024292	_num_ minutes later they had no chef at all .
+D-42	-4.92525053024292	_num_ minutes later they had no chef at all .
+P-42	-3.9343 -0.5077 -2.9465 -2.7793 -1.8147 -2.9807 -3.6579 -1.8298 -0.1238 -0.0963 -0.0909
+S-215	good Ġfood Ġ, Ġgreat Ġprices Ġon Ġwings Ġon Ġt ues days Ġ.
+T-215	good food , great prices on wings on tuesdays .
+H-215	-6.312446117401123	this time has no bueno at all .
+D-215	-6.312446117401123	this time has no bueno at all .
+P-215	-5.0923 -3.4984 -3.2381 -2.5132 -4.6262 -2.1972 -2.2557 -0.0826 -0.0872
+S-238	b isc uits Ġand Ġgravy Ġare Ġa Ġgreat Ġbreakfast Ġitem Ġtoo Ġ.
+T-238	biscuits and gravy are a great breakfast item too .
+H-238	-6.070340156555176	there 's only reason for _num_ mins .
+D-238	-6.070340156555176	there 's only reason for _num_ mins .
+P-238	-3.7030 -3.5867 -4.7722 -2.2135 -1.7266 -3.3959 -0.9717 -2.2283 -0.0881
+S-3	my Ġhusband Ġgot Ġa Ġrub en Ġsandwich Ġ, Ġhe Ġloved Ġit Ġ.
+T-3	my husband got a ruben sandwich , he loved it .
+H-3	-5.347715854644775	the waitress did n't care about us .
+D-3	-5.347715854644775	the waitress did n't care about us .
+P-3	-4.7450 -2.7279 -1.0106 -1.0181 -2.6229 -3.3805 -2.8143 -1.5752 -0.0909
+S-17	friendly Ġfolks Ġ, Ġdelicious Ġauthentic Ġbag els Ġ, Ġtasty Ġcream Ġcheese Ġ.
+T-17	friendly folks , delicious authentic bagels , tasty cream cheese .
+H-17	-5.420717239379883	the waitress was terrible at all .
+D-17	-5.420717239379883	the waitress was terrible at all .
+P-17	-4.8032 -3.2959 -0.6904 -5.0967 -1.5773 -1.7288 -1.5945 -0.0893
+S-116	the Ġpatio Ġis Ġa Ġfun Ġplace Ġto Ġsit Ġat Ġ7 pm Ġ.
+T-116	the patio is a fun place to sit at 7pm .
+H-116	-5.092807769775391	there was no apology from this type of staff .
+D-116	-5.092807769775391	there was no apology from this type of staff .
+P-116	-4.9281 -0.0968 -0.7936 -4.8345 -2.4299 -1.6606 -3.9815 -0.2122 -2.3601 -0.0839 -0.0868
+S-122	i Ġgot Ġa Ġbag el Ġbreakfast Ġsandwich Ġand Ġit Ġwas Ġdelicious Ġ!
+T-122	i got a bagel breakfast sandwich and it was delicious !
+H-122	-5.30012845993042	i guess not worth it at all .
+D-122	-5.30012845993042	i guess not worth it at all .
+P-122	-1.4758 -4.6453 -2.3932 -3.8704 -2.1311 -4.2337 -0.4139 -0.5560 -0.0882
+S-143	everything Ġwe Ġ' ve Ġever Ġordered Ġhere Ġhas Ġbeen Ġgreat Ġtasting Ġ.
+T-143	everything we 've ever ordered here has been great tasting .
+H-143	-4.850071430206299	wo n't be back after _num_ minutes .
+D-143	-4.850071430206299	wo n't be back after _num_ minutes .
+P-143	-7.4441 -0.1568 -0.8422 -1.5151 -6.1403 -0.7594 -0.7828 -0.3942 -0.0907
+S-190	great Ġselection Ġof Ġsalads Ġand Ġpasta Ġitems Ġin Ġthe Ġdel i Ġ.
+T-190	great selection of salads and pasta items in the deli .
+H-190	-6.039028167724609	the customer service would n't waste your time .
+D-190	-6.039028167724609	the customer service would n't waste your time .
+P-190	-4.8060 -5.3028 -0.2236 -2.3104 -2.5214 -5.6630 -1.4687 -1.3421 -0.3155 -0.0883
+S-275	thank Ġyou Ġf iesta Ġ, Ġlunch Ġwith Ġyou Ġis Ġalways Ġgood Ġ.
+T-275	thank you fiesta , lunch with you is always good .
+H-275	-6.15290641784668	it did n't greet me as possible .
+D-275	-6.15290641784668	it did n't greet me as possible .
+P-275	-3.3458 -4.1606 -0.1105 -5.8934 -2.4381 -2.2144 -4.6649 -0.0806 -0.0864
+S-294	it Ġ' s Ġa Ġmuch Ġbetter Ġoption Ġthan Ġthe Ġclub Ġscene Ġ.
+T-294	it 's a much better option than the club scene .
+H-294	-5.258449077606201	worst customer service i have ever eaten .
+D-294	-5.258449077606201	worst customer service i have ever eaten .
+P-294	-7.5093 -1.8634 -0.1815 -1.1039 -1.2617 -1.9767 -5.3074 -0.3617 -0.0862
+S-307	it Ġis Ġa Ġhalf Ġa Ġday Ġtrip Ġfrom Ġph oenix Ġarea Ġ.
+T-307	it is a half a day trip from phoenix area .
+H-307	-5.430602073669434	unless it 's not worth my money at all .
+D-307	-5.430602073669434	unless it 's not worth my money at all .
+P-307	-6.5226 -1.7012 -2.3337 -3.2980 -2.9147 -2.4373 -1.6656 -1.3466 -0.2179 -0.3658 -0.0885
+S-320	i Ġjust Ġreturned Ġfrom Ġa Ġdelightful Ġstay Ġat Ġthe Ġcamel back Ġ.
+T-320	i just returned from a delightful stay at the camelback .
+H-320	-6.2701096534729	wo n't be heading back with my little place .
+D-320	-6.2701096534729	wo n't be heading back with my little place .
+P-320	-8.1931 -0.1135 -0.3135 -7.2763 -0.4894 -2.9091 -2.3644 -2.3111 -2.2638 -0.1063 -0.0905
+S-346	travel Ġall Ġaround Ġthe Ġworld Ġand Ġknow Ġind ian Ġfood Ġwell Ġ.
+T-346	travel all around the world and know indian food well .
+H-346	-5.803766250610352	it should have been _num_ minutes later with my order .
+D-346	-5.803766250610352	it should have been _num_ minutes later with my order .
+P-346	-3.5619 -5.6767 -2.4771 -0.8744 -1.1866 -1.0967 -4.1909 -0.9594 -3.9313 -1.6360 -0.0970 -0.0880
+S-23	this Ġgolf Ġclub Ġis Ġone Ġof Ġthe Ġbest Ġin Ġmy Ġopinion Ġ.
+T-23	this golf club is one of the best in my opinion .
+H-23	-6.073393821716309	not sure how there was a delay .
+D-23	-6.073393821716309	not sure how there was a delay .
+P-23	-4.5842 -2.0191 -2.9928 -3.6407 -1.0278 -0.5806 -6.6303 -1.1345 -0.0873
+S-28	the Ġmost Ġimportant Ġthing Ġ, Ġof Ġcourse Ġ, Ġis Ġthe Ġfood Ġ.
+T-28	the most important thing , of course , is the food .
+H-28	-5.308413982391357	i 'm not sure why a nightmare at this location .
+D-28	-5.308413982391357	i 'm not sure why a nightmare at this location .
+P-28	-0.6800 -1.8987 -0.9381 -5.3500 -2.5436 -2.1664 -4.5056 -1.8879 -0.2153 -3.1987 -0.1021 -0.0898
+S-35	a Ġgreat Ġstop Ġif Ġyou Ġwant Ġnice Ġthings Ġat Ġa Ġsteal Ġ.
+T-35	a great stop if you want nice things at a steal .
+H-35	-6.553840637207031	needless to say this place was no onion rings .
+D-35	-6.553840637207031	needless to say this place was no onion rings .
+P-35	-6.3300 -0.3011 -0.0808 -4.4538 -3.0615 -1.5893 -4.8263 -4.3553 -2.3663 -0.1726 -0.0898
+S-88	the Ġowner Ġreplied Ġ, Ġi Ġwill Ġgo Ġin Ġhalf Ġwith Ġyou Ġ.
+T-88	the owner replied , i will go in half with you .
+H-88	-4.876156806945801	my waitress did n't seem like this place .
+D-88	-4.876156806945801	my waitress did n't seem like this place .
+P-88	-5.2882 -4.0250 -1.3856 -0.3687 -3.1312 -1.2771 -2.7011 -0.9133 -0.2303 -0.0920
+S-111	one Ġof Ġmy Ġfavorite Ġplaces Ġto Ġgo Ġfor Ġa Ġgreat Ġsteak Ġ.
+T-111	one of my favorite places to go for a great steak .
+H-111	-5.749256610870361	terrible customer service was not sure at all .
+D-111	-5.749256610870361	terrible customer service was not sure at all .
+P-111	-6.7052 -2.0232 -0.1288 -5.0273 -1.2241 -4.8721 -2.4844 -0.2122 -0.1202 -0.0908
+S-119	she Ġkept Ġour Ġdrinks Ġfull Ġand Ġgave Ġus Ġgreat Ġfood Ġrecommendations Ġ.
+T-119	she kept our drinks full and gave us great food recommendations .
+H-119	-4.727864742279053	we did n't waste your time or money .
+D-119	-4.727864742279053	we did n't waste your time or money .
+P-119	-1.6314 -4.6644 -0.5256 -6.0990 -1.0830 -0.3824 -2.2007 -0.4025 -1.7430 -0.0899
+S-124	pool Ġtables Ġand Ġinexpensive Ġdrinks Ġmake Ġthis Ġa Ġfun Ġnight Ġout Ġ!
+T-124	pool tables and inexpensive drinks make this a fun night out !
+H-124	-6.061970233917236	there was no apology from this horrible .
+D-124	-6.061970233917236	there was no apology from this horrible .
+P-124	-6.6005 -0.3940 -2.0827 -5.6050 -1.7276 -0.4535 -5.5044 -0.1996 -0.0874
+S-138	nothing Ġbut Ġhappy Ġthoughts Ġfrom Ġanyone Ġi Ġhave Ġsent Ġtheir Ġway Ġ!
+T-138	nothing but happy thoughts from anyone i have sent their way !
+H-138	-5.422305583953857	staff was rude as hell .
+D-138	-5.422305583953857	staff was rude as hell .
+P-138	-6.2124 -0.7940 -3.7387 -2.4598 -3.1738 -0.9581 -0.0910
+S-169	we Ġate Ġhere Ġyesterday Ġfor Ġhappy Ġhour Ġand Ġit Ġwas Ġfantastic Ġ.
+T-169	we ate here yesterday for happy hour and it was fantastic .
+H-169	-5.043751239776611	worst customer service ever .
+D-169	-5.043751239776611	worst customer service ever .
+P-169	-5.5299 -2.7840 -0.1545 -3.0113 -3.2140 -0.0853
+S-201	i Ġalso Ġget Ġdessert Ġhere Ġwhen Ġi Ġhave Ġa Ġsweet Ġtooth Ġ.
+T-201	i also get dessert here when i have a sweet tooth .
+H-201	-4.660881519317627	this place had not a real problem with me .
+D-201	-4.660881519317627	this place had not a real problem with me .
+P-201	-3.1625 -0.2160 -2.2327 -3.3996 -3.2834 -1.9343 -1.8089 -0.8996 -2.5196 -0.1047 -0.0862
+S-205	service Ġwas Ġgreat Ġas Ġthey Ġcontinued Ġto Ġcheck Ġon Ġour Ġtable Ġ.
+T-205	service was great as they continued to check on our table .
+H-205	-5.631300926208496	there was terrible customer service like this place .
+D-205	-5.631300926208496	there was terrible customer service like this place .
+P-205	-4.8901 -0.9447 -4.4868 -3.4890 -0.0943 -4.7460 -0.3728 -3.2236 -0.0829 -0.0884
+S-265	absolutely Ġhands Ġdown Ġthe Ġbest Ġdentist Ġoffice Ġin Ġthe Ġeast Ġvalley Ġ!
+T-265	absolutely hands down the best dentist office in the east valley !
+H-265	-5.579232215881348	needless to say `` chris '' is no longer .
+D-265	-5.579232215881348	needless to say `` chris '' is no longer .
+P-265	-7.6424 -0.1585 -0.1615 -3.6202 -3.4531 -0.3440 -3.0724 -3.2834 -1.3424 -0.3547 -0.0860
+S-284	it Ġcan Ġbe Ġpricey Ġ, Ġbut Ġit Ġis Ġreally Ġworth Ġit Ġ.
+T-284	it can be pricey , but it is really worth it .
+H-284	-5.252120018005371	the food is terrible as well .
+D-284	-5.252120018005371	the food is terrible as well .
+P-284	-0.7112 -5.3930 -2.6945 -4.5919 -2.8732 -1.8463 -0.0913 -0.0874
+S-298	it Ġis Ġvery Ġvery Ġfamily Ġoriented Ġand Ġwe Ġloved Ġthat Ġtoo Ġ!
+T-298	it is very very family oriented and we loved that too !
+H-298	-6.125341415405273	the pizza was horrible as well .
+D-298	-6.125341415405273	the pizza was horrible as well .
+P-298	-4.9993 -5.0023 -0.2786 -1.3080 -5.7459 -3.2077 -0.6997 -0.0882
+S-300	she Ġdid Ġan Ġamazing Ġjob Ġon Ġmy Ġcolor Ġand Ġmy Ġcut Ġ!
+T-300	she did an amazing job on my color and my cut !
+H-300	-5.505270481109619	needless to say there were only _num_ minutes after this .
+D-300	-5.505270481109619	needless to say there were only _num_ minutes after this .
+P-300	-6.7202 -0.1605 -0.0922 -6.8591 -0.7554 -2.2141 -2.3775 -2.3673 -1.9928 -0.5713 -0.2529 -0.0872
+S-360	place Ġwas Ġclean Ġand Ġwell Ġkept Ġ, Ġdrinks Ġwere Ġreasonably Ġpriced Ġ.
+T-360	place was clean and well kept , drinks were reasonably priced .
+H-360	-4.971523284912109	not sure what arrived at all .
+D-360	-4.971523284912109	not sure what arrived at all .
+P-360	-3.3843 -3.2588 -2.1521 -3.4863 -2.4245 -1.3782 -1.1401 -0.0874
+S-363	they Ġalso Ġfound Ġmy Ġapartment Ġwhich Ġis Ġpretty Ġhard Ġto Ġfind Ġ.
+T-363	they also found my apartment which is pretty hard to find .
+H-363	-6.168209075927734	our waitress was n't ready , but very unprofessional .
+D-363	-6.168209075927734	our waitress was n't ready , but very unprofessional .
+P-363	-6.1800 -2.9494 -0.2261 -0.7680 -4.9002 -2.8493 -1.0350 -4.5308 -2.3730 -0.1013 -0.0882
+S-384	they Ġbring Ġit Ġout Ġfront Ġfor Ġyou Ġand Ġare Ġvery Ġhelpful Ġ.
+T-384	they bring it out front for you and are very helpful .
+H-384	-5.603396415710449	the worst customer service i 've ever been too .
+D-384	-5.603396415710449	the worst customer service i 've ever been too .
+P-384	-5.1778 -2.8410 -2.7268 -0.1308 -5.3193 -0.3053 -0.8722 -3.4561 -2.5259 -0.1764 -0.0887
+S-397	the Ġwoman Ġwho Ġhelped Ġme Ġtoday Ġwas Ġvery Ġfriendly Ġand Ġknowledgeable Ġ.
+T-397	the woman who helped me today was very friendly and knowledgeable .
+H-397	-6.1778244972229	_num_ minutes before they were either undercooked .
+D-397	-6.1778244972229	_num_ minutes before they were either undercooked .
+P-397	-7.5061 -0.4874 -2.8837 -2.2686 -4.3446 -2.0016 -3.3989 -0.1095 -0.0872
+S-441	plus Ġhe Ġhas Ġamazing Ġprices Ġ, Ġhow Ġcould Ġyou Ġnot Ġgo Ġ?
+T-441	plus he has amazing prices , how could you not go ?
+H-441	-6.477390289306641	worst experience ever , there was not one sitting .
+D-441	-6.477390289306641	worst experience ever , there was not one sitting .
+P-441	-6.4486 -3.6628 -2.4891 -2.3225 -1.5591 -0.5341 -2.4008 -3.7029 -3.8746 -0.2224 -0.0878
+S-449	they Ġare Ġsuper Ġfriendly Ġ, Ġvery Ġhelpful Ġ, Ġand Ġamazingly Ġquick Ġ!
+T-449	they are super friendly , very helpful , and amazingly quick !
+H-449	-5.097657680511475	wo n't be returning at this location ... .
+D-449	-5.097657680511475	wo n't be returning at this location ... .
+P-449	-5.9170 -0.1386 -0.8395 -3.7296 -5.5719 -0.6421 -2.0048 -0.8764 -0.4876 -0.0867
+S-464	got Ġscrewed Ġat Ġbar Ġthat Ġwe Ġmade Ġreservations Ġat Ġnext Ġdoor Ġ.
+T-464	got screwed at bar that we made reservations at next door .
+H-464	-5.764963626861572	if you did n't receive my money back .
+D-464	-5.764963626861572	if you did n't receive my money back .
+P-464	-6.1358 -1.5065 -2.1479 -0.5232 -4.7455 -2.4522 -3.8345 -1.4228 -0.0926 -0.0898
+S-468	had Ġa Ġblast Ġand Ġthe Ġfood Ġat Ġtheir Ġrestaurant Ġwas Ġexcellent Ġ!
+T-468	had a blast and the food at their restaurant was excellent !
+H-468	-5.3630194664001465	this place was worst customer service at all .
+D-468	-5.3630194664001465	this place was worst customer service at all .
+P-468	-1.2046 -2.0632 -3.4140 -2.7833 -4.6616 -0.4581 -3.4631 -3.0177 -0.1954 -0.0895
+S-231	ordered Ġthe Ġhue v os Ġr anche ros Ġand Ġit Ġwas Ġdelicious Ġ!
+T-231	ordered the huevos rancheros and it was delicious !
+H-231	-6.609452724456787	this place was just awful in customer service .
+D-231	-6.609452724456787	this place was just awful in customer service .
+P-231	-2.2128 -2.7865 -2.5353 -5.8542 -4.8798 -3.2767 -4.1432 -0.4545 -0.0826 -0.0872
+S-396	the Ġcal if ornia Ġbur rito Ġwas Ġalso Ġa Ġgreat Ġbur rito Ġ.
+T-396	the california burrito was also a great burrito .
+H-396	-4.217360496520996	it was not worth a _num_ minute wait .
+D-396	-4.217360496520996	it was not worth a _num_ minute wait .
+P-396	-2.6772 -0.5170 -2.7143 -1.5157 -0.4895 -2.7327 -2.2814 -1.5440 -2.2285 -0.0893
+S-65	i Ġhad Ġa Ġsp anish Ġo me let Ġwas Ġhuge Ġand Ġdelicious Ġ.
+T-65	i had a spanish omelet was huge and delicious .
+H-65	-4.902661323547363	_num_ % of the chicken was awful though .
+D-65	-4.902661323547363	_num_ % of the chicken was awful though .
+P-65	-3.1726 -4.3690 -1.7828 -0.5586 -3.2268 -0.3217 -1.4455 -4.4460 -0.1037 -0.0911
+S-253	always Ġorder Ġthe Ġt z atz iki Ġsauce Ġwith Ġeverything Ġyou Ġget Ġ!
+T-253	always order the tzatziki sauce with everything you get !
+H-253	-6.450617790222168	this place is horrible .
+D-253	-6.450617790222168	this place is horrible .
+P-253	-2.8859 -3.8816 -2.0421 -3.8399 -6.1635 -0.0882
+S-393	i Ġ' m Ġa Ġregular Ġdrive - through Ġcustomer Ġat Ġthis Ġlocation Ġ.
+T-393	i 'm a regular drive-through customer at this location .
+H-393	-4.755773067474365	the food was mediocre at best .
+D-393	-4.755773067474365	the food was mediocre at best .
+P-393	-5.9289 -0.7553 -0.1359 -6.1658 -1.9589 -1.4060 -0.1228 -0.0869
+S-140	j enn ifer Ġis Ġgreat Ġand Ġshe Ġreally Ġmakes Ġskin Ġcare Ġaffordable Ġ.
+T-140	jennifer is great and she really makes skin care affordable .
+H-140	-5.544487953186035	there was only $ _num_ ahead of me .
+D-140	-5.544487953186035	there was only $ _num_ ahead of me .
+P-140	-4.6492 -0.3310 -4.0678 -5.5914 -0.0929 -5.7325 -0.8817 -0.5379 -0.1008 -0.0878
+S-174	the Ġmeat lo af Ġ( Ġwhen Ġthey Ġhave Ġit Ġ) Ġis Ġamazing Ġ.
+T-174	the meatloaf ( when they have it ) is amazing .
+H-174	-6.607468605041504	then it was about _num_ minutes tops .
+D-174	-6.607468605041504	then it was about _num_ minutes tops .
+P-174	-5.6540 -2.1226 -2.0989 -5.4850 -0.6019 -2.1370 -4.6897 -1.8167 -0.0877
+S-210	ok ay Ġprices Ġand Ġgreat Ġtast ings Ġat Ġleast Ġonce Ġa Ġmonth Ġ.
+T-210	okay prices and great tastings at least once a month .
+H-210	-6.088986396789551	there was no excuse after _num_ minutes .
+D-210	-6.088986396789551	there was no excuse after _num_ minutes .
+P-210	-4.8759 -0.9208 -2.1575 -3.9674 -3.6170 -2.5631 -3.8286 -0.7375 -0.0880
+S-233	the Ġfire cr acker Ġshrimp Ġand Ġduck Ġis Ġalso Ġalways Ġa Ġwinner Ġ.
+T-233	the firecracker shrimp and duck is also always a winner .
+H-233	-5.875997543334961	the worst customer service i have ever experienced .
+D-233	-5.875997543334961	the worst customer service i have ever experienced .
+P-233	-3.8620 -4.7650 -3.0645 -0.3034 -5.3850 -0.9675 -0.5959 -4.1349 -0.2277 -0.0868
+S-302	t otally Ġwill Ġcome Ġback Ġnext Ġtime Ġi Ġ' m Ġin Ġtown Ġ.
+T-302	totally will come back next time i 'm in town .
+H-302	-6.150674819946289	worst customer service ever had .
+D-302	-6.150674819946289	worst customer service ever had .
+P-302	-6.0758 -4.8128 -0.1641 -4.7280 -2.7241 -1.1785 -0.0857
+S-342	every Ġtime Ġi Ġcrave Ġme x ican Ġfood Ġ, Ġi Ġgo Ġhere Ġ!
+T-342	every time i crave mexican food , i go here !
+H-342	-5.418057918548584	the waitress was horrible , but there are not enough .
+D-342	-5.418057918548584	the waitress was horrible , but there are not enough .
+P-342	-1.9764 -2.9613 -1.5946 -3.3618 -1.7899 -3.0689 -2.2853 -2.1934 -1.9054 -2.7594 -0.0793 -0.0874
+S-349	en joy Ġtaking Ġmy Ġfamily Ġhere Ġalways Ġthe Ġfres hest Ġsea Ġfood Ġ.
+T-349	enjoy taking my family here always the freshest sea food .
+H-349	-6.305184364318848	she did n't wait so _num_ minutes to be described .
+D-349	-6.305184364318848	she did n't wait so _num_ minutes to be described .
+P-349	-6.6001 -1.2143 -0.6190 -5.4390 -1.6185 -4.4942 -0.9731 -1.4885 -1.5413 -3.7739 -0.1519 -0.0894
+S-0	it Ġ' s Ġsmall Ġyet Ġthey Ġmake Ġyou Ġfeel Ġright Ġat Ġhome Ġ.
+T-0	it 's small yet they make you feel right at home .
+H-0	-6.020719051361084	unfortunately they were not worth a _num_ star when it .
+D-0	-6.020719051361084	unfortunately they were not worth a _num_ star when it .
+P-0	-7.9039 -1.0857 -1.7768 -2.1726 -1.9349 -1.9270 -2.4697 -2.1307 -1.7483 -3.0400 -0.4595 -0.0906
+S-54	produ ce Ġis Ġvery Ġreasonably Ġpriced Ġand Ġgreat Ġselection Ġof Ġorganic Ġproduce Ġ.
+T-54	produce is very reasonably priced and great selection of organic produce .
+H-54	-5.908353328704834	she did n't get rid of this pizza .
+D-54	-5.908353328704834	she did n't get rid of this pizza .
+P-54	-2.2571 -3.2250 -0.2998 -4.3857 -5.2402 -0.1864 -3.4577 -3.2546 -1.1262 -0.0890
+S-92	also Ġthe Ġcrab Ġwont ons Ġrule Ġalong Ġwith Ġthe Ġspicy Ġplum Ġsauce Ġ.
+T-92	also the crab wontons rule along with the spicy plum sauce .
+H-92	-5.367312431335449	_num_ minutes later they had no steak at all .
+D-92	-5.367312431335449	_num_ minutes later they had no steak at all .
+P-92	-5.5876 -1.0825 -2.3686 -2.9677 -2.9362 -0.5670 -6.1045 -0.6957 -0.1199 -0.1072 -0.0884
+S-156	st opped Ġin Ġfor Ġlunch Ġ, Ġnice Ġwine Ġlist Ġ, Ġgood Ġservice Ġ.
+T-156	stopped in for lunch , nice wine list , good service .
+H-156	-5.44663667678833	the waitress was beyond bland at all .
+D-156	-5.44663667678833	the waitress was beyond bland at all .
+P-156	-3.5876 -3.1494 -0.8713 -5.0302 -3.1131 -2.4578 -1.4881 -0.5681 -0.0896
+S-189	they Ġwere Ġgreat Ġ, Ġnot Ġtoo Ġgre asy Ġbut Ġfluffy Ġand Ġlight Ġ.
+T-189	they were great , not too greasy but fluffy and light .
+H-189	-4.821659088134766	this place has no clue about customer service .
+D-189	-4.821659088134766	this place has no clue about customer service .
+P-189	-2.8489 -0.6803 -4.0710 -2.1512 -4.5952 -2.4554 -1.3952 -0.0714 -0.8366 -0.0902
+S-207	aw esome Ġand Ġfast Ġservice Ġ, Ġthese Ġguys Ġreally Ġknow Ġtheir Ġstuff Ġ.
+T-207	awesome and fast service , these guys really know their stuff .
+H-207	-6.291624546051025	she wo n't be returning because of this stuff .
+D-207	-6.291624546051025	she wo n't be returning because of this stuff .
+P-207	-3.6615 -6.5276 -0.1726 -2.3374 -3.7159 -4.4087 -0.5932 -0.7313 -4.1633 -0.1197 -0.0904
+S-301	the Ġowner Ġis Ġa Ġh oot Ġand Ġthe Ġfacility Ġis Ġvery Ġaccommodating Ġ.
+T-301	the owner is a hoot and the facility is very accommodating .
+H-301	-5.413300514221191	unfortunately there was nothing like this place .
+D-301	-5.413300514221191	unfortunately there was nothing like this place .
+P-301	-3.5201 -2.7281 -1.0151 -1.1461 -4.3507 -3.1647 -3.4523 -0.7676 -0.0859
+S-326	we Ġrecommend Ġimports Ġ& Ġameric an Ġauto Ġservice Ġto Ġeveryone Ġwe Ġknow Ġ.
+T-326	we recommend imports & american auto service to everyone we know .
+H-326	-5.524749755859375	_num_ minutes later , this placed sucked for me .
+D-326	-5.524749755859375	_num_ minutes later , this placed sucked for me .
+P-326	-5.7719 -2.3460 -2.2654 -3.7737 -2.1071 -1.4133 -2.7737 -1.6620 -0.9812 -0.1048 -0.0898
+S-355	had Ġthe Ġnormal Ġgy ro Ġsandwich Ġwith Ġtheir Ġsauce Ġ... Ġvery Ġgood Ġ.
+T-355	had the normal gyro sandwich with their sauce ... very good .
+H-355	-5.347123622894287	unfortunately , there was no one coming back .
+D-355	-5.347123622894287	unfortunately , there was no one coming back .
+P-355	-4.2369 -1.3615 -3.9225 -1.5879 -1.2252 -1.5843 -3.4594 -2.9765 -0.8436 -0.0895
+S-414	the Ġsushi Ġhere Ġis Ġgreat Ġand Ġi Ġlove Ġthe Ġcuc umber Ġsalad Ġ.
+T-414	the sushi here is great and i love the cucumber salad .
+H-414	-5.876766204833984	worst experience i 've ever been back to .
+D-414	-5.876766204833984	worst experience i 've ever been back to .
+P-414	-2.2183 -2.2370 -4.1982 -0.9560 -0.3680 -3.0377 -4.4801 -2.1175 -3.6949 -0.0881
+S-495	this Ġis Ġa Ġfantastic Ġlocation Ġ, Ġespecially Ġbecause Ġof Ġte resa Ġm Ġ!
+T-495	this is a fantastic location , especially because of teresa m !
+H-495	-5.420561790466309	it was not worth _num_ minutes at all .
+D-495	-5.420561790466309	it was not worth _num_ minutes at all .
+P-495	-4.6190 -0.4900 -3.7855 -4.0982 -1.5204 -3.3038 -3.2516 -0.3276 -0.0936 -0.0901
+S-10	i Ġwas Ġnervous Ġand Ġshe Ġmade Ġme Ġfeel Ġso Ġcomfortable Ġand Ġwelcome Ġ.
+T-10	i was nervous and she made me feel so comfortable and welcome .
+H-10	-4.740849018096924	my husband 's worst service ever .
+D-10	-4.740849018096924	my husband 's worst service ever .
+P-10	-2.8884 -4.3397 -2.4887 -2.8820 -2.0338 -1.1198 -0.6696 -0.0865
+S-83	we Ġdropped Ġour Ġrental Ġtruck Ġof Ġat Ġthis Ġlocation Ġtwo Ġweeks Ġago Ġ.
+T-83	we dropped our rental truck of at this location two weeks ago .
+H-83	-5.704891681671143	las vegas roll was not awesome at all .
+D-83	-5.704891681671143	las vegas roll was not awesome at all .
+P-83	-9.0887 -0.5708 -3.1481 -0.4595 -1.6423 -6.4462 -0.8191 -0.3564 -0.0917 -0.0887
+S-93	i Ġhave Ġgotten Ġso Ġmany Ġdresses Ġat Ġa Ġsteal Ġof Ġa Ġprice Ġ!
+T-93	i have gotten so many dresses at a steal of a price !
+H-93	-5.4295454025268555	who does n't seem like _num_ dollars .
+D-93	-5.4295454025268555	who does n't seem like _num_ dollars .
+P-93	-7.0324 -2.3439 -0.1507 -2.8692 -1.0470 -3.2917 -3.3224 -0.1436 -0.0905
+S-125	the Ġeggs Ġare Ġalways Ġfluffy Ġ, Ġthe Ġside Ġof Ġfruit Ġalways Ġgood Ġ.
+T-125	the eggs are always fluffy , the side of fruit always good .
+H-125	-5.443145751953125	_num_ minutes later they were expecting better than that .
+D-125	-5.443145751953125	_num_ minutes later they were expecting better than that .
+P-125	-3.3484 -0.6929 -2.1510 -3.0952 -1.5163 -3.4531 -4.5953 -2.8493 -0.9911 -0.1614 -0.0909
+S-209	nice Ġfor Ġme Ġto Ġgo Ġand Ġwork Ġand Ġhave Ġa Ġgreat Ġbreakfast Ġ!
+T-209	nice for me to go and work and have a great breakfast !
+H-209	-5.741854190826416	why did n't we get rid of it .
+D-209	-5.741854190826416	why did n't we get rid of it .
+P-209	-7.9852 -1.6617 -0.1827 -2.5184 -5.4144 -3.8831 -0.2086 -0.8223 -0.0947 -0.0877
+S-251	i Ġhad Ġthe Ġburger Ġonce Ġand Ġit Ġwas Ġjuicy Ġand Ġvery Ġflavorful Ġ!
+T-251	i had the burger once and it was juicy and very flavorful !
+H-251	-5.233219146728516	the food was horrible as well .
+D-251	-5.233219146728516	the food was horrible as well .
+P-251	-2.1813 -6.0306 -0.2135 -5.0792 -2.0643 -2.0621 -0.5061 -0.0861
+S-309	the Ġstaff Ġare Ġall Ġsuper Ġfriendly Ġand Ġon Ġtop Ġof Ġthere Ġjobs Ġ.
+T-309	the staff are all super friendly and on top of there jobs .
+H-309	-5.06684684753418	needless to say , he did n't waste your time .
+D-309	-5.06684684753418	needless to say , he did n't waste your time .
+P-309	-7.2378 -0.1620 -0.1546 -1.8432 -1.7769 -1.9408 -0.7601 -6.0343 -1.1576 -1.2313 -0.1145 -0.0902
+S-313	super Ġtasty Ġand Ġa Ġmuch Ġbetter Ġdeal Ġthan Ġthe Ġchain Ġsub Ġjoints Ġ.
+T-313	super tasty and a much better deal than the chain sub joints .
+H-313	-6.392046928405762	dr. hook was nothing like this location .
+D-313	-6.392046928405762	dr. hook was nothing like this location .
+P-313	-7.6790 -3.6452 -0.7111 -2.6067 -2.7351 -2.8802 -3.4433 -0.0976 -0.0902
+S-335	great Ġfood Ġ, Ġgreat Ġservice Ġ, Ġtheir Ġcatering Ġcan Ġnot Ġbe Ġbeat Ġ.
+T-335	great food , great service , their catering can not be beat .
+H-335	-5.519662857055664	they did n't care much about your table .
+D-335	-5.519662857055664	they did n't care much about your table .
+P-335	-4.5566 -1.9396 -0.2763 -4.6040 -2.6591 -2.2754 -2.2871 -1.7707 -1.5149 -0.0903
+S-353	family Ġowned Ġlittle Ġand Ġi Ġmean Ġlittle Ġrestaurant Ġwith Ġabsolutely Ġamazing Ġfood Ġ.
+T-353	family owned little and i mean little restaurant with absolutely amazing food .
+H-353	-4.729863166809082	_num_ minutes after that neither was my fault .
+D-353	-4.729863166809082	_num_ minutes after that neither was my fault .
+P-353	-3.2456 -1.1672 -4.0840 -2.1072 -2.9642 -0.6957 -1.3129 -3.0669 -0.0957 -0.0906
+S-415	if Ġyou Ġare Ġlooking Ġto Ġwalk Ġout Ġtransformed Ġthis Ġis Ġyour Ġplace Ġ!
+T-415	if you are looking to walk out transformed this is your place !
+H-415	-5.473267555236816	it did n't taste like this place .
+D-415	-5.473267555236816	it did n't taste like this place .
+P-415	-2.1823 -5.7104 -0.2166 -4.0358 -1.3823 -2.8197 -1.0832 -2.9376 -0.0868
+S-439	i Ġhave Ġhad Ġa Ġgreat Ġexperience Ġevery Ġtime Ġfrom Ġstart Ġto Ġfinish Ġ.
+T-439	i have had a great experience every time from start to finish .
+H-439	-6.258527755737305	_num_ minutes later they did n't taste like that .
+D-439	-6.258527755737305	_num_ minutes later they did n't taste like that .
+P-439	-6.1554 -0.8244 -0.8269 -2.4543 -4.2756 -0.4585 -5.9128 -1.2907 -4.0197 -0.0714 -0.0922
+S-443	all Ġhad Ġthat Ġsatisfying Ġgrease Ġflavor Ġthat Ġwashed Ġdown Ġwell Ġwith Ġbeers Ġ.
+T-443	all had that satisfying grease flavor that washed down well with beers .
+H-443	-6.338305473327637	horrible experience at least they took _num_ days .
+D-443	-6.338305473327637	horrible experience at least they took _num_ days .
+P-443	-4.4404 -1.2107 -4.6533 -2.8090 -3.0731 -3.5935 -1.5921 -3.2986 -0.4728 -0.0896
+S-448	it Ġis Ġa Ġcool Ġplace Ġ, Ġwith Ġlots Ġto Ġsee Ġand Ġtry Ġ.
+T-448	it is a cool place , with lots to see and try .
+H-448	-5.260209560394287	_num_ minutes later they were unable to clean up .
+D-448	-5.260209560394287	_num_ minutes later they were unable to clean up .
+P-448	-5.8177 -0.3816 -3.9288 -0.3492 -1.3654 -5.4154 -0.3155 -2.4830 -1.9084 -0.1165 -0.0922
+S-452	i Ġhad Ġto Ġbox Ġit Ġup Ġeven Ġ, Ġsuch Ġa Ġhuge Ġportion Ġ.
+T-452	i had to box it up even , such a huge portion .
+H-452	-6.406468391418457	there was nothing special because of this company looks .
+D-452	-6.406468391418457	there was nothing special because of this company looks .
+P-452	-7.3137 -1.3802 -3.1975 -3.6996 -2.6880 -0.6373 -1.8579 -3.3835 -2.6146 -0.1459 -0.0875
+S-493	i Ġalso Ġlike Ġthe Ġfact Ġthat Ġthey Ġhave Ġfresh Ġsqueezed Ġorange Ġjuice Ġ.
+T-493	i also like the fact that they have fresh squeezed orange juice .
+H-493	-6.022514343261719	i wo n't be bothered with this little place .
+D-493	-6.022514343261719	i wo n't be bothered with this little place .
+P-493	-1.4598 -7.3667 -0.1761 -2.2014 -5.1324 -1.1101 -1.4390 -4.0816 -2.2208 -0.1078 -0.0915
+S-259	best Ġbreakfast Ġi Ġhad Ġon Ġmy Ġrecent Ġtrip Ġto Ġsc ot ts dale Ġ.
+T-259	best breakfast i had on my recent trip to scottsdale .
+H-259	-5.667605876922607	_num_ minutes went downhill with them .
+D-259	-5.667605876922607	_num_ minutes went downhill with them .
+P-259	-5.9070 -0.5738 -4.0100 -3.7419 -1.4726 -3.3940 -0.5460 -0.0905
+S-432	t ried Ġtheir Ġlas agna Ġand Ġits Ġthe Ġbest Ġ ive Ġever Ġhad Ġ.
+T-432	tried their lasagna and its the best ive ever had .
+H-432	-5.3485941886901855	there was no reason to clean this restaurant .
+D-432	-5.3485941886901855	there was no reason to clean this restaurant .
+P-432	-4.3567 -1.7732 -1.6641 -2.4322 -1.3643 -6.7636 -0.0342 -2.7379 -0.0783 -0.0887
+S-492	this Ġis Ġone Ġplace Ġin Ġsc ot ts dale Ġcasual Ġdress Ġis Ġacceptable Ġ.
+T-492	this is one place in scottsdale casual dress is acceptable .
+H-492	-5.971734046936035	unfortunately there was no one coming to have .
+D-492	-5.971734046936035	unfortunately there was no one coming to have .
+P-492	-5.6157 -5.0879 -1.0886 -1.5283 -1.8512 -3.5159 -0.3443 -2.1713 -2.4827 -0.0878
+S-58	this Ġplace Ġhas Ġbeen Ġmaking Ġgreat Ġsushi Ġand Ġs ash imi Ġfor Ġyears Ġ.
+T-58	this place has been making great sushi and sashimi for years .
+H-58	-5.274022102355957	there is terrible customer service like this .
+D-58	-5.274022102355957	there is terrible customer service like this .
+P-58	-3.1991 -1.7260 -5.2380 -1.8742 -0.1111 -5.1098 -0.1559 -2.2053 -0.0906
+S-90	br itt any Ġgave Ġme Ġa Ġvery Ġnew Ġhaircut Ġand Ġtransformed Ġme Ġcompletely Ġ.
+T-90	brittany gave me a very new haircut and transformed me completely .
+H-90	-5.621654987335205	there was nothing wrong about this time .
+D-90	-5.621654987335205	there was nothing wrong about this time .
+P-90	-4.5946 -0.7114 -3.4954 -3.3514 -4.3709 -0.6107 -3.7026 -0.0824 -0.0898
+S-295	i Ġordered Ġthe Ġcar ne Ġas ada Ġsteak Ġand Ġit Ġwas Ġcooked Ġperfectly Ġ!
+T-295	i ordered the carne asada steak and it was cooked perfectly !
+H-295	-6.218250751495361	it took _num_ minutes for a purse that came .
+D-295	-6.218250751495361	it took _num_ minutes for a purse that came .
+P-295	-5.6378 -4.3832 -1.9441 -0.7716 -0.7194 -1.1688 -6.9600 -3.6689 -0.6934 -0.1734 -0.0915
+S-41	i Ġ' m Ġso Ġhappy Ġand Ġwill Ġdefinitely Ġgo Ġback Ġfor Ġfuture Ġservices Ġ.
+T-41	i 'm so happy and will definitely go back for future services .
+H-41	-5.400794982910156	worst customer service ever .
+D-41	-5.400794982910156	worst customer service ever .
+P-41	-5.4297 -2.9478 -0.1137 -4.0404 -3.2092 -0.0844
+S-57	certain ly Ġa Ġgood Ġchoice Ġif Ġgoing Ġto Ġa Ġperforming Ġarts Ġcenter Ġevent Ġ.
+T-57	certainly a good choice if going to a performing arts center event .
+H-57	-5.068935871124268	needless to say they did n't bother me .
+D-57	-5.068935871124268	needless to say they did n't bother me .
+P-57	-6.5504 -0.3047 -0.1045 -2.8345 -1.3984 -0.1662 -5.4502 -3.0844 -0.1950 -0.0917
+S-69	the Ġcolor Ġthat Ġshe Ġuses Ġon Ġmy Ġgirlfriend Ġ' s Ġhair Ġlooks Ġgreat Ġ.
+T-69	the color that she uses on my girlfriend 's hair looks great .
+H-69	-6.386749744415283	she did n't feel bad at all .
+D-69	-6.386749744415283	she did n't feel bad at all .
+P-69	-5.0117 -3.4974 -0.4808 -4.4195 -4.2923 -3.9481 -1.5908 -0.5407 -0.0872
+S-181	my Ġfather Ġhas Ġdecided Ġto Ġupgrade Ġmy Ġmothers Ġengagement Ġring Ġthis Ġx mas Ġ.
+T-181	my father has decided to upgrade my mothers engagement ring this xmas .
+H-181	-5.605496406555176	_num_ minutes later they did n't have any type .
+D-181	-5.605496406555176	_num_ minutes later they did n't have any type .
+P-181	-5.1300 -0.4238 -1.8978 -0.9627 -4.4235 -0.8242 -1.8141 -3.1522 -4.8037 -0.1118 -0.0856
+S-187	c ame Ġhere Ġto Ġget Ġbreakfast Ġand Ġthat Ġwas Ġthe Ġbest Ġdecision Ġyet Ġ.
+T-187	came here to get breakfast and that was the best decision yet .
+H-187	-5.583232402801514	_num_ minutes later they gave us airways as well .
+D-187	-5.583232402801514	_num_ minutes later they gave us airways as well .
+P-187	-3.5465 -0.8862 -1.9149 -1.5234 -5.7977 -2.2020 -3.6614 -1.7182 -2.0935 -0.1036 -0.0881
+S-228	our Ġbartender Ġer ik Ġtook Ġcare Ġof Ġmy Ġfiance Ġand Ġi Ġvery Ġwell Ġ.
+T-228	our bartender erik took care of my fiance and i very well .
+H-228	-5.54002046585083	it was _num_ minutes early for their crab puffs .
+D-228	-5.54002046585083	it was _num_ minutes early for their crab puffs .
+P-228	-1.9643 -0.9941 -4.0450 -2.4752 -6.1490 -1.4209 -2.3906 -1.7729 -1.9589 -0.0910 -0.0914
+S-270	the Ġservice Ġwas Ġexcellent Ġand Ġmy Ġhost ess Ġwas Ġvery Ġnice Ġand Ġhelpful Ġ.
+T-270	the service was excellent and my hostess was very nice and helpful .
+H-270	-3.954957962036133	it 's worst customer service ever .
+D-270	-3.954957962036133	it 's worst customer service ever .
+P-270	-3.8555 -1.2896 -2.4110 -3.0077 -0.1686 -2.7496 -0.2029 -0.0869
+S-291	th orough Ġ, Ġreasonably Ġpriced Ġand Ġthey Ġanswer Ġthe Ġphone Ġwhen Ġcalled Ġpromptly Ġ.
+T-291	thorough , reasonably priced and they answer the phone when called promptly .
+H-291	-6.072967529296875	if you 're not gon na have an update this .
+D-291	-6.072967529296875	if you 're not gon na have an update this .
+P-291	-7.5139 -0.5143 -2.7373 -0.9909 -5.4490 -0.0731 -3.2843 -2.3794 -2.8501 -0.2529 -0.8380 -0.0886
+S-323	i Ġ' ve Ġbeen Ġhere Ġseveral Ġtimes Ġand Ġevery Ġtime Ġhas Ġbeen Ġgreat Ġ.
+T-323	i 've been here several times and every time has been great .
+H-323	-5.167451858520508	the hell does n't taste like that anymore .
+D-323	-5.167451858520508	the hell does n't taste like that anymore .
+P-323	-2.8605 -4.7351 -2.6761 -0.1523 -3.0760 -1.1201 -1.8216 -3.9451 -0.0961 -0.0891
+S-325	it Ġis Ġsuch Ġa Ġcool Ġlittle Ġplace Ġto Ġrelax Ġand Ġget Ġsw anky Ġ.
+T-325	it is such a cool little place to relax and get swanky .
+H-325	-5.136805057525635	there was no apology from this type of place .
+D-325	-5.136805057525635	there was no apology from this type of place .
+P-325	-5.5937 -0.5099 -3.7543 -3.2708 -2.0518 -0.6962 -2.9100 -1.2873 -1.3843 -0.1078 -0.0876
+S-329	t ook Ġhome Ġthe Ġmost Ġdelicious Ġwhite Ġpizza Ġsince Ġliving Ġhere Ġin Ġaz Ġ.
+T-329	took home the most delicious white pizza since living here in az .
+H-329	-5.2952399253845215	they do n't waste your time or money .
+D-329	-5.2952399253845215	they do n't waste your time or money .
+P-329	-3.1494 -5.4345 -0.5766 -4.6309 -0.9276 -1.0496 -4.6604 -0.3715 -0.1929 -0.0875
+S-330	after Ġeating Ġseveral Ġother Ġgy ro Ġplace Ġkings Ġstill Ġhas Ġthe Ġbest Ġsauce Ġ.
+T-330	after eating several other gyro place kings still has the best sauce .
+H-330	-5.561128616333008	needless to say she was n't working for me .
+D-330	-5.561128616333008	needless to say she was n't working for me .
+P-330	-7.4718 -0.3056 -0.1741 -3.0579 -0.4380 -1.9218 -4.0207 -2.6570 -3.1911 -0.1144 -0.0898
+S-369	and Ġi Ġhad Ġmy Ġsugar Ġbowl Ġfavorite Ġ, Ġthe Ġtop Ġhat Ġsund ae Ġ!
+T-369	and i had my sugar bowl favorite , the top hat sundae !
+H-369	-5.907641887664795	$ _num_ cheaper than one waitress .
+D-369	-5.907641887664795	$ _num_ cheaper than one waitress .
+P-369	-5.5523 -0.1033 -5.3061 -1.7870 -3.0982 -3.8289 -0.8056 -0.0902
+S-382	my self Ġand Ġfamily Ġ/ Ġfriends Ġhave Ġbeen Ġgoing Ġto Ġthem Ġfor Ġyears Ġ!
+T-382	myself and family / friends have been going to them for years !
+H-382	-5.417985439300537	_num_ minutes went by for a joke .
+D-382	-5.417985439300537	_num_ minutes went by for a joke .
+P-382	-3.6981 -0.5779 -5.1947 -1.2530 -1.9976 -2.1502 -5.0667 -0.2190 -0.0907
+S-388	the Ġfood Ġwas Ġgood Ġ, Ġsteak Ġbites Ġand Ġhum mus Ġplate Ġa Ġmust Ġ.
+T-388	the food was good , steak bites and hummus plate a must .
+H-388	-5.765120029449463	it 's worst customer service ever .
+D-388	-5.765120029449463	it 's worst customer service ever .
+P-388	-2.9704 -1.6888 -4.0349 -4.2129 -0.2552 -5.1239 -1.7044 -0.0850
+S-394	it Ġwas Ġso Ġdelicious Ġ; Ġi Ġ' ve Ġnever Ġhad Ġanything Ġlike Ġit Ġ!
+T-394	it was so delicious ; i 've never had anything like it !
+H-394	-4.994246959686279	do n't let me preface this place .
+D-394	-4.994246959686279	do n't let me preface this place .
+P-394	-6.2603 -1.0292 -3.1770 -1.0802 -5.0994 -0.7090 -0.6472 -0.5738 -0.0884
+S-398	the Ġservice Ġwas Ġgreat Ġ, Ġfood Ġdelicious Ġ, Ġand Ġthe Ġvalue Ġimpecc able Ġ.
+T-398	the service was great , food delicious , and the value impeccable .
+H-398	-4.889989852905273	the wait time was atrocious .
+D-398	-4.889989852905273	the wait time was atrocious .
+P-398	-1.7548 -3.2920 -1.9759 -0.6027 -6.0661 -1.9363 -0.0890
+S-482	and Ġi Ġget Ġthe Ġgy ro Ġsandwich Ġevery Ġtime Ġand Ġits Ġthe Ġbest Ġ.
+T-482	and i get the gyro sandwich every time and its the best .
+H-482	-5.876614570617676	worst part : they have gone downhill .
+D-482	-5.876614570617676	worst part : they have gone downhill .
+P-482	-3.5325 -2.9777 -5.8408 -0.4502 -0.3740 -6.6384 -1.8186 -0.2406 -0.0893
+S-485	i Ġhighly Ġrecommend Ġthis Ġsalon Ġand Ġthe Ġwonderfully Ġtalented Ġstyl ist Ġ, Ġangel Ġ.
+T-485	i highly recommend this salon and the wonderfully talented stylist , angel .
+H-485	-5.745737552642822	_num_ minutes pass by this place .
+D-485	-5.745737552642822	_num_ minutes pass by this place .
+P-485	-6.1437 -0.8730 -4.3684 -2.9406 -2.7394 -2.5460 -0.3048 -0.0919
+S-56	first Ġtime Ġi Ġcame Ġin Ġ, Ġi Ġknew Ġi Ġjust Ġwanted Ġsomething Ġnew Ġ.
+T-56	first time i came in , i knew i just wanted something new .
+H-56	-6.1060004234313965	_num_ minutes went by to be desired .
+D-56	-6.1060004234313965	_num_ minutes went by to be desired .
+P-56	-5.7829 -1.0466 -5.2223 -1.0012 -1.1038 -4.2853 -4.1705 -0.1146 -0.0921
+S-62	we Ġwent Ġwith Ġa Ġgroup Ġof Ġeight Ġand Ġall Ġhad Ġa Ġgreat Ġtime Ġ.
+T-62	we went with a group of eight and all had a great time .
+H-62	-5.402601718902588	it was terrible after almost _num_ minutes .
+D-62	-5.402601718902588	it was terrible after almost _num_ minutes .
+P-62	-7.4848 -0.8446 -1.3300 -4.1266 -3.8648 -1.4647 -0.8067 -0.1763 -0.0920
+S-80	you Ġhave Ġto Ġsit Ġoutside Ġto Ġget Ġthe Ġbest Ġexperience Ġfrom Ġthis Ġplace Ġ.
+T-80	you have to sit outside to get the best experience from this place .
+H-80	-3.7268128395080566	worst customer service ever .
+D-80	-3.7268128395080566	worst customer service ever .
+P-80	-3.9028 -2.3435 -0.0922 -2.8207 -1.6743 -0.0867
+S-84	this Ġadds Ġthe Ġlast Ġlittle Ġtouch Ġto Ġwhat Ġwas Ġalready Ġan Ġamazing Ġplace Ġ.
+T-84	this adds the last little touch to what was already an amazing place .
+H-84	-5.045165061950684	worst customer service ever .
+D-84	-5.045165061950684	worst customer service ever .
+P-84	-6.7590 -1.5125 -0.0957 -3.7201 -2.6102 -0.0856
+S-141	this Ġis Ġa Ġrare Ġgem Ġand Ġi Ġam Ġexcited Ġto Ġhave Ġfound Ġit Ġ.
+T-141	this is a rare gem and i am excited to have found it .
+H-141	-4.79068660736084	we waited over _num_ minutes for this place .
+D-141	-4.79068660736084	we waited over _num_ minutes for this place .
+P-141	-3.9035 -4.6416 -2.9828 -0.1500 -0.6605 -2.0195 -2.5889 -1.1407 -0.8958 -0.0888
+S-157	i Ġlove Ġthat Ġthis Ġis Ġthe Ġplace Ġin Ġthe Ġcomic Ġ- Ġfamily Ġcircus Ġ.
+T-157	i love that this is the place in the comic - family circus .
+H-157	-5.004125595092773	needless to say it 's not my fault .
+D-157	-5.004125595092773	needless to say it 's not my fault .
+P-157	-7.0637 -0.5229 -0.1324 -4.3056 -1.4371 -3.5629 -1.5190 -1.1505 -0.1392 -0.0885
+S-160	i Ġlove Ġthe Ġoutside Ġseating Ġand Ġthe Ġreverse Ġhappy Ġhour Ġis Ġincredibly Ġaffordable Ġ.
+T-160	i love the outside seating and the reverse happy hour is incredibly affordable .
+H-160	-5.522954940795898	i had no idea where to be _num_ minutes .
+D-160	-5.522954940795898	i had no idea where to be _num_ minutes .
+P-160	-8.0636 -1.5982 -1.6039 -3.0697 -2.8813 -0.1930 -0.6786 -2.2708 -2.7002 -0.1322 -0.0897
+S-172	nice Ġclub Ġgood Ġlayout Ġthe Ġcourse Ġwas Ġin Ġgood Ġto Ġabove Ġaverage Ġshape Ġ.
+T-172	nice club good layout the course was in good to above average shape .
+H-172	-4.850418567657471	this place should n't be treated as well .
+D-172	-4.850418567657471	this place should n't be treated as well .
+P-172	-1.1777 -0.8519 -5.1162 -1.9218 -1.1636 -5.7108 -1.2922 -1.8957 -0.0902 -0.0897
+S-179	the Ġfood Ġis Ġgood Ġand Ġfrom Ġwhat Ġi Ġcan Ġtell Ġis Ġrather Ġauthentic Ġ.
+T-179	the food is good and from what i can tell is rather authentic .
+H-179	-5.71380615234375	needless to say , they did n't deliver your car .
+D-179	-5.71380615234375	needless to say , they did n't deliver your car .
+P-179	-7.2379 -0.1687 -0.1919 -1.0938 -3.0759 -2.3703 -0.3424 -4.7916 -3.6664 -2.2134 -0.1372 -0.0872
+S-255	try Ġanything Ġon Ġthe Ġmenu Ġand Ġyou Ġwill Ġbe Ġglad Ġyou Ġcame Ġin Ġ!
+T-255	try anything on the menu and you will be glad you came in !
+H-255	-4.136260986328125	needless to say we did n't respect it .
+D-255	-4.136260986328125	needless to say we did n't respect it .
+P-255	-4.9434 -0.1463 -0.0804 -2.9771 -1.7785 -0.4506 -4.6742 -1.2179 -0.1093 -0.0891
+S-267	he Ġalways Ġlooks Ġgorgeous Ġand Ġis Ġso Ġhappy Ġwhen Ġi Ġpick Ġhim Ġup Ġ!
+T-267	he always looks gorgeous and is so happy when i pick him up !
+H-267	-5.1015119552612305	needless to say they had no problem at all .
+D-267	-5.1015119552612305	needless to say they had no problem at all .
+P-267	-6.7456 -0.2970 -0.0722 -2.9290 -2.9087 -1.3485 -4.4848 -2.2592 -0.2955 -0.0776 -0.0867
+S-274	when Ġwe Ġget Ġinto Ġtown Ġ, Ġthis Ġis Ġthe Ġfirst Ġplace Ġwe Ġcome Ġ!
+T-274	when we get into town , this is the first place we come !
+H-274	-5.804234027862549	my sister looked like _num_ minutes away .
+D-274	-5.804234027862549	my sister looked like _num_ minutes away .
+P-274	-1.5642 -6.4239 -3.4222 -2.4343 -1.8150 -0.5268 -5.2675 -0.1486 -0.0890
+S-283	the Ġservice Ġwas Ġtop Ġnotch Ġand Ġthe Ġfood Ġwas Ġa Ġbit Ġof Ġheaven Ġ.
+T-283	the service was top notch and the food was a bit of heaven .
+H-283	-5.671314716339111	everything else was tired of the chef .
+D-283	-5.671314716339111	everything else was tired of the chef .
+P-283	-8.0161 -1.8998 -0.3600 -3.8710 -1.6791 -1.2136 -3.6406 -0.4263 -0.0884
+S-314	by Ġfar Ġthe Ġbest Ġexperience Ġi Ġhave Ġever Ġhad Ġin Ġa Ġauto Ġshop Ġ.
+T-314	by far the best experience i have ever had in a auto shop .
+H-314	-4.634296894073486	worst customer service ever .
+D-314	-4.634296894073486	worst customer service ever .
+P-314	-4.0669 -3.7886 -0.1194 -2.1259 -3.3926 -0.0858
+S-324	the Ġgood Ġnews Ġthat Ġmy Ġvision Ġhad Ġimproved Ġmade Ġthe Ġvisit Ġeven Ġbetter Ġ.
+T-324	the good news that my vision had improved made the visit even better .
+H-324	-4.050271034240723	the food was mediocre at best .
+D-324	-4.050271034240723	the food was mediocre at best .
+P-324	-3.5770 -3.5080 -0.5051 -2.8954 -1.6882 -1.7305 -0.1114 -0.0884
+S-361	the Ġemployees Ġalways Ġremember Ġme Ġand Ġmy Ġdog Ġ, Ġwhich Ġis Ġvery Ġnice Ġ.
+T-361	the employees always remember me and my dog , which is very nice .
+H-361	-5.4683613777160645	unfortunately there was nothing like _num_ stars .
+D-361	-5.4683613777160645	unfortunately there was nothing like _num_ stars .
+P-361	-4.4339 -4.4596 -0.5681 -2.5296 -3.4330 -2.1039 -2.4399 -0.3782 -0.0901
+S-367	super Ġfriendly Ġstaff Ġ, Ġquick Ġservice Ġand Ġamazing Ġand Ġsimple Ġfood Ġdone Ġright Ġ!
+T-367	super friendly staff , quick service and amazing and simple food done right !
+H-367	-5.473723411560059	one of the worst restaurants i have ever walked in .
+D-367	-5.473723411560059	one of the worst restaurants i have ever walked in .
+P-367	-8.7106 -0.3172 -1.6142 -0.0493 -3.0571 -1.7006 -1.0690 -0.5404 -6.4713 -0.5656 -0.1245 -0.0906
+S-368	great Ġprices Ġand Ġthe Ġassociates Ġthere Ġare Ġall Ġvery Ġcustomer Ġfriendly Ġand Ġhelpful Ġ!
+T-368	great prices and the associates there are all very customer friendly and helpful !
+H-368	-4.691367149353027	worst customer service ever .
+D-368	-4.691367149353027	worst customer service ever .
+P-368	-5.3978 -3.5713 -0.2239 -3.0212 -1.4458 -0.0865
+S-416	she Ġchose Ġa Ġgreat Ġcolor Ġthat Ġlooks Ġincredible Ġwith Ġmy Ġskin Ġ, Ġtoo Ġ.
+T-416	she chose a great color that looks incredible with my skin , too .
+H-416	-5.920651435852051	do n't waste your money as expected .
+D-416	-5.920651435852051	do n't waste your money as expected .
+P-416	-7.6077 -0.4417 -3.7820 -1.4091 -2.7169 -2.4140 -3.0860 -0.5808 -0.0884
+S-429	well Ġthe Ġfood Ġwas Ġgreat Ġand Ġthe Ġprice Ġof Ġit Ġwas Ġeven Ġbetter Ġ.
+T-429	well the food was great and the price of it was even better .
+H-429	-5.279885768890381	_num_ minutes later they werent serving up , too much .
+D-429	-5.279885768890381	_num_ minutes later they werent serving up , too much .
+P-429	-4.5217 -0.8591 -2.7791 -1.6090 -5.2495 -1.9498 -1.3911 -1.5363 -0.7419 -2.6376 -0.0872 -0.0873
+S-445	if Ġyou Ġsit Ġin Ġthe Ġbar Ġthey Ġhave Ġthe Ġbest Ġbartender Ġin Ġtown Ġ.
+T-445	if you sit in the bar they have the best bartender in town .
+H-445	-7.0844573974609375	one of them do n't even bother with that .
+D-445	-7.0844573974609375	one of them do n't even bother with that .
+P-445	-6.5887 -2.6894 -2.3027 -2.4881 -0.4098 -3.9529 -5.0320 -2.3066 -3.7979 -0.2060 -0.0896
+S-180	i Ġwould Ġrecommend Ġdent istry Ġof Ġold Ġtown Ġsc ot ts dale Ġto Ġeveryone Ġ.
+T-180	i would recommend dentistry of old town scottsdale to everyone .
+H-180	-5.865838527679443	there was _num_ minutes pass by this .
+D-180	-5.865838527679443	there was _num_ minutes pass by this .
+P-180	-8.7741 -0.5875 -2.4080 -0.6740 -4.2709 -1.1098 -0.8324 -3.1767 -0.0884
+S-39	i Ġalso Ġlove Ġtheir Ġconvenient Ġlocation Ġright Ġoff Ġof Ġsc ot ts dale Ġroad Ġ.
+T-39	i also love their convenient location right off of scottsdale road .
+H-39	-5.688662528991699	_num_ minutes later there was nothing against my party .
+D-39	-5.688662528991699	_num_ minutes later there was nothing against my party .
+P-39	-6.0568 -0.4683 -1.9248 -4.5213 -0.5195 -3.5975 -3.2361 -0.3801 -3.0898 -0.0966 -0.0891
+S-50	the Ġcal z ones Ġare Ġawesome Ġand Ġthe Ġlunch Ġspecial Ġthey Ġhave Ġis Ġperfect Ġ.
+T-50	the calzones are awesome and the lunch special they have is perfect .
+H-50	-5.096689701080322	this place is not worth _num_ minutes at all .
+D-50	-5.096689701080322	this place is not worth _num_ minutes at all .
+P-50	-4.6262 -2.5102 -0.4934 -2.0409 -1.9389 -2.5853 -0.7847 -3.7440 -2.5814 -0.0897 -0.0897
+S-97	nice Ġwine Ġlist Ġat Ġ2 x Ġretail Ġrather Ġthan Ġthe Ġmore Ġtypical Ġ3 x Ġ.
+T-97	nice wine list at 2x retail rather than the more typical 3x .
+H-97	-4.825540065765381	the worst service ever is mediocre , too .
+D-97	-4.825540065765381	the worst service ever is mediocre , too .
+P-97	-0.8503 -1.5917 -2.1519 -2.1421 -2.0967 -5.9450 -2.8539 -1.3580 -0.1337 -0.0876
+S-102	def initely Ġa Ġmust Ġdo Ġif Ġyou Ġhave Ġtime Ġin Ġthe Ġph oenix Ġarea Ġ.
+T-102	definitely a must do if you have time in the phoenix area .
+H-102	-6.49720573425293	after _num_ minutes of us worst service i ordered .
+D-102	-6.49720573425293	after _num_ minutes of us worst service i ordered .
+P-102	-7.1931 -2.5739 -0.2250 -1.0089 -4.1823 -3.8045 -2.5489 -0.2265 -5.4169 -0.1184 -0.0897
+S-387	one Ġof Ġbest Ġve al Ġdishes Ġi Ġ' ve Ġever Ġhad Ġand Ġreasonable Ġprices Ġ.
+T-387	one of best veal dishes i 've ever had and reasonable prices .
+H-387	-6.172809600830078	needless to say this location was terrible .
+D-387	-6.172809600830078	needless to say this location was terrible .
+P-387	-8.6126 -0.2042 -0.2743 -3.2729 -3.0277 -1.1509 -4.7101 -1.7274 -0.0890
+S-47	great Ġplace Ġto Ġhang Ġout Ġ, Ġgrab Ġa Ġmeal Ġand Ġa Ġfew Ġbrew s Ġ!
+T-47	great place to hang out , grab a meal and a few brews !
+H-47	-5.587835311889648	there was no bueno in my opinion .
+D-47	-5.587835311889648	there was no bueno in my opinion .
+P-47	-5.6784 -0.2073 -1.5078 -6.4818 -3.5743 -0.6103 -2.6064 -0.1292 -0.0874
+S-66	they Ġhave Ġthe Ġbig Ġmassage Ġchairs Ġand Ġeach Ġmanic ure Ġstation Ġis Ġfairly Ġclean Ġ.
+T-66	they have the big massage chairs and each manicure station is fairly clean .
+H-66	-5.972054958343506	it had no idea why they are both crap .
+D-66	-5.972054958343506	it had no idea why they are both crap .
+P-66	-1.7524 -6.7324 -0.5090 -4.2180 -0.7387 -1.0432 -2.3569 -4.8780 -2.7457 -0.1117 -0.0886
+S-129	sometimes Ġit Ġ' s Ġa Ġsimple Ġcut Ġ, Ġother Ġtimes Ġis Ġmore Ġcomplicated Ġcolor Ġ.
+T-129	sometimes it 's a simple cut , other times is more complicated color .
+H-129	-4.809174537658691	this place is horrible at least .
+D-129	-4.809174537658691	this place is horrible at least .
+P-129	-4.0270 -0.4809 -1.3919 -4.1712 -2.7371 -1.9439 -1.9067 -0.0879
+S-217	ton ight Ġthough Ġi Ġordered Ġto Ġgo Ġand Ġthe Ġfood Ġwas Ġjust Ġas Ġgood Ġ.
+T-217	tonight though i ordered to go and the food was just as good .
+H-217	-5.453843116760254	wo n't be returning because there was no desk .
+D-217	-5.453843116760254	wo n't be returning because there was no desk .
+P-217	-6.4817 -0.1978 -1.3263 -2.3371 -4.4036 -1.3170 -0.8862 -2.8252 -2.9667 -0.1585 -0.0899
+S-248	this Ġplace Ġis Ġa Ġmust Ġgo Ġif Ġyou Ġ' re Ġa Ġbride Ġto Ġbe Ġ!
+T-248	this place is a must go if you 're a bride to be !
+H-248	-5.2012619972229	terrible customer service would not return .
+D-248	-5.2012619972229	terrible customer service would not return .
+P-248	-7.4121 -2.2437 -0.1116 -3.2129 -0.9349 -3.6702 -0.4373 -0.0890
+S-327	the Ġgirls Ġare Ġvery Ġattractive Ġand Ġreally Ġfriendly Ġ, Ġnot Ġpush y Ġat Ġall Ġ.
+T-327	the girls are very attractive and really friendly , not pushy at all .
+H-327	-5.28562068939209	there 's no reason to be back .
+D-327	-5.28562068939209	there 's no reason to be back .
+P-327	-1.9896 -1.3844 -0.7504 -3.7412 -3.5201 -1.2222 -3.6394 -3.4169 -0.0891
+S-381	it Ġ' s Ġa Ġwhole Ġnew Ġexperience Ġand Ġnew Ġflavors Ġeach Ġtime Ġyou Ġgo Ġ.
+T-381	it 's a whole new experience and new flavors each time you go .
+H-381	-5.605550289154053	the food is horrible as well .
+D-381	-5.605550289154053	the food is horrible as well .
+P-381	-4.4726 -2.9088 -2.2058 -3.6840 -2.6100 -3.2941 -0.2563 -0.0882
+S-383	they Ġ' ve Ġadded Ġsome Ġnew Ġitems Ġon Ġthe Ġmenu Ġsince Ġmy Ġlast Ġvisit Ġ.
+T-383	they 've added some new items on the menu since my last visit .
+H-383	-4.750581741333008	the prime rib was not worth it .
+D-383	-4.750581741333008	the prime rib was not worth it .
+P-383	-1.7761 -5.8866 -0.3951 -0.1167 -1.4824 -6.9580 -0.6701 -0.3798 -0.0890
+S-385	great Ġplace Ġto Ġgo Ġfor Ġgames Ġwith Ġmultiple Ġt vs Ġand Ġa Ġlively Ġcrowd Ġ.
+T-385	great place to go for games with multiple tvs and a lively crowd .
+H-385	-5.591197967529297	needless to say this location was horrible .
+D-385	-5.591197967529297	needless to say this location was horrible .
+P-385	-7.1330 -0.2100 -0.1038 -2.7507 -2.7304 -0.7331 -4.9138 -2.2327 -0.0878
+S-400	pei Ġwe i Ġhas Ġfair Ġprices Ġ, Ġfast Ġservice Ġ, Ġand Ġwonderful Ġoutdoor Ġseating Ġ.
+T-400	pei wei has fair prices , fast service , and wonderful outdoor seating .
+H-400	-4.344391345977783	worst customer service ever .
+D-400	-4.344391345977783	worst customer service ever .
+P-400	-5.2961 -1.6686 -0.1123 -1.8439 -3.7252 -0.0836
+S-423	fun Ġplace Ġto Ġcatch Ġa Ġgame Ġon Ġtv Ġand Ġcatch Ġup Ġw / Ġpeople Ġ.
+T-423	fun place to catch a game on tv and catch up w/ people .
+H-423	-5.14326810836792	needless to say this place was horrible .
+D-423	-5.14326810836792	needless to say this place was horrible .
+P-423	-7.9102 -0.1957 -0.2726 -3.7486 -1.3703 -1.1327 -4.0494 -0.4540 -0.0879
+S-470	their Ġsteak Ġ& Ġsalsa Ġbur rito Ġwas Ġvery Ġvery Ġgood Ġand Ġreally Ġbig Ġtoo Ġ.
+T-470	their steak & salsa burrito was very very good and really big too .
+H-470	-6.483365535736084	do n't waste your time or money .
+D-470	-6.483365535736084	do n't waste your time or money .
+P-470	-8.0570 -0.3821 -4.4877 -1.8735 -0.6405 -5.8960 -0.9296 -1.8756 -0.0877
+S-38	this Ġis Ġa Ġplace Ġwhere Ġstill Ġthe Ġcustomer Ġcomes Ġfirst Ġand Ġis Ġtreated Ġright Ġ.
+T-38	this is a place where still the customer comes first and is treated right .
+H-38	-5.36019229888916	first off , the food was neither good for me .
+D-38	-5.36019229888916	first off , the food was neither good for me .
+P-38	-7.8888 -1.8133 -2.7920 -0.9008 -1.8831 -0.2253 -3.7907 -1.7304 -0.8596 -1.7114 -0.1209 -0.0898
+S-40	their Ġpizza Ġis Ġthe Ġbest Ġi Ġhave Ġever Ġhad Ġas Ġwell Ġas Ġtheir Ġranch Ġ!
+T-40	their pizza is the best i have ever had as well as their ranch !
+H-40	-5.880943775177002	_num_ minutes later he did n't exist .
+D-40	-5.880943775177002	_num_ minutes later he did n't exist .
+P-40	-6.5229 -0.3842 -1.8556 -4.1570 -1.7996 -0.2870 -6.0295 -0.8542 -0.0883
+S-60	you Ġwill Ġbe Ġhelped Ġby Ġall Ġof Ġtheir Ġfriendly Ġadvise Ġ, Ġand Ġtravel Ġknowledge Ġ!
+T-60	you will be helped by all of their friendly advise , and travel knowledge !
+H-60	-6.05120325088501	this place is way overpriced for _num_ minutes .
+D-60	-6.05120325088501	this place is way overpriced for _num_ minutes .
+P-60	-5.0354 -1.6742 -0.7165 -4.4403 -4.3725 -2.1647 -1.6070 -3.7723 -0.2176 -0.0899
+S-61	i Ġspent Ġtime Ġwith Ġmy Ġbest Ġbuds Ġand Ġenjoyed Ġsome Ġexcellent Ġwine Ġand Ġfood Ġ.
+T-61	i spent time with my best buds and enjoyed some excellent wine and food .
+H-61	-5.192688465118408	worst customer service ever .
+D-61	-5.192688465118408	worst customer service ever .
+P-61	-5.8655 -3.8304 -0.2062 -2.2831 -2.9430 -0.0872
+S-79	the Ġstaff Ġis Ġawesome Ġand Ġlocation Ġis Ġright Ġin Ġthe Ġheart Ġof Ġold Ġtown Ġ!
+T-79	the staff is awesome and location is right in the heart of old town !
+H-79	-5.523274898529053	wo n't be returning from this place .
+D-79	-5.523274898529053	wo n't be returning from this place .
+P-79	-6.8039 -0.2013 -1.2020 -3.5560 -4.6763 -1.7328 -2.1348 -0.2436 -0.0909
+S-128	they Ġmade Ġme Ġfeel Ġlike Ġi Ġwas Ġat Ġhome Ġand Ġtheir Ġan Ġextended Ġfamily Ġ!
+T-128	they made me feel like i was at home and their an extended family !
+H-128	-4.703859329223633	needless to say he was horrible .
+D-128	-4.703859329223633	needless to say he was horrible .
+P-128	-7.8226 -0.3752 -0.1005 -2.5216 -3.2893 -1.4263 -0.7546 -0.0897
+S-150	also Ġ, Ġwe Ġwere Ġpleasantly Ġsurprised Ġlast Ġtime Ġwe Ġbrought Ġour Ġdogs Ġfor Ġshots Ġ.
+T-150	also , we were pleasantly surprised last time we brought our dogs for shots .
+H-150	-5.776446342468262	after _num_ minutes pass it was terrible .
+D-150	-5.776446342468262	after _num_ minutes pass it was terrible .
+P-150	-6.0138 -1.8640 -0.4090 -6.2717 -1.0716 -1.6662 -2.4037 -1.7958 -0.0918
+S-165	you Ġcan Ġcome Ġin Ġ, Ġspend Ġany Ġamount Ġof Ġmoney Ġand Ġenjoy Ġsomething Ġamazing Ġ.
+T-165	you can come in , spend any amount of money and enjoy something amazing .
+H-165	-6.422709941864014	she did n't listen to this establishment .
+D-165	-6.422709941864014	she did n't listen to this establishment .
+P-165	-6.3519 -2.7699 -0.3294 -5.4277 -0.9049 -3.0146 -4.0458 -1.0698 -0.0889
+S-185	the Ġsalsa Ġwas Ġfantastic Ġalthough Ġnext Ġtime Ġi Ġwill Ġask Ġfor Ġa Ġhotter Ġone Ġ.
+T-185	the salsa was fantastic although next time i will ask for a hotter one .
+H-185	-5.397405624389648	front desk was not worth it .
+D-185	-5.397405624389648	front desk was not worth it .
+P-185	-6.8852 -0.5263 -0.5235 -1.3592 -4.3641 -2.9547 -2.0886 -0.0932
+S-204	the Ġbartender Ġwas Ġsuper Ġfriendly Ġand Ġquick Ġto Ġhelp Ġus Ġespecially Ġwith Ġthe Ġcrowd Ġ.
+T-204	the bartender was super friendly and quick to help us especially with the crowd .
+H-204	-4.565978527069092	worst customer service ever .
+D-204	-4.565978527069092	worst customer service ever .
+P-204	-2.8233 -4.5008 -0.1682 -3.3122 -2.4886 -0.0859
+S-214	nice Ġmenu Ġ, Ġgood Ġprices Ġ, Ġgreat Ġservice Ġ- Ġfor Ġboth Ġdinner Ġand Ġbreakfast Ġ!
+T-214	nice menu , good prices , great service - for both dinner and breakfast !
+H-214	-4.2779765129089355	the customer service was terrible at all .
+D-214	-4.2779765129089355	the customer service was terrible at all .
+P-214	-1.9753 -4.4444 -0.2853 -1.0286 -2.5714 -2.2689 -2.4365 -0.8877 -0.0895
+S-220	the Ġsalsa Ġis Ġgreat Ġ, Ġthe Ġfish Ġtop Ġnotch Ġ, Ġthe Ġdrinks Ġjust Ġexcellent Ġ.
+T-220	the salsa is great , the fish top notch , the drinks just excellent .
+H-220	-5.077784538269043	needless to say my wife was not working .
+D-220	-5.077784538269043	needless to say my wife was not working .
+P-220	-5.6994 -0.1926 -0.0894 -1.7309 -3.7119 -0.7645 -3.3206 -2.2602 -2.3573 -0.0882
+S-221	i Ġlike Ġthis Ġplace Ġso Ġmuch Ġi Ġhave Ġactually Ġinquired Ġabout Ġpurchasing Ġa Ġfranchise Ġ.
+T-221	i like this place so much i have actually inquired about purchasing a franchise .
+H-221	-5.030918121337891	_num_ minutes later they did n't compensate for us .
+D-221	-5.030918121337891	_num_ minutes later they did n't compensate for us .
+P-221	-3.7600 -0.5051 -2.2214 -1.6630 -3.7513 -0.9654 -3.4147 -4.1259 -0.6039 -0.1054 -0.0913
+S-223	the Ġbread Ġis Ġdefinitely Ġhome Ġmade Ġand Ġi Ġcould Ġprobably Ġeat Ġit Ġall Ġday Ġ.
+T-223	the bread is definitely home made and i could probably eat it all day .
+H-223	-4.3775553703308105	worst customer service ever had .
+D-223	-4.3775553703308105	worst customer service ever had .
+P-223	-3.0984 -4.3312 -0.1601 -4.0506 -1.3749 -0.9687 -0.0860
+S-224	the Ġportions Ġwere Ġhuge Ġ, Ġthe Ġfood Ġcame Ġout Ġhot Ġ, Ġfresh Ġand Ġgood Ġ.
+T-224	the portions were huge , the food came out hot , fresh and good .
+H-224	-4.899270057678223	why did n't you get past _num_ minutes .
+D-224	-4.899270057678223	why did n't you get past _num_ minutes .
+P-224	-5.6310 -1.1092 -0.0862 -3.0753 -4.2932 -1.9025 -1.7454 -1.1633 -0.4098 -0.0884
+S-225	a Ġbit Ġon Ġthe Ġnoisy Ġside Ġbut Ġthe Ġfresh Ġfood Ġmakes Ġup Ġfor Ġit Ġ.
+T-225	a bit on the noisy side but the fresh food makes up for it .
+H-225	-5.216940402984619	it was over _num_ minutes left .
+D-225	-5.216940402984619	it was over _num_ minutes left .
+P-225	-4.7207 -2.4770 -4.8881 -0.4010 -0.8655 -2.1193 -2.6050 -0.0898
+S-239	always Ġa Ġgreat Ġexperience Ġthere Ġwith Ġthe Ġowner Ġand Ġthe Ġrest Ġof Ġthe Ġteam Ġ.
+T-239	always a great experience there with the owner and the rest of the team .
+H-239	-5.038610935211182	i wo n't be returning at all but this place was horrible .
+D-239	-5.038610935211182	i wo n't be returning at all but this place was horrible .
+P-239	-3.8565 -5.4277 -0.1686 -0.9873 -1.9939 -3.0891 -1.0551 -4.5013 -0.4782 -1.1047 -0.4173 -1.2684 -0.1098 -0.0885
+S-242	this Ġis Ġa Ġgolf Ġcourse Ġthat Ġis Ġtucked Ġaway Ġit Ġis Ġin Ġgreat Ġcondition Ġ.
+T-242	this is a golf course that is tucked away it is in great condition .
+H-242	-5.796624183654785	it should be ashamed with all _num_ minutes .
+D-242	-5.796624183654785	it should be ashamed with all _num_ minutes .
+P-242	-3.1021 -5.6742 -0.8352 -4.5956 -3.0871 -2.2170 -1.6041 -1.7572 -0.1166 -0.0876
+S-263	the Ġenvironment Ġwas Ġcozy Ġ, Ġthe Ġservers Ġwere Ġfriendly Ġand Ġon Ġtop Ġof Ġthings Ġ.
+T-263	the environment was cozy , the servers were friendly and on top of things .
+H-263	-5.497320652008057	needless to say , there was nothing wrong .
+D-263	-5.497320652008057	needless to say , there was nothing wrong .
+P-263	-5.8652 -0.4119 -0.0998 -1.7589 -2.9800 -0.5768 -2.2908 -7.0813 -0.7325 -0.0880
+S-287	every Ġperson Ġenjoyed Ġthemselves Ġand Ġthere Ġwas Ġnothing Ġbut Ġpraise Ġfrom Ġour Ġentire Ġgroup Ġ.
+T-287	every person enjoyed themselves and there was nothing but praise from our entire group .
+H-287	-6.700584888458252	unfortunately there was no one or less service .
+D-287	-6.700584888458252	unfortunately there was no one or less service .
+P-287	-6.3518 -4.9318 -2.2997 -1.6323 -0.7950 -4.7576 -1.3533 -4.2531 -0.2114 -0.0896
+S-404	we Ġwere Ġsat Ġright Ġaway Ġand Ġevery Ġstaff Ġmember Ġwas Ġextremely Ġfriendly Ġand Ġhappy Ġ.
+T-404	we were sat right away and every staff member was extremely friendly and happy .
+H-404	-5.845284938812256	my fault for not going back .
+D-404	-5.845284938812256	my fault for not going back .
+P-404	-4.7531 -4.8001 -1.9274 -0.2934 -5.7909 -2.0879 -0.6135 -0.0882
+S-427	a Ġgreat Ġlittle Ġspot Ġto Ġthrow Ġback Ġa Ġfew Ġbeers Ġafter Ġa Ġrough Ġday Ġ.
+T-427	a great little spot to throw back a few beers after a rough day .
+H-427	-5.965311050415039	this place was horrible just about customer service .
+D-427	-5.965311050415039	this place was horrible just about customer service .
+P-427	-6.7336 -1.6768 -0.7040 -3.8951 -3.5080 -2.2358 -4.4842 -0.3291 -0.0926 -0.0891
+S-478	i Ġcan Ġhonestly Ġsay Ġi Ġam Ġso Ġglad Ġwe Ġwill Ġbe Ġmoving Ġto Ġaz Ġ.
+T-478	i can honestly say i am so glad we will be moving to az .
+H-478	-4.536586761474609	needless to say , they were rude at all .
+D-478	-4.536586761474609	needless to say , they were rude at all .
+P-478	-7.7858 -0.1785 -0.1202 -1.6144 -2.0679 -0.4303 -2.0757 -2.8608 -1.7937 -0.1070 -0.0891
+S-497	you Ġget Ġso Ġmuch Ġfor Ġthe Ġprice Ġand Ġthe Ġfood Ġis Ġfresh Ġand Ġdelicious Ġ.
+T-497	you get so much for the price and the food is fresh and delicious .
+H-497	-5.277287483215332	i could not wait until _num_ minutes with this establishment .
+D-497	-5.277287483215332	i could not wait until _num_ minutes with this establishment .
+P-497	-2.0941 -4.8225 -1.1935 -2.9612 -4.1903 -1.0553 -1.4159 -1.7019 -1.2563 -2.5550 -0.1033 -0.0887
+S-82	and Ġthe Ġf ett ucc ine Ġal fred o Ġis Ġabsolutely Ġscr um pt ious Ġ!
+T-82	and the fettuccine alfredo is absolutely scrumptious !
+H-82	-5.664518356323242	needless to say , there was no cooking .
+D-82	-5.664518356323242	needless to say , there was no cooking .
+P-82	-7.0866 -0.2320 -0.1065 -1.5656 -3.6301 -0.7831 -1.9835 -6.1416 -0.9341 -0.0877
+S-198	grim aldi Ġ' s Ġis Ġthe Ġmost Ġconsistently Ġamazing Ġpizza Ġplace Ġin Ġa ri zona Ġ.
+T-198	<<unk>> 's is the most consistently amazing pizza place in arizona .
+H-198	-5.565445899963379	worst customer service ever .
+D-198	-5.565445899963379	worst customer service ever .
+P-198	-6.4740 -3.2317 -0.2042 -4.0435 -2.2674 -0.0866
+S-91	this Ġresort Ġhas Ġbeen Ġin Ġsc ot ts dale Ġforever Ġand Ġit Ġtruly Ġknows Ġservice Ġ.
+T-91	this resort has been in scottsdale forever and it truly knows service .
+H-91	-5.519477844238281	it was not worth a disaster or two days .
+D-91	-5.519477844238281	it was not worth a disaster or two days .
+P-91	-4.5102 -0.3773 -0.5638 -2.3115 -2.1542 -6.1943 -2.3644 -2.7831 -1.8269 -0.0915 -0.0895
+S-151	i Ġre cc om end Ġthe Ġdrunken Ġdragon Ġnoodles Ġ( Ġfor Ġyou Ġspicy Ġlovers Ġ! Ġ)
+T-151	i reccomend the drunken dragon noodles ( for you spicy lovers ! )
+H-151	-5.226198196411133	wo n't be going back to this place .
+D-151	-5.226198196411133	wo n't be going back to this place .
+P-151	-6.2886 -0.1258 -0.4331 -4.8878 -0.1827 -4.6967 -2.1858 -1.7925 -0.1225 -0.0901
+S-379	great Ġfood Ġ, Ġlow Ġprices Ġ, Ġand Ġan Ġauthentic Ġme x ican Ġcant ina Ġvibe Ġ.
+T-379	great food , low prices , and an authentic mexican cantina vibe .
+H-379	-5.431217193603516	my husband did n't seem like this place .
+D-379	-5.431217193603516	my husband did n't seem like this place .
+P-379	-3.9223 -2.4183 -3.4058 -0.1562 -4.4740 -2.7967 -3.6664 -0.5155 -0.1760 -0.0908
+S-212	while Ġthe Ġmenu Ġis Ġsimple Ġ, Ġwhat Ġit Ġdoes Ġoffer Ġis Ġtruly Ġfirst - rate Ġ.
+T-212	while the menu is simple , what it does offer is truly first-rate .
+H-212	-5.947942733764648	there was _num_ minutes pass by this company .
+D-212	-5.947942733764648	there was _num_ minutes pass by this company .
+P-212	-5.0732 -1.0146 -6.0511 -1.5258 -4.0072 -2.9985 -0.1453 -2.6756 -0.0990 -0.0889
+S-434	f ant astic Ġplace Ġto Ġsee Ġa Ġshow Ġas Ġevery Ġseat Ġis Ġa Ġgreat Ġseat Ġ!
+T-434	fantastic place to see a show as every seat is a great seat !
+H-434	-5.818631649017334	_num_ minutes later they did n't like that .
+D-434	-5.818631649017334	_num_ minutes later they did n't like that .
+P-434	-5.1710 -2.0741 -3.8314 -1.1741 -3.0981 -0.3002 -5.1449 -1.5729 -0.7091 -0.0888
+S-461	the Ġad ov ada Ġis Ġhot Ġbut Ġwonderful Ġand Ġthe Ġchocolate Ġbread Ġpudding Ġis Ġamazing Ġ.
+T-461	the adovada is hot but wonderful and the chocolate bread pudding is amazing .
+H-461	-6.281069278717041	there must be _num_ minutes after this company .
+D-461	-6.281069278717041	there must be _num_ minutes after this company .
+P-461	-6.4205 -5.2595 -1.2201 -0.9535 -2.4100 -3.9921 -0.8120 -2.9116 -0.9371 -0.0889
+S-22	ste ve Ġwas Ġprofessional Ġand Ġfound Ġexactly Ġthe Ġright Ġunit Ġto Ġfit Ġin Ġour Ġspace Ġ.
+T-22	steve was professional and found exactly the right unit to fit in our space .
+H-22	-4.684739589691162	the customer service was terrible at all .
+D-22	-4.684739589691162	the customer service was terrible at all .
+P-22	-3.1606 -4.5421 -0.2145 -0.1295 -5.8484 -2.8626 -0.5004 -0.1609 -0.0889
+S-98	we Ġloved Ġour Ġday Ġon Ġthe Ġriver Ġand Ġca Ġn 't Ġwait Ġto Ġgo Ġback Ġ!
+T-98	we loved our day on the river and ca n't wait to go back !
+H-98	-5.716609477996826	it tasted like _num_ minutes at all .
+D-98	-5.716609477996826	it tasted like _num_ minutes at all .
+P-98	-4.9131 -6.1536 -0.3340 -2.0125 -2.7487 -3.9006 -0.6755 -0.5358 -0.0902
+S-99	if Ġyou Ġ' re Ġyoung Ġand Ġare Ġinto Ġsports Ġthis Ġis Ġthe Ġplace Ġfor Ġyou Ġ.
+T-99	if you 're young and are into sports this is the place for you .
+H-99	-5.237538814544678	they do n't waste your time or $ _num_ .
+D-99	-5.237538814544678	they do n't waste your time or $ _num_ .
+P-99	-2.0158 -4.0416 -0.3512 -5.4940 -0.7988 -0.8760 -3.3129 -4.8757 -0.1412 -0.0818 -0.0891
+S-305	if Ġyou Ġ' re Ġinto Ġthat Ġsort Ġof Ġthing Ġstop Ġby Ġand Ġcheck Ġit Ġout Ġ!
+T-305	if you 're into that sort of thing stop by and check it out !
+H-305	-5.038808822631836	needless to say this place was horrible .
+D-305	-5.038808822631836	needless to say this place was horrible .
+P-305	-6.7281 -0.1510 -0.0971 -2.3558 -3.0385 -0.2500 -5.5879 -0.5335 -0.0891
+S-356	i Ġjust Ġhad Ġprobably Ġone Ġof Ġthe Ġbest Ġrestaurant Ġexperiences Ġi Ġ' ve Ġever Ġhad Ġ.
+T-356	i just had probably one of the best restaurant experiences i 've ever had .
+H-356	-5.601458549499512	service was not worth _num_ minutes at all .
+D-356	-5.601458549499512	service was not worth _num_ minutes at all .
+P-356	-7.8652 -0.2870 -1.5326 -2.8671 -4.6571 -1.8999 -2.4851 -0.5153 -0.1007 -0.0897
+S-389	as Ġfar Ġas Ġpizza Ġgoes Ġthis Ġranks Ġwith Ġthe Ġbest Ġi Ġ' ve Ġever Ġeaten Ġ.
+T-389	as far as pizza goes this ranks with the best i 've ever eaten .
+H-389	-7.150228023529053	_num_ minutes pass because there 's no longer .
+D-389	-7.150228023529053	_num_ minutes pass because there 's no longer .
+P-389	-7.2275 -0.8830 -4.7741 -2.7186 -4.3703 -4.2530 -1.6762 -2.4020 -0.0708 -0.0901
+S-420	but Ġbeing Ġa Ġt uc son Ġnative Ġthis Ġplace Ġbrought Ġnostalgia Ġvia Ġmy Ġtast eb uds Ġ.
+T-420	but being a tucson native this place brought nostalgia via my tastebuds .
+H-420	-6.117326736450195	unfortunately the service was none of this location .
+D-420	-6.117326736450195	unfortunately the service was none of this location .
+P-420	-5.4792 -2.2263 -3.3703 -0.2652 -5.4316 -1.1343 -2.2494 -4.0112 -0.0959 -0.0901
+S-95	the Ġflour less Ġchocolate Ġcake Ġwas Ġone Ġof Ġthe Ġbest Ġdesserts Ġi Ġ' ve Ġever Ġhad Ġ.
+T-95	the flourless chocolate cake was one of the best desserts i 've ever had .
+H-95	-6.305220127105713	_num_ minutes went by for a budget .
+D-95	-6.305220127105713	_num_ minutes went by for a budget .
+P-95	-6.2179 -0.3514 -5.6282 -1.7404 -3.4762 -1.0138 -4.6871 -0.3609 -0.0879
+S-246	the Ġbest Ġpart Ġof Ġmy Ġthanks giving Ġdinner Ġby Ġfar Ġwas Ġsweet Ġcakes Ġpe can Ġpie Ġ.
+T-246	the best part of my thanksgiving dinner by far was sweet cakes pecan pie .
+H-246	-5.369534969329834	there 's no excuse for this place .
+D-246	-5.369534969329834	there 's no excuse for this place .
+P-246	-5.1826 -0.7370 -2.8943 -3.1625 -2.2954 -1.6372 -3.2784 -0.7910 -0.0886
+S-339	c oup on Ġor Ġnot Ġ, Ġthis Ġplace Ġis Ġextra Ġnice Ġand Ġa Ġvery Ġgood Ġvalue Ġ.
+T-339	coupon or not , this place is extra nice and a very good value .
+H-339	-5.477339267730713	i had no idea where to be seated .
+D-339	-5.477339267730713	i had no idea where to be seated .
+P-339	-1.4043 -2.5831 -1.2280 -4.5053 -4.7794 -0.5492 -1.6677 -4.8361 -0.1643 -0.0882
+S-418	this Ġcute Ġlittle Ġpizza Ġ, Ġsalad Ġand Ġpasta Ġplace Ġin Ġeast Ġch and ler Ġis Ġgreat Ġ.
+T-418	this cute little pizza , salad and pasta place in east chandler is great .
+H-418	-5.131354808807373	she did n't yell at this way .
+D-418	-5.131354808807373	she did n't yell at this way .
+P-418	-3.2017 -1.7214 -0.4777 -6.7260 -0.1497 -3.2281 -3.4667 -0.1159 -0.0898
+S-365	it Ġ' s Ġlocated Ġin Ġa Ġgreat Ġpart Ġof Ġsc ot ts dale Ġand Ġwas Ġreally Ġaccommodating Ġ.
+T-365	it 's located in a great part of scottsdale and was really accommodating .
+H-365	-5.779603004455566	there was n't even worse than this place .
+D-365	-5.779603004455566	there was n't even worse than this place .
+P-365	-4.2502 -1.0249 -2.7724 -5.8441 -2.3280 -2.8505 -0.9844 -2.7411 -0.1259 -0.0875
+S-261	it Ġ' s Ġbasic Ġ, Ġtraditional Ġ, Ġme x ican Ġfood Ġthat Ġis Ġhomemade Ġand Ġtastes Ġgreat Ġ.
+T-261	it 's basic , traditional , mexican food that is homemade and tastes great .
+H-261	-6.226355075836182	there was nothing else wrong with my husband .
+D-261	-6.226355075836182	there was nothing else wrong with my husband .
+P-261	-4.8324 -0.6693 -3.6053 -4.1832 -3.4569 -2.3279 -1.3482 -4.1358 -0.1393 -0.0893
+S-430	i Ġtook Ġthe Ġwaiter Ġ' s Ġrecommendation Ġof Ġthe Ġve al Ġcar olina Ġand Ġit Ġwas Ġsuper Ġ!
+T-430	i took the waiter 's recommendation of the veal carolina and it was super !
+H-430	-5.885007381439209	sorry if you did n't get any respect .
+D-430	-5.885007381439209	sorry if you did n't get any respect .
+P-430	-8.6257 -1.1281 -0.4317 -3.3209 -0.3855 -3.7789 -1.9456 -2.1589 -1.5662 -0.0871
+S-120	l oved Ġthe Ġburgers Ġ, Ġi Ġhad Ġthe Ġj al ape o Ġranch Ġburger Ġit Ġwas Ġreally Ġtasty Ġ.
+T-120	loved the burgers , i had the jalapeo ranch burger it was really tasty .
+H-120	-5.470945835113525	it 's worst customer service ever .
+D-120	-5.470945835113525	it 's worst customer service ever .
+P-120	-3.7499 -1.8042 -6.6561 -1.6440 -0.1571 -2.8920 -2.0599 -0.0877
+S-408	the Ġmarg ar itas Ġwere Ġalso Ġtasted Ġand Ġthe Ġch ur ros Ġwith Ġice Ġcream Ġwas Ġalso Ġoutstanding Ġ.
+T-408	the margaritas were also tasted and the churros with ice cream was also outstanding .
+H-408	-6.051257133483887	_num_ minutes later they did n't greet us .
+D-408	-6.051257133483887	_num_ minutes later they did n't greet us .
+P-408	-7.0632 -0.6472 -2.9900 -1.2140 -1.9148 -0.2238 -8.6949 -1.0917 -0.1604 -0.0905
+2021-07-07 18:01:21 | INFO | fairseq_cli.generate | NOTE: hypothesis and token scores are output in base 2
+2021-07-07 18:01:21 | INFO | fairseq_cli.generate | Translated 500 sentences (4817 tokens) in 32.7s (15.29 sentences/s, 147.26 tokens/s)
+2021-07-07 18:01:21 | WARNING | fairseq_cli.generate | BLEU score is being computed by splitting detokenized string on spaces, this is probably not what you want. Use --sacrebleu for standard 13a BLEU tokenization
+Generate test with beam=10: BLEU4 = 0.00, 12.5/0.1/0.0/0.0 (BP=0.863, ratio=0.871, syslen=4317, reflen=4954)
