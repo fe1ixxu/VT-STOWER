@@ -525,47 +525,23 @@ class TransformerEncoder(FairseqEncoder):
 
         if self.vae_0 and len(src_tokens) > 1:
             x, vq_loss_0 = self.vae_0(x, encoder_padding_mask)
-            # vq_1, vq_loss_1 = self.vae_1(x, encoder_padding_mask)
             vq_loss = vq_loss_0 #+ vq_loss_1
-            # mask = self.labels.unsqueeze(0).unsqueeze(-1)
-            # vq = vq_0 * (1 - mask) + vq_1 * mask
         elif self.vae_0 and len(src_tokens) == 1:
-            # x = self.vae_0.sample_random_latent(x.shape, x.device)
             x, vq_loss_0 = self.vae_0(x, encoder_padding_mask)
-            # vq_1, vq_loss_1 = self.vae_1(x, encoder_padding_mask)
-            # mask = self.labels.unsqueeze(0).unsqueeze(-1)
-            # vq = vq_1 * (1 - mask) + vq_0 * mask
             vq_loss = vq_loss_0 #+ vq_loss_1
-            # vq_loss = torch.tensor(0).to(x.device)
         else:
-            # vq_0 = style_embedding_0
-            # vq_1 = style_embedding_1
-            # vq = vq_1 * (1 - self.labels).unsqueeze(-1) + vq_0 * self.labels.unsqueeze(-1)
             vq_loss = torch.tensor(0).to(x.device)
-
-        # labels = torch.stack([self.labels] * x.shape[0], dim=1).transpose(0,1).contiguous() # [len, batch_size]
-        # class_mask = (1. - encoder_padding_mask.float()).transpose(0,1).contiguous() # [len, batch_size]
          
         sim_0 = torch.cosine_similarity(torch.mean(x, dim=0).detach(), style_embedding_orig, dim=-1).unsqueeze(1)
         sim_1 = torch.cosine_similarity(torch.mean(x, dim=0).detach(), style_embedding_rev, dim=-1).unsqueeze(1)
-        # sim_1 = torch.cosine_similarity(x.view(-1, x.shape[-1]).detach(), vq_1.view(-1, vq.shape[-1]), dim=-1).unsqueeze(1)
-        # sim_1 = torch.cosine_similarity(torch.mean(x, dim=0).detach(), vq_1).unsqueeze(1)
+
 
         class_loss = self.classifier(torch.cat((sim_0, sim_1), dim=-1), self.labels, self.weight_c)
-        # class_loss_2 = self.classifier(torch.mean(x, dim=0) + style_embedding_rev, 1 - self.labels, self.weight_c)
-        # class_loss = class_loss_1 + class_loss_2
        
         if len(src_tokens) > 1:
-            # x = x + vq.detach()
-            # x = x + style_embedding_orig.unsqueeze(0).detach()
             x = torch.stack([torch.mean(x, dim=0) + style_embedding_orig.detach()] * len(x))
         elif len(src_tokens) == 1:
-            # x = x + 6 * style_embedding_rev.unsqueeze(0).detach()
-            # x = torch.stack([torch.mean(x, dim=0) +  2* vq_0  -  2*vq_1] * len(x))
-            # x = x + 2 * vq_0 - 2*vq_1
             x = torch.stack([torch.mean(x, dim=0) + 3 * (style_embedding_rev.detach() - style_embedding_orig.detach())] * len(x))
-        # elif len(src_tokens) == 16:
-        #     x = torch.stack([torch.mean(x, dim=0) + 3 * (style_embedding_rev.detach() - style_embedding_orig.detach())] * len(x))
 
 
         return EncoderOut(
@@ -1191,25 +1167,10 @@ class Classifier(nn.Module):
         self.i = 0
     def forward(self, input, labels, weight_c):
         out = self.sigmoid(self.fc1(input))
-        # sim_0 = sim_0.view(-1)
-        # sim_1 = sim_1.view(-1)
-        # labels = labels.view(-1)
-
-        # new_labels = (2 * labels - 1).float()
-        # loss = torch.mean(( (sim_0 + new_labels) ** 2 + (sim_1 - new_labels) ** 2 ) * class_mask.view(-1))
-
-        # out = self.sigmoid(input)
         labels = labels.float()
 
-        # loss = -torch.mean((labels.view(-1) * torch.log(out.view(-1)) + (1 - labels.view(-1)) * torch.log(1 - out.view(-1))) * class_mask.view(-1))
         loss = self.criterion(out.view(-1), labels.view(-1))
         
-        # labels = labels.view(-1, 1)
-        # loss = self.criterion(out, torch.cat((1.0 - labels, labels), dim=1))
-        # if self.i % 200 == 0:
-        #     print(torch.cat((out.view(-1,1), labels.view(-1,1)), dim=-1))
-
-        # self.i += 1
         return weight_c * loss
 
 class Style_Embedding(nn.Module):
