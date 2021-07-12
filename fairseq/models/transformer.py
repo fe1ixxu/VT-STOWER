@@ -199,7 +199,7 @@ class TransformerModel(FairseqEncoderDecoderModel):
         parser.add_argument("--mean", default=False, action='store_true',
                     help="if mean of selected layers")
         parser.add_argument("--vq_num", default=2048, type=int)
-        parser.add_argument("--vae_type", default=None, type=str)
+        parser.add_argument("--vae_type", default=None, type=str, choices=["base", "vqvae"])
         parser.add_argument("--alpha", default=1, type=float)
         parser.add_argument("--weight_c", default=10, type=float)
         parser.add_argument("--latent_size", default=256, type=int, help="used for base vae")
@@ -404,14 +404,11 @@ class TransformerEncoder(FairseqEncoder):
         self.dictionary = dictionary
 
         if args.vae_type == "vqvae":
-            self.vae_0 = VectorQuantizer(num_embeddings=args.vq_num, embedding_dim=args.encoder_embed_dim, alpha=args.alpha)
-            # self.vae_1 = VectorQuantizer(num_embeddings=args.vq_num, embedding_dim=args.encoder_embed_dim, alpha=args.alpha)
+            self.vae = VectorQuantizer(num_embeddings=args.vq_num, embedding_dim=args.encoder_embed_dim, alpha=args.alpha)
         elif args.vae_type == "base":
-            self.vae_0 = VanillaVAE(args.encoder_embed_dim, args.latent_size ,args)
-            # self.vae_1 = VanillaVAE(args.encoder_embed_dim, args.latent_size, args)
+            self.vae = VanillaVAE(args.encoder_embed_dim, args.latent_size ,args)
         else:
-            self.vae_0 = None
-            # self.vae_1 = None
+            self.vae = None
 
         self.classifier = Classifier(2)
         self.weight_c = args.weight_c
@@ -523,12 +520,10 @@ class TransformerEncoder(FairseqEncoder):
         style_embedding_orig = self.style_embedding(self.labels)
         style_embedding_rev = self.style_embedding(1 - self.labels)
 
-        if self.vae_0 and len(src_tokens) > 1:
-            x, vq_loss_0 = self.vae_0(x, encoder_padding_mask)
-            vq_loss = vq_loss_0 #+ vq_loss_1
-        elif self.vae_0 and len(src_tokens) == 1:
-            x, vq_loss_0 = self.vae_0(x, encoder_padding_mask)
-            vq_loss = vq_loss_0 #+ vq_loss_1
+        if self.vae and len(src_tokens) > 1:
+            x, vq_loss = self.vae(x, encoder_padding_mask)
+        elif self.vae and len(src_tokens) == 1:
+            x, vq_loss = self.vae(x, encoder_padding_mask)
         else:
             vq_loss = torch.tensor(0).to(x.device)
          
@@ -1052,40 +1047,12 @@ class VectorQuantizer(nn.Module):
         self.D = embedding_dim
         self.beta = beta
         self.alpha = alpha
-
         self.embedding = nn.Embedding(self.K, self.D)
-        # self.embedding.weight.data.uniform_(-1 / self.K, 1 / self.K)
-
-        ###
-        # self.embedding.weight.data.uniform_(-1, 1)
-        ###
-        
-        self.i = 0
-        import collections
-        self.count = collections.defaultdict(int)
-
-        # self.conv1d = torch.nn.Conv1d(768, 512, 2, stride=2)
-        # self.deconv1d = torch.nn.ConvTranspose1d(512, 768, 2, stride=2)
-        
-        ###
+    
 
     def forward(self, latents, gpu):
 
-        # label_mask = label_mask.unsqueeze(-1).unsqueeze(-1)
-        # label_mask = torch.stack([label_mask]*latents.shape[0], dim=-1).view(-1)
-
-        ###
-        # orig_shape = latents.shape
-        # latents = latents.mean(dim=0, keepdim=True)
         latents = latents.permute(1, 0, 2).contiguous()
-
-        # latents = latents.permute(0, 2, 1).contiguous()
-        # output_size = latents.shape
-        # latents = self.conv1d(latents)
-        # latents = latents.permute(0, 2, 1).contiguous()
-        
-        ####
-        
         self.gpu = gpu
         latents_shape = latents.shape
         flat_latents = latents.view(-1, self.D)   # [b*len, dim]
@@ -1097,37 +1064,6 @@ class VectorQuantizer(nn.Module):
 
         encoding_inds = torch.argmin(dist, dim=1).unsqueeze(1)    # [b*len, 1]
 
-
-        #### bebug block
-        
-        # exit(0)
-        for ind in encoding_inds:
-            self.count[int(ind)] += 1
-        # if self.i <= 2000:
-        #     encoding_inds = torch.randint(0, self.K, encoding_inds.shape).to(self.gpu)
-        
-
-        if self.i % 200 == 0:
-            print(random.sample([int(ind) for ind in encoding_inds.data], 10))
-            # print(dist[:15, :])
-            # print(encoding_inds[:20])
-            # print("Most popular selected discrete EMB:", len(self.count))
-            # for key in sorted(self.count, key=self.count.get, reverse=True):
-            #     print(key, self.count[key])
-        
-            # forplot = torch.cat((flat_latents.data, self.embedding.weight.data), dim=0)
-            # U, S, V = torch.pca_lowrank(forplot)
-            # codebook = torch.matmul(forplot, V[:,:2]).to("cpu").numpy()
-            # plt.scatter(codebook[:n_tokens,0], codebook[:n_tokens,1], color="b")
-            # plt.scatter(codebook[n_tokens+1:,0], codebook[n_tokens+1:,1], color="r")
-            # plt.savefig("codebook_orig/"+str(self.i)+".png")
-            # plt.clf()
-        self.i += 1
-        # print(S)
-        # torch.save(torch.matmul(self.embedding.weight.data, V[:,:2]).to("cpu"), "codebook.pt")
-        # exit(0)
-        ####
-
         # Convert to one-hot encodings
         encoding_one_hot = torch.zeros(encoding_inds.size(0), self.K, device=self.gpu)
         encoding_one_hot.scatter_(1, encoding_inds, 1)   # [b*len, K]
@@ -1137,7 +1073,6 @@ class VectorQuantizer(nn.Module):
         quantized_latents = quantized_latents.view(latents_shape)  # [b, len , dim]
         
         # Compute the VQ Losses
-        # denominator = torch.sum(label_mask) * latents_shape[-1] * latents_shape[-2]
         commitment_loss = torch.mean((quantized_latents.detach() - latents)**2)
         embedding_loss = torch.mean((quantized_latents - latents.detach())**2) 
 
@@ -1145,15 +1080,6 @@ class VectorQuantizer(nn.Module):
 
         # Add the residue back to the latents
         quantized_latents = ( latents + (quantized_latents - latents).detach() )
-
-        ###
-        # quantized_latents = self.deconv1d(quantized_latents.permute(0, 2, 1), output_size=output_size)
-        # quantized_latents = quantized_latents.permute(2, 0, 1).contiguous()
-        
-        # for layer in layers:
-        #     quantized_latents = layer(quantized_latents, encoder_padding_mask)
-        # quantized_latents = torch.zeros(orig_shape).to(self.gpu) + quantized_latents
-        ### .permute(1, 0, 2).contiguous()
 
         quantized_latents = quantized_latents.permute(1, 0, 2).contiguous().mean(dim=0)
         return quantized_latents, vq_loss  * self.alpha 
