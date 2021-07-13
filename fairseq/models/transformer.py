@@ -204,6 +204,9 @@ class TransformerModel(FairseqEncoderDecoderModel):
         parser.add_argument("--weight_c", default=10, type=float)
         parser.add_argument("--latent_size", default=256, type=int, help="used for base vae")
         parser.add_argument("--vae_encoder_layers", default=2, type=int, help="number Vanilla VAE layers")
+        parser.add_argument("--stage", default=0, type=int, choices=[0, 1])
+        parser.add_argument("--used_tokens", default="used_tokens.pt", type=str)
+        parser.add_argument("--score_maker", default="classifier.pt", type=str)
         
         
 
@@ -411,6 +414,13 @@ class TransformerEncoder(FairseqEncoder):
             self.vae = None
 
         self.classifier = Classifier(2)
+        self.stage = args.stage
+        if self.stage == 1:
+            self.used_tokens = torch.load(args.used_tokens)
+            self.scoremaker = ScoreMaker(args.encoder_embed_dim, args)
+            self.scoremaker.load_state_dict(torch.load(args.score_maker))
+            self.scoremaker.eval()
+
         self.weight_c = args.weight_c
         self.style_embedding = Style_Embedding(args.encoder_embed_dim, 2)
         # self.style_embedding_1 = Style_Embedding(args.encoder_embed_dim, 2)
@@ -428,12 +438,6 @@ class TransformerEncoder(FairseqEncoder):
         # embed tokens and positions
         if token_embedding is None:
             device = src_tokens.device
-            labels = src_tokens[:,-2]
-            zeros = torch.zeros_like(labels).to(device)
-            ones = torch.ones_like(labels).to(device)
-            self.labels = torch.where(labels == self.dictionary.eos_index, ones, zeros)
-            src_tokens = torch.cat((src_tokens[:,:-2], src_tokens[:,-1:]), dim=-1)
-
             if self.pretrained_model_name:
                 
                 with torch.no_grad():
@@ -495,16 +499,38 @@ class TransformerEncoder(FairseqEncoder):
                   hidden states of shape `(src_len, batch, embed_dim)`.
                   Only populated if *return_all_hiddens* is True.
         """
+        labels = src_tokens[:,-2]
+        zeros = torch.zeros_like(labels).to(device)
+        ones = torch.ones_like(labels).to(device)
+        self.labels = torch.where(labels == self.dictionary.eos_index, ones, zeros)
+        src_tokens = torch.cat((src_tokens[:,:-2], src_tokens[:,-1:]), dim=-1)
+
         x, encoder_embedding = self.forward_embedding(src_tokens, token_embeddings)
+
 
         # B x T x C -> T x B x C
         x = x.transpose(0, 1)
 
         # compute padding mask
-        src_tokens = torch.cat((src_tokens[:,:-2], src_tokens[:,-1:]), dim=-1)
         encoder_padding_mask = src_tokens.eq(self.padding_idx)
 
         encoder_states = [] if return_all_hiddens else None
+
+        if self.stage == 1 and torch.rand(1) < 0.5 and self.training:
+            with torch.no_grad():
+                _, scores = self.scoremaker(x, self.labels, encoder_padding_mask, src_tokens)
+            mask_len = int(0.15 * scores.shape[-1])
+            _, indices = torch.topk(scores[:,:-1], k=mask_len, dim=-1)
+            for i, tokens in enumerate(src_tokens):
+                candidates = random.sample(list(self.used_tokens[str(int(1-self.labels[i]))]), mask_len)
+                candidates = torch.tensor(candidates, dtype=torch.long).to(x.device)
+                src_tokens[i][indices[i]] = candidates
+
+            for par in self.style_embedding.parameters():
+                par.requires_grad = False
+
+            x, encoder_embedding = self.forward_embedding(src_tokens, token_embeddings)
+            x = x.transpose(0, 1)
 
         # encoder layers
         for layer in self.layers:
@@ -526,12 +552,15 @@ class TransformerEncoder(FairseqEncoder):
             x, vq_loss = self.vae(x, encoder_padding_mask)
         else:
             vq_loss = torch.tensor(0).to(x.device)
-         
-        sim_0 = torch.cosine_similarity(torch.mean(x, dim=0).detach(), style_embedding_orig, dim=-1).unsqueeze(1)
-        sim_1 = torch.cosine_similarity(torch.mean(x, dim=0).detach(), style_embedding_rev, dim=-1).unsqueeze(1)
+        
+        if self.stage == 0:
+            sim_0 = torch.cosine_similarity(torch.mean(x, dim=0).detach(), style_embedding_orig, dim=-1).unsqueeze(1)
+            sim_1 = torch.cosine_similarity(torch.mean(x, dim=0).detach(), style_embedding_rev, dim=-1).unsqueeze(1)
 
+            class_loss = self.classifier(torch.cat((sim_0, sim_1), dim=-1), self.labels, self.weight_c)
+        else:
+            class_loss = torch.tensor([0]).to(x.device)
 
-        class_loss = self.classifier(torch.cat((sim_0, sim_1), dim=-1), self.labels, self.weight_c)
        
         if len(src_tokens) > 1:
             x = torch.stack([torch.mean(x, dim=0) + style_embedding_orig.detach()] * len(x))
@@ -1139,6 +1168,53 @@ class VanillaVAE(nn.Module):
         z = z.to(gpu)
         return z
 
+class ScoreMaker(nn.Module):
+    def __init__(self, latent_size, args):
+        super(ScoreMaker, self).__init__()
+        self.encoder = TransformerEncoderLayer(args)
+        self.fc1 = nn.Linear(latent_size, 2)
+        self.sigmoid = nn.Sigmoid()
+        self.weight_c = args.weight_c
+        self.Q = nn.Linear(latent_size, latent_size)
+        self.K = nn.Linear(latent_size, latent_size)
+        self.V = nn.Linear(latent_size, latent_size)
+        # self.criterion = torch.nn.BCELoss()
+        self.i = 0
+    def forward(self, x, labels, encoder_padding_mask, src_tokens):
+        """
+        labels: [len, batch]
+        weight_c: [len, batch]
+        """
+        x = self.encoder(x, encoder_padding_mask)  # [len, batch, dim]
+        x = x.transpose(0,1) # [batch, len, dim]
+        scores = (self.Q(x[:,-1,:]).unsqueeze(1) @ self.K(x).permute(0,2,1))/torch.sqrt(torch.tensor(x.shape[-1])) #[batch, 1, len]
+        scores = nn.functional.softmax(scores.squeeze(1), dim=-1).unsqueeze(-1) #[batch, len, 1]
+        x = torch.sum(self.V(x) * scores, dim=1) # [batch, dim]
+
+        x = self.fc1(x)      # [batch, 2]
+        x = self.sigmoid(x) # [batch, 2]
+    
+
+        labels = labels.float().unsqueeze(-1)
+        labels = torch.cat((1-labels, labels), dim=-1)
+
+        # class_mask = torch.cat((class_mask.unsqueeze(-1), class_mask.unsqueeze(-1)), dim=-1)
+        # x = x.view(-1)
+        # labels = labels.float().view(-1)
+        # class_mask = class_mask.view(-1)
+        loss = -torch.mean(labels * torch.log(x) + (1 - labels) * torch.log(1 - x))
+        # loss = -torch.sum(labels * torch.log(x) + (1 - labels) * torch.log(1 - x) * class_mask) / (torch.sum(class_mask) )
+        # if self.i % 20 == 0:
+        #     t = AutoTokenizer.from_pretrained("roberta-base")
+        #     for j in range(len(src_tokens)):
+        #         plt.barh(t.convert_ids_to_tokens(src_tokens[j]), scores.squeeze(-1)[j].detach().to("cpu").numpy(), align='center')
+        #         plt.savefig("class/class{}{}.png".format(self.i, j))
+        #         plt.cla()
+
+
+        self.i += 1
+        # loss = self.criterion(x, torch.cat((1-labels, labels), dim=-1))
+        return self.weight_c * loss, scores.squeeze(-1)
 def Embedding(num_embeddings, embedding_dim, padding_idx):
     m = nn.Embedding(num_embeddings, embedding_dim, padding_idx=padding_idx)
     nn.init.normal_(m.weight, mean=0, std=embedding_dim ** -0.5)
