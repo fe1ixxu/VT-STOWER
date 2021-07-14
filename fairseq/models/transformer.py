@@ -407,18 +407,18 @@ class TransformerEncoder(FairseqEncoder):
         self.dictionary = dictionary
 
         if args.vae_type == "vqvae":
-            self.vae = VectorQuantizer(num_embeddings=args.vq_num, embedding_dim=args.encoder_embed_dim, alpha=args.alpha)
+            self.vae_0 = VectorQuantizer(num_embeddings=args.vq_num, embedding_dim=args.encoder_embed_dim, alpha=args.alpha)
         elif args.vae_type == "base":
-            self.vae = VanillaVAE(args.encoder_embed_dim, args.latent_size ,args)
+            self.vae_0 = VanillaVAE(args.encoder_embed_dim, args.latent_size ,args)
         else:
-            self.vae = None
+            self.vae_0 = None
 
         self.classifier = Classifier(2)
         self.stage = args.stage
         if self.stage == 1:
             self.used_tokens = torch.load(args.used_tokens)
             self.scoremaker = ScoreMaker(args.encoder_embed_dim, args)
-            self.scoremaker.load_state_dict(torch.load(args.score_maker))
+            self.scoremaker.load_state_dict(torch.load(args.score_maker, map_location="cuda"))
             self.scoremaker.eval()
 
         self.weight_c = args.weight_c
@@ -500,8 +500,8 @@ class TransformerEncoder(FairseqEncoder):
                   Only populated if *return_all_hiddens* is True.
         """
         labels = src_tokens[:,-2]
-        zeros = torch.zeros_like(labels).to(device)
-        ones = torch.ones_like(labels).to(device)
+        zeros = torch.zeros_like(labels).to(src_tokens.device)
+        ones = torch.ones_like(labels).to(src_tokens.device)
         self.labels = torch.where(labels == self.dictionary.eos_index, ones, zeros)
         src_tokens = torch.cat((src_tokens[:,:-2], src_tokens[:,-1:]), dim=-1)
 
@@ -519,8 +519,9 @@ class TransformerEncoder(FairseqEncoder):
         if self.stage == 1 and torch.rand(1) < 0.5 and self.training:
             with torch.no_grad():
                 _, scores = self.scoremaker(x, self.labels, encoder_padding_mask, src_tokens)
-            mask_len = int(0.15 * scores.shape[-1])
+            mask_len = int(0.3 * scores.shape[-1])
             _, indices = torch.topk(scores[:,:-1], k=mask_len, dim=-1)
+
             for i, tokens in enumerate(src_tokens):
                 candidates = random.sample(list(self.used_tokens[str(int(1-self.labels[i]))]), mask_len)
                 candidates = torch.tensor(candidates, dtype=torch.long).to(x.device)
@@ -546,10 +547,10 @@ class TransformerEncoder(FairseqEncoder):
         style_embedding_orig = self.style_embedding(self.labels)
         style_embedding_rev = self.style_embedding(1 - self.labels)
 
-        if self.vae and len(src_tokens) > 1:
-            x, vq_loss = self.vae(x, encoder_padding_mask)
-        elif self.vae and len(src_tokens) == 1:
-            x, vq_loss = self.vae(x, encoder_padding_mask)
+        if self.vae_0 and len(src_tokens) > 1:
+            x, vq_loss = self.vae_0(x, encoder_padding_mask)
+        elif self.vae_0 and len(src_tokens) == 1:
+            x, vq_loss = self.vae_0(x, encoder_padding_mask)
         else:
             vq_loss = torch.tensor(0).to(x.device)
         
@@ -562,10 +563,12 @@ class TransformerEncoder(FairseqEncoder):
             class_loss = torch.tensor([0]).to(x.device)
 
        
-        if len(src_tokens) > 1:
+        if len(src_tokens) > 2:
             x = torch.stack([torch.mean(x, dim=0) + style_embedding_orig.detach()] * len(x))
         elif len(src_tokens) == 1:
-            x = torch.stack([torch.mean(x, dim=0) + 3 * (style_embedding_rev.detach() - style_embedding_orig.detach())] * len(x))
+            x = torch.stack([torch.mean(x, dim=0) + 1.5 * (style_embedding_rev.detach() - style_embedding_orig.detach())] * len(x))
+        elif len(src_tokens) == 2:
+            x = torch.stack([torch.mean(x, dim=0) + 2.15 * (style_embedding_rev.detach() - style_embedding_orig.detach())] * len(x))
 
 
         return EncoderOut(
