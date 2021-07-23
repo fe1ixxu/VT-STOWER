@@ -419,15 +419,17 @@ class TransformerEncoder(FairseqEncoder):
             self.used_tokens = torch.load(args.used_tokens)
             self.scoremaker = ScoreMaker(args.encoder_embed_dim, args)
             self.scoremaker.load_state_dict(torch.load(args.score_maker, map_location="cuda"))
+            self.pivots = {"0": torch.load("yelp_0.pivot.pt"), "1": torch.load("yelp_1.pivot.pt")}
             self.scoremaker.eval()
 
         self.weight_c = args.weight_c
         self.style_embedding = Style_Embedding(args.encoder_embed_dim, 2)
         # self.style_embedding_1 = Style_Embedding(args.encoder_embed_dim, 2)
         if self.pretrained_model_name:
+            self.tokenizer = AutoTokenizer.from_pretrained(self.pretrained_model_name)
             get_pretrained_model(self.pretrained_model_name, self.use_our_model)
 
-        self.pivots = {"0": torch.load("yelp_0.pivot.pt"), "1": torch.load("yelp_1.pivot.pt")}
+        
 
         # self.rnn = torch.nn.GRU(args.encoder_embed_dim, args.encoder_embed_dim, 2)
     def build_encoder_layer(self, args):
@@ -510,20 +512,20 @@ class TransformerEncoder(FairseqEncoder):
         ###### MASK by pivots
         ####################################################
         # t = AutoTokenizer.from_pretrained("roberta-base")
-        for par in self.style_embedding.parameters():
-            par.requires_grad = False
-        if self.stage == 1 and torch.rand(1) < 1 and self.training:
-            for i in range(len(src_tokens)):
-                for j in range(len(src_tokens[i])):
-                    label = str(int(self.labels[i]))
-                    rev_label = str(1 - int(self.labels[i]))
-                    token_id = int(src_tokens[i,j])
-                    if token_id in self.pivots[label]:
-                        # print("-----------")
-                        # print(t.convert_ids_to_tokens(token_id))
-                        src_tokens[i,j] = torch.tensor([random.sample(self.pivots[rev_label], 1)], dtype=torch.long).to(src_tokens.device)
-                        # print(t.convert_ids_to_tokens(int(src_tokens[i,j])))
-                        # print("------------")
+        # for par in self.style_embedding.parameters():
+        #     par.requires_grad = False
+        # if self.stage == 1 and torch.rand(1) < 1 and self.training:
+        #     for i in range(len(src_tokens)):
+        #         for j in range(len(src_tokens[i])):
+        #             label = str(int(self.labels[i]))
+        #             rev_label = str(1 - int(self.labels[i]))
+        #             token_id = int(src_tokens[i,j])
+        #             if token_id in self.pivots[label]:
+        #                 # print("-----------")
+        #                 # print(t.convert_ids_to_tokens(token_id))
+        #                 src_tokens[i,j] = torch.tensor([random.sample(self.pivots[rev_label], 1)], dtype=torch.long).to(src_tokens.device)
+        #                 # print(t.convert_ids_to_tokens(int(src_tokens[i,j])))
+        #                 # print("------------")
                         
         
         ####################################################
@@ -541,22 +543,29 @@ class TransformerEncoder(FairseqEncoder):
         ####################################################
         ###### MASK by CLassifier
         ####################################################
-        # if self.stage == 1 and torch.rand(1) < 0.5 and self.training:
-        #     with torch.no_grad():
-        #         _, scores = self.scoremaker(x, self.labels, encoder_padding_mask, src_tokens)
-        #     mask_len = int(0.3 * scores.shape[-1])
-        #     _, indices = torch.topk(scores[:,:-1], k=mask_len, dim=-1)
+        if (self.stage == 1 and torch.rand(1) < 0.5 and self.training):
+            with torch.no_grad():
+                _, scores = self.scoremaker(x, self.labels, encoder_padding_mask, src_tokens)
+            # mask_len = int(0.3 * scores.shape[-1])
+            # _, indices = torch.topk(scores[:,:-1], k=mask_len, dim=-1)
 
-        #     for i, tokens in enumerate(src_tokens):
-        #         candidates = random.sample(list(self.used_tokens[str(int(1-self.labels[i]))]), mask_len)
-        #         candidates = torch.tensor(candidates, dtype=torch.long).to(x.device)
-        #         src_tokens[i][indices[i]] = candidates
+            # for i, tokens in enumerate(src_tokens):
+            #     # candidates = random.sample(list(self.used_tokens[str(int(1-self.labels[i]))]), mask_len)
+            #     # candidates = torch.tensor(candidates, dtype=torch.long).to(x.device)
+            #     # src_tokens[i][indices[i]] = candidates
+            #     src_tokens[i][indices[i]] = torch.tensor([self.tokenizer.mask_token_id]).to(x.device)
 
-            # for par in self.style_embedding.parameters():
-            #     par.requires_grad = False
+            replace = torch.rand(scores.shape).to(x.device)
+            replace[:,-1] = replace[:,-1] + 1.
+            masks = (self.tokenizer.mask_token_id * torch.ones_like(scores, dtype=torch.long)).to(x.device)
+            src_tokens = torch.where(replace < scores, masks, src_tokens)
 
-        #     x, encoder_embedding = self.forward_embedding(src_tokens, token_embeddings)
-        #     x = x.transpose(0, 1)
+
+            for par in self.style_embedding.parameters():
+                par.requires_grad = False
+
+            x, encoder_embedding = self.forward_embedding(src_tokens, token_embeddings)
+            x = x.transpose(0, 1)
         ####################################################
         ###### MASK by CLassifier End
         ####################################################
@@ -594,9 +603,9 @@ class TransformerEncoder(FairseqEncoder):
         if len(src_tokens) > 2:
             x = torch.stack([torch.mean(x, dim=0) + style_embedding_orig.detach()] * len(x))
         elif len(src_tokens) == 1:
-            x = torch.stack([torch.mean(x, dim=0) + 2 * (style_embedding_rev.detach() - style_embedding_orig.detach())] * len(x))
+            x = torch.stack([torch.mean(x, dim=0) + 3 * (style_embedding_rev.detach() - style_embedding_orig.detach())] * len(x))
         elif len(src_tokens) == 2:
-            x = torch.stack([torch.mean(x, dim=0) + 2.25 * (style_embedding_rev.detach() - style_embedding_orig.detach())] * len(x))
+            x = torch.stack([torch.mean(x, dim=0) + 5 * (style_embedding_rev.detach() - style_embedding_orig.detach())] * len(x))
 
 
         return EncoderOut(

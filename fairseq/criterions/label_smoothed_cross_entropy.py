@@ -75,7 +75,7 @@ class LabelSmoothedCrossEntropyCriterion(FairseqCriterion):
         rec_loss = loss.data
         loss = loss + vq_loss + class_loss
         logging_output = {
-            "loss": rec_loss * sample_size,
+            "loss": loss * sample_size,
             "nll_loss": nll_loss* sample_size,
             "ntokens": sample["ntokens"],
             "nsentences": sample["target"].size(0),
