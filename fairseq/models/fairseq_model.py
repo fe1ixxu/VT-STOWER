@@ -162,6 +162,7 @@ class BaseFairseqModel(nn.Module):
             kwargs["retain_dropout"] = cfg.generation.retain_dropout
             kwargs["retain_dropout_modules"] = cfg.generation.retain_dropout_modules
         self.make_generation_fast_(**kwargs)
+        self.encoder.style_weight = cfg.task.style_weight
 
     def make_generation_fast_(self, **kwargs):
         """

@@ -28,27 +28,34 @@ from fairseq.modules import (
     SinusoidalPositionalEmbedding,
     TransformerDecoderLayer,
     TransformerEncoderLayer,
-    Transformer2EncoderLayer,
-    Transformer2DecoderLayer
 )
 from fairseq.modules.quant_noise import quant_noise as apply_quant_noise_
 from torch import Tensor
 
-from transformers import AutoModel, AutoTokenizer
+from transformers import AutoModel, AutoTokenizer, RobertaForSequenceClassification, XLMRobertaForSequenceClassification
 
 DEFAULT_MAX_SOURCE_POSITIONS = 1024
 DEFAULT_MAX_TARGET_POSITIONS = 1024
 
 PRETRAINED_MODEL = None
-# EMBEDDING = None
-def get_pretrained_model(model_name, use_our_model):
+SCOREMAKER = None
+
+def get_pretrained_model(model_name):
     global PRETRAINED_MODEL #, EMBEDDING
-    if use_our_model:
-        PRETRAINED_MODEL = torch.load(model_name)
-    else:
-        # EMBEDDING = AutoModel.from_pretrained(model_name).get_input_embeddings()
-        PRETRAINED_MODEL = AutoModel.from_pretrained(model_name)
+    PRETRAINED_MODEL = AutoModel.from_pretrained(model_name)
     PRETRAINED_MODEL.eval()
+
+def get_scoremaker(model_name, model_path):
+    global SCOREMAKER
+    if model_name == "roberta-base":
+        SCOREMAKER = RobertaForSequenceClassification.from_pretrained("roberta-base", num_labels=2)
+    elif model_name == "xlm-roberta-base":
+         SCOREMAKER = XLMRobertaForSequenceClassification.from_pretrained("xlm-roberta-base", num_labels=2)
+    else:
+        raise ValueError("No such options! Only 'roberta-base' and 'xlm-roberta-base' is available")
+    SCOREMAKER.load_state_dict(torch.load(model_path, map_location=torch.device('cuda')))
+    SCOREMAKER.eval()
+    
 
 @register_model("transformer")
 class TransformerModel(FairseqEncoderDecoderModel):
@@ -194,19 +201,17 @@ class TransformerModel(FairseqEncoderDecoderModel):
                     help="Name of the path for the pre-trained model")
         parser.add_argument("--use_drop_embedding", default=1, type=int,
                     help="Num of dropped embeddings")
-        parser.add_argument("--use_our_model", default=False, action='store_true',
-                    help="if use our model")
-        parser.add_argument("--mean", default=False, action='store_true',
-                    help="if mean of selected layers")
         parser.add_argument("--vq_num", default=2048, type=int)
-        parser.add_argument("--vae_type", default=None, type=str, choices=["base", "vqvae"])
+        parser.add_argument("--vae_type", default="base", type=str)
         parser.add_argument("--alpha", default=1, type=float)
         parser.add_argument("--weight_c", default=10, type=float)
         parser.add_argument("--latent_size", default=256, type=int, help="used for base vae")
         parser.add_argument("--vae_encoder_layers", default=2, type=int, help="number Vanilla VAE layers")
         parser.add_argument("--stage", default=0, type=int, choices=[0, 1])
-        parser.add_argument("--used_tokens", default="used_tokens.pt", type=str)
+        # parser.add_argument("--used_tokens", default="used_tokens.pt", type=str)
         parser.add_argument("--score_maker", default="classifier.pt", type=str)
+        parser.add_argument("--transfer_task", default=None, type=str, choices=["yelp", "cs", "gyafc"])
+        
         
         
 
@@ -355,8 +360,6 @@ class TransformerEncoder(FairseqEncoder):
         self.max_source_positions = args.max_source_positions
 
         self.pretrained_model_name = args.pretrained_model
-        self.use_our_model = args.use_our_model
-        self.mean_layer = args.mean
         self.use_drop_embedding = args.use_drop_embedding
         assert 1 <= self.use_drop_embedding <= 12
 
@@ -414,24 +417,32 @@ class TransformerEncoder(FairseqEncoder):
             self.vae_0 = None
 
         self.classifier = Classifier(2)
-        self.stage = args.stage
+        try:
+            self.stage = args.stage
+        except Exception:
+            self.stage = 0
         if self.stage == 1:
-            self.used_tokens = torch.load(args.used_tokens)
-            self.scoremaker = ScoreMaker(args.encoder_embed_dim, args)
-            self.scoremaker.load_state_dict(torch.load(args.score_maker, map_location="cuda"))
-            self.pivots = {"0": torch.load("yelp_0.pivot.pt"), "1": torch.load("yelp_1.pivot.pt")}
-            self.scoremaker.eval()
+            get_scoremaker(self.pretrained_model_name, args.score_maker)
+        try:
+            self.transfer_task = args.transfer_task
+        except Exception:
+            self.transfer_task = "cs"
 
+        if self.transfer_task == "yelp":
+            self.gamma = 0.01
+        elif self.transfer_task == "gyafc":
+            self.gamma = 0.03
+        else:
+            self.gamma = 0.0002
+        self.i = 0
         self.weight_c = args.weight_c
         self.style_embedding = Style_Embedding(args.encoder_embed_dim, 2)
-        # self.style_embedding_1 = Style_Embedding(args.encoder_embed_dim, 2)
+        self.style_weight = 0  # default is 0, unless it is changed in generation step.
+
         if self.pretrained_model_name:
             self.tokenizer = AutoTokenizer.from_pretrained(self.pretrained_model_name)
-            get_pretrained_model(self.pretrained_model_name, self.use_our_model)
+            get_pretrained_model(self.pretrained_model_name)
 
-        
-
-        # self.rnn = torch.nn.GRU(args.encoder_embed_dim, args.encoder_embed_dim, 2)
     def build_encoder_layer(self, args):
         return TransformerEncoderLayer(args)
 
@@ -508,29 +519,6 @@ class TransformerEncoder(FairseqEncoder):
         self.labels = torch.where(labels == self.dictionary.eos_index, ones, zeros)
         src_tokens = torch.cat((src_tokens[:,:-2], src_tokens[:,-1:]), dim=-1)
 
-        ####################################################
-        ###### MASK by pivots
-        ####################################################
-        # t = AutoTokenizer.from_pretrained("roberta-base")
-        # for par in self.style_embedding.parameters():
-        #     par.requires_grad = False
-        # if self.stage == 1 and torch.rand(1) < 1 and self.training:
-        #     for i in range(len(src_tokens)):
-        #         for j in range(len(src_tokens[i])):
-        #             label = str(int(self.labels[i]))
-        #             rev_label = str(1 - int(self.labels[i]))
-        #             token_id = int(src_tokens[i,j])
-        #             if token_id in self.pivots[label]:
-        #                 # print("-----------")
-        #                 # print(t.convert_ids_to_tokens(token_id))
-        #                 src_tokens[i,j] = torch.tensor([random.sample(self.pivots[rev_label], 1)], dtype=torch.long).to(src_tokens.device)
-        #                 # print(t.convert_ids_to_tokens(int(src_tokens[i,j])))
-        #                 # print("------------")
-                        
-        
-        ####################################################
-        ###### MASK by pivots End
-        ####################################################
         x, encoder_embedding = self.forward_embedding(src_tokens, token_embeddings)
         # B x T x C -> T x B x C
         x = x.transpose(0, 1)
@@ -541,25 +529,16 @@ class TransformerEncoder(FairseqEncoder):
         encoder_states = [] if return_all_hiddens else None
 
         ####################################################
-        ###### MASK by CLassifier
+        ###### MASKing
         ####################################################
         if (self.stage == 1 and torch.rand(1) < 0.5 and self.training):
             with torch.no_grad():
-                _, scores = self.scoremaker(x, self.labels, encoder_padding_mask, src_tokens)
-            # mask_len = int(0.3 * scores.shape[-1])
-            # _, indices = torch.topk(scores[:,:-1], k=mask_len, dim=-1)
-
-            # for i, tokens in enumerate(src_tokens):
-            #     # candidates = random.sample(list(self.used_tokens[str(int(1-self.labels[i]))]), mask_len)
-            #     # candidates = torch.tensor(candidates, dtype=torch.long).to(x.device)
-            #     # src_tokens[i][indices[i]] = candidates
-            #     src_tokens[i][indices[i]] = torch.tensor([self.tokenizer.mask_token_id]).to(x.device)
+                scores = self.scoremaker_foward(src_tokens, x.device)
 
             replace = torch.rand(scores.shape).to(x.device)
             replace[:,-1] = replace[:,-1] + 1.
             masks = (self.tokenizer.mask_token_id * torch.ones_like(scores, dtype=torch.long)).to(x.device)
             src_tokens = torch.where(replace < scores, masks, src_tokens)
-
 
             for par in self.style_embedding.parameters():
                 par.requires_grad = False
@@ -567,7 +546,7 @@ class TransformerEncoder(FairseqEncoder):
             x, encoder_embedding = self.forward_embedding(src_tokens, token_embeddings)
             x = x.transpose(0, 1)
         ####################################################
-        ###### MASK by CLassifier End
+        ###### MASKing End
         ####################################################
 
         # encoder layers
@@ -584,9 +563,7 @@ class TransformerEncoder(FairseqEncoder):
         style_embedding_orig = self.style_embedding(self.labels)
         style_embedding_rev = self.style_embedding(1 - self.labels)
 
-        if self.vae_0 and len(src_tokens) > 1:
-            x, vq_loss = self.vae_0(x, encoder_padding_mask)
-        elif self.vae_0 and len(src_tokens) == 1:
+        if self.vae_0:
             x, vq_loss = self.vae_0(x, encoder_padding_mask)
         else:
             vq_loss = torch.tensor(0).to(x.device)
@@ -599,13 +576,10 @@ class TransformerEncoder(FairseqEncoder):
         else:
             class_loss = torch.tensor([0]).to(x.device)
 
-       
-        if len(src_tokens) > 2:
+        if not self.style_weight:
             x = torch.stack([torch.mean(x, dim=0) + style_embedding_orig.detach()] * len(x))
-        elif len(src_tokens) == 1:
-            x = torch.stack([torch.mean(x, dim=0) + 3 * (style_embedding_rev.detach() - style_embedding_orig.detach())] * len(x))
-        elif len(src_tokens) == 2:
-            x = torch.stack([torch.mean(x, dim=0) + 5 * (style_embedding_rev.detach() - style_embedding_orig.detach())] * len(x))
+        else:
+            x = torch.stack([torch.mean(x, dim=0) + self.style_weight * (style_embedding_rev.detach() - style_embedding_orig.detach())] * len(x))
 
 
         return EncoderOut(
@@ -673,6 +647,25 @@ class TransformerEncoder(FairseqEncoder):
             src_tokens=src_tokens,  # B x T
             src_lengths=src_lengths,  # B x 1
         )
+    def scoremaker_foward(self, src_tokens, device):
+        SCOREMAKER.to(device)
+        bos = self.dictionary.bos() * torch.ones(src_tokens.shape[0], 1, dtype=torch.long, device=device)
+        src_tokens = torch.cat((bos, src_tokens), dim=1)
+        ### 
+        token_ids = torch.zeros(src_tokens.shape, dtype=torch.long, device=device)
+        token_attention = torch.ones(src_tokens.shape, dtype=torch.long, device=device)
+        token_attention = torch.where(src_tokens==self.dictionary.pad(), token_ids, token_attention)
+        outputs = SCOREMAKER(src_tokens, token_type_ids=token_ids, attention_mask=token_attention, labels=self.labels, output_attentions=True)
+        attentions = torch.mean(outputs.attentions[-1], dim=1)
+        if self.transfer_task in ["yelp", "gyafc"]:
+            attentions = torch.nn.functional.softmax(attentions[:,0, 1:]/self.gamma, dim=-1)
+        else:
+            attentions = torch.nn.functional.softmax(-attentions[:,0, 1:]/self.gamma, dim=-1)
+        return attentions # return [batch_sz, token_len]
+
+
+
+
 
     def max_positions(self):
         """Maximum input length supported by the encoder."""
@@ -940,35 +933,6 @@ class TransformerDecoder(FairseqIncrementalDecoder):
             prev_output_tokens = prev_output_tokens[:, -1:]
             if positions is not None:
                 positions = positions[:, -1:]
-
-        # embed tokens and positions
-        # with torch.no_grad():
-        #     device = prev_output_tokens.device
-        #     Pretrained_model.to(device)
-        #     eos = 4*torch.ones(prev_output_tokens.shape[0], 1, dtype=torch.long, device=device)
-        #     prev_output_tokens = torch.cat((prev_output_tokens, eos), dim=1)
-        #     token_ids = torch.zeros(prev_output_tokens.shape, dtype=torch.long, device=device)
-        #     token_attention = torch.ones(prev_output_tokens.shape, dtype=torch.long, device=device)
-        #     token_attention = torch.where(prev_output_tokens==0, token_ids, token_attention)
-        #     token_ids = torch.ones(prev_output_tokens.shape, dtype=torch.long, device=device)
-        #     if incremental_state is not None:
-        #         token_embedding = Pretrained_model(prev_output_tokens, token_type_ids=token_ids, attention_mask=token_attention)[0][:,-2:-1,:]
-        #     else:
-        #         # token_embedding = self.embed_tokens(src_tokens)  # original embedding
-        #         length = prev_output_tokens.shape[1]
-        #         token_embedding = torch.zeros(prev_output_tokens.shape[0], prev_output_tokens.shape[1] - 1, 768, device=device)
-        #         for i in range(1, length):        
-        #             token_embedding[:, i-1 ,:] = Pretrained_model(
-        #                 torch.cat((prev_output_tokens[:, :i], eos), dim=1),
-        #                 token_type_ids=torch.cat((token_ids[:, :i], token_ids[:, -1:]), dim=1),
-        #                 attention_mask=torch.cat((token_attention[:, :i], token_attention[:, -1:]), dim=1))[0][:, i-1, :]
-        #     # token_embedding = Pretrained_model(prev_output_tokens, token_type_ids=token_ids, attention_mask=token_attention)[0][:, :-1, :]
-        #     prev_output_tokens = prev_output_tokens[:,:-1]
-
-        # if incremental_state is not None:
-        #     prev_output_tokens = prev_output_tokens[:, -1:]
-        #     if positions is not None:
-        #         positions = positions[:, -1:]
 
         x = self.embed_scale *  self.embed_tokens(prev_output_tokens)
 

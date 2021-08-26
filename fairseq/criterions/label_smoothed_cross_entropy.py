@@ -75,8 +75,10 @@ class LabelSmoothedCrossEntropyCriterion(FairseqCriterion):
         rec_loss = loss.data
         loss = loss + vq_loss + class_loss
         logging_output = {
-            "loss": loss * sample_size,
-            "nll_loss": nll_loss* sample_size,
+            "loss": loss * sample_size * math.log(2),
+            "nll_loss": nll_loss * sample["ntokens"] * math.log(2),
+            "vq_loss": vq_loss.data * sample_size * math.log(2),
+            "class_loss": class_loss.data * sample_size * math.log(2),
             "ntokens": sample["ntokens"],
             "nsentences": sample["target"].size(0),
             "sample_size": sample_size,
@@ -128,6 +130,8 @@ class LabelSmoothedCrossEntropyCriterion(FairseqCriterion):
         loss_sum = sum(log.get("loss", 0) for log in logging_outputs)
         nll_loss_sum = sum(log.get("nll_loss", 0) for log in logging_outputs)
         ntokens = sum(log.get("ntokens", 0) for log in logging_outputs)
+        vq_loss = sum(log.get("vq_loss", 0) for log in logging_outputs)
+        class_loss = sum(log.get("class_loss", 0) for log in logging_outputs)
         sample_size = sum(log.get("sample_size", 0) for log in logging_outputs)
 
         metrics.log_scalar(
@@ -135,6 +139,12 @@ class LabelSmoothedCrossEntropyCriterion(FairseqCriterion):
         )
         metrics.log_scalar(
             "nll_loss", nll_loss_sum / ntokens / math.log(2), ntokens, round=3
+        )
+        metrics.log_scalar(
+            "vq_loss", vq_loss / sample_size / math.log(2), sample_size, round=3
+        )
+        metrics.log_scalar(
+            "class_loss", class_loss / sample_size / math.log(2), sample_size, round=3
         )
         metrics.log_derived(
             "ppl", lambda meters: utils.get_perplexity(meters["nll_loss"].avg)

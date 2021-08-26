@@ -346,20 +346,13 @@ class Dictionary(object):
             word = f.readline()
             ind = 0
             bos = eos = unk = pad = None
+            bos_ind = eos_ind = pad_ind = unk_ind = None
             while word:
                 word = word.strip()
-                if word in ["[CLS]", "<s>"]:
-                    bos = word
-                    bos_ind = ind
-                elif word in ["[SEP]", "</s>"]:
-                    eos = word
-                    eos_ind = ind
-                elif word in ["[PAD]", "<pad>"]:
-                    pad = word
-                    pad_ind = ind
-                elif word in ["[UNK]", "<unk>"]:
-                    unk = word
-                    unk_ind = ind
+                bos, bos_ind = (word, ind) if word in ["[CLS]", "<s>"] else (bos, bos_ind)
+                eos, eos_ind = (word, ind) if word in ["[SEP]", "</s>"] else (eos, eos_ind)
+                pad, pad_ind = (word, ind) if word in ["[PAD]", "<pad>"] else (pad, pad_ind)
+                unk, unk_ind = (word, ind) if word in ["[UNK]", "<unk>"] else (unk, unk_ind)
                 word = f.readline()
                 ind += 1
         return bos, bos_ind, eos, eos_ind, pad, pad_ind, unk, unk_ind
