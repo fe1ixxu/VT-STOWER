@@ -1,3 +1,15 @@
+# Acitivate Environment
+```
+unzip handoff.zip
+mkdir -p vae-gan
+tar -xzf vae-gan.tar.gz -C vae-gan
+source vae-gan/bin/activate    
+
+cd fairseq
+pip install --editable ./
+```
+And now you should have the dependecy below in your envirnoment named `vae-gan`
+
 # Dependency
 * python 3.6/3.7
 * fairseq, which will also automatically install pytorch
@@ -21,6 +33,7 @@ Usually, the dataset is split into `train.0`, `train.1`, `dev.0`, `dev.1`, `test
 ## Tokenization and Adding Special Symbols
 To finish step 1) and 2), we run:
 ```
+cd vae-fairseq
 python transform_tokenizer.py --input $INPUT_FILE --output $OUTPUT_FILE --pretrained_model $PRE_TRAINED --suffix $CLASS
 ```
 It will tokenize the input data and store it to the target position, and it will also add a speical symbol at the end of the sentence. Spefically, `<s>`(BOS) for class `0` and `</s>`(EOS) for class 1. An example of tokenizing the input file `train.0` with the pre-trained model `RoBERTa` is shown as follows.
@@ -53,8 +66,10 @@ python get_vocab.py --tokenizer robert-base --output ./preprocessed/src_vocab.tx
 ## Get the Vocabulary of Raw files
 To get the vocab from a text file, we run `python`, and then:
 ```
+cp dictionary.py ./raw/
+cd raw
 from dictionary import Dictionary
-d = Dictionary(src=False)
+d = Dictionary(2)     ## 2 represent the minimum number of tokens shown in the dataset
 with open("tgt_vocab.txt", "w") as f:
     for i in range(len(d)):
         f.writelines([d.id2word[i], "\n"])
@@ -92,13 +107,14 @@ CUDA_VISIBLE_DEVICES=0,1,2 fairseq-train ${TEXT}neg-databin/ --arch vae --ddp-ba
 --save-interval 3  --alpha 1 --no-epoch-checkpoints  --weight_c 1  --pretrained_model roberta-base --vae_encoder_layers 1 --vae_type base
 ```
 
-Our stage 1 trained models are located at `vae-fairseq/models/{yelp,cs}/vae+style_embed`
+Our stage 1 trained models are located at `vae-fairseq/models/{yelp,gyafc,en-hi}/vae+style_embed`
 
 ## Stage 2 Training: Training with Masked Pivot Words
 Pre-train a classifier first (take RoBerta as an example):
 ### Prepare data for classification training:
 ```
-python BERT_Classification_Training_data_preparation.py ## remember to change the data path in this py file
+cd transformer-drg-style-transfer
+python BERT_Classification_Training_data_preparation.py ## remember to change the data path in this py file, use raw dataset
 ```
 ### Classification Training
 ```
@@ -106,10 +122,10 @@ export BERT_DATA_DIR=raw # raw data path
 export BERT_MODEL_DIR=models/classification/  #Path to save the classifier trained model
 CUDA_VISBLE_DEVICES=0 python run_classifier.py \
 --data_dir=$BERT_DATA_DIR \
---bert_model=roberta-base \
+--bert_model=roberta-base \      # use your path
 --output_dir=$BERT_MODEL_DIR \
 --max_seq_length=128 \
---do_train \
+--do_train \  
 --train_batch_size=128 \
 --num_train_epochs=10 
 ```
@@ -125,7 +141,7 @@ CUDA_VISBLE_DEVICES=0 python run_classifier.py \
 --num_train_epochs=10 
 ```
 
-Our classifiers are located at `transformer-drg-style-transfer/model/{yelp, cs}/pytorch_model.bin`
+Our classifiers are located at `transformer-drg-style-transfer/model/{yelp,gyafc,cs}/pytorch_model.bin`
 
 ### Start training VAE and frozen style embeddings with masked pivot words:
 For code-switching:
@@ -137,7 +153,7 @@ CUDA_VISIBLE_DEVICES=0,1,2 fairseq-train ${TEXT}cs-databin/ --arch cs-vae --ddp-
 --lr 0.0005 --lr-scheduler inverse_sqrt  --dropout 0.1 --warmup-updates 1000 --warmup-init-lr 1e-07 --weight-decay 0.0 --criterion label_smoothed_cross_entropy --label-smoothing 0.1 \
 --max-tokens 1024 --update-freq 1 --attention-dropout 0.1 --activation-dropout 0.1 --max-update 100000 --save-dir ${SAVE_DIR}  --encoder-embed-dim 768 --decoder-embed-dim 768 --max-epoch 401  \
 --save-interval 3  --alpha 0.5 --no-epoch-checkpoints  --weight_c 1  --pretrained_model xlm-roberta-base --vae_encoder_layers 1 --vae_type base \
---warmup_from_nmt --warmup_nmt_file ./models/cs/checkpoint_best.pt --reset-lr-scheduler --reset-optimizer --stage 1  --score_maker models/classification/pytorch_model.bin
+--warmup_from_nmt --warmup_nmt_file ./models/en-hi/checkpoint_best.pt --reset-lr-scheduler --reset-optimizer --stage 1  --score_maker models/classification/pytorch_model.bin
 ```
 where `--warmup_from_nmt` indicates the location of model in stage 1, `--score_maker` indicates the path of classification model, and `--stage` indicate the the stage of training (`0` means stage 1 and `1` means stage 2. Default number is `0`)
 
@@ -150,14 +166,14 @@ CUDA_VISIBLE_DEVICES=0,1,2 fairseq-train ${TEXT}neg-databin/ --arch vae --ddp-ba
 --warmup_from_nmt --warmup_nmt_file ./models/yelp/checkpoint_best.pt --reset-lr-scheduler --reset-optimizer --stage 1  --score_maker models/classification/pytorch_model.bin
 
 ```
-Our stage 2 models are located at `vae-fairseq/models/{yelp,cs}/vae+style_embed+mask+score/`
+Our stage 2 models are located at `vae-fairseq/models/{yelp,gyafc,cs}/vae+style_embed+mask+score/`
 
 # Style Transfer (Generation)
 To transfer from one style to another style, we run the fairseq command (remember the input file is `test.0` in the preprocessed folder):
 ```
 MODELPATH=./models/yelp/
-PRE=roberta-base
-PRE_SRC=roberta-base
+PRE=roberta-base      # use your path
+PRE_SRC=roberta-base  # use your path
 ## transfer from 1 -> 0
 STPATH=${DATAPATH}neg-databin/
 
@@ -211,12 +227,13 @@ fasttext test models/model.pt test.0
 The results will show the precision and recall. Because we only have one label for the test file, the accuracy equals to the recall.
 
 
-Our classifiers are located at `vae-fairseq/models/classifier/{yelp, cs}.pt`
+Our classifiers are located at `vae-fairseq/models/classifier/{yelp, gyafc,cs}.pt`
 
 ## Perplexity
 ### PPL for pure English transfer
 For pure English tasks like sentiment transfer, PPL calculation is very easy by the GPT2 model. For instance, to calculate the ppl of the output file `generate.extract`:
 ```
+cd vae-fairseq
 CUDA_VISIBLE_DEVICES=0 python cal_ppl.py --input generate.extract
 ```
 ### PPL for code-switching transfer

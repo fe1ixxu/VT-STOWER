@@ -87,9 +87,9 @@ class LabelSmoothedCrossEntropyCriterion(FairseqCriterion):
             n_correct, total = self.compute_accuracy(model, net_output, sample)
             logging_output["n_correct"] = utils.item(n_correct.data)
             logging_output["total"] = utils.item(total.data)
-        if self.i % 200 == 0:
-            print("REC loss:  ", rec_loss, "VAE_LOSS:  ", vq_loss.data, "Class loss: ", class_loss.data, "Total loss: ", loss.data)
-        self.i += 1
+        # if self.i % 200 == 0:
+        #     print("REC loss:  ", rec_loss, "VAE_LOSS:  ", vq_loss.data, "Class loss: ", class_loss.data, "Total loss: ", loss.data)
+        # self.i += 1
         return loss, sample_size, logging_output
 
     def get_lprobs_and_target(self, model, net_output, sample):
