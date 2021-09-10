@@ -16,6 +16,10 @@ conda activate stower
   ```
   pip install hydra-core==1.0.3
   ```
+* boto3
+  ```
+  pip install boto3
+  ```
 ## Our outputs
 For simplity, we directly put our outputs under the folder `outputs`.
   
