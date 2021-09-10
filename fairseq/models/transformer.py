@@ -1182,8 +1182,6 @@ class ScoreMaker(nn.Module):
         self.Q = nn.Linear(latent_size, latent_size)
         self.K = nn.Linear(latent_size, latent_size)
         self.V = nn.Linear(latent_size, latent_size)
-        # self.criterion = torch.nn.BCELoss()
-        self.i = 0
     def forward(self, x, labels, encoder_padding_mask, src_tokens):
         """
         labels: [len, batch]
@@ -1201,23 +1199,8 @@ class ScoreMaker(nn.Module):
 
         labels = labels.float().unsqueeze(-1)
         labels = torch.cat((1-labels, labels), dim=-1)
-
-        # class_mask = torch.cat((class_mask.unsqueeze(-1), class_mask.unsqueeze(-1)), dim=-1)
-        # x = x.view(-1)
-        # labels = labels.float().view(-1)
-        # class_mask = class_mask.view(-1)
         loss = -torch.mean(labels * torch.log(x) + (1 - labels) * torch.log(1 - x))
-        # loss = -torch.sum(labels * torch.log(x) + (1 - labels) * torch.log(1 - x) * class_mask) / (torch.sum(class_mask) )
-        # if self.i % 20 == 0:
-        #     t = AutoTokenizer.from_pretrained("roberta-base")
-        #     for j in range(len(src_tokens)):
-        #         plt.barh(t.convert_ids_to_tokens(src_tokens[j]), scores.squeeze(-1)[j].detach().to("cpu").numpy(), align='center')
-        #         plt.savefig("class/class{}{}.png".format(self.i, j))
-        #         plt.cla()
 
-
-        self.i += 1
-        # loss = self.criterion(x, torch.cat((1-labels, labels), dim=-1))
         return self.weight_c * loss, scores.squeeze(-1)
 def Embedding(num_embeddings, embedding_dim, padding_idx):
     m = nn.Embedding(num_embeddings, embedding_dim, padding_idx=padding_idx)
