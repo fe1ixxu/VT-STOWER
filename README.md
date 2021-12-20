@@ -32,7 +32,7 @@ Dataset is stored at `preprocess` folder. To preprocess dataset, run the command
 After preprocessing, three databins will be generated: 
  * `yelp-databin`: yelp dataset for sentiment transfer;
  * `gyafc-databin`: gyafc dataset for formality transfer;
- * `en-hi-databin`: Hingdi-Hinglish dataset for code-switching transfer.
+ * `en-hi-databin`: Hindi-Hinglish dataset for code-switching transfer.
 
 ## Training
 Training scripts are stored in the `train` folder
