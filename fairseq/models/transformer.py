@@ -1155,7 +1155,7 @@ class VanillaVAE(nn.Module):
             mu = layer(latent, mask)
 
         log_var = latent
-        for layer in self.fc_mu:
+        for layer in self.fc_var:
             log_var = layer(latent, mask)
 
         z = self.reparameterize(mu, log_var)
